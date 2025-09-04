@@ -1,0 +1,8 @@
+{
+  "description": "A word puzzle game with a Wordscapes-inspired UI. Players swipe letters or use voice to form words that fit into a crossword grid. Features dynamic background, icon-based navigation, and swipe-to-select letter input with visual feedback.",
+  "prompt": "",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "name": "WordSlide_0.25b"
+}

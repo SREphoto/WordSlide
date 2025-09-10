@@ -173,6 +173,7 @@ const worldThemeInput = document.getElementById('world-theme-input') as HTMLInpu
 const numLevelsInput = document.getElementById('num-levels-input') as HTMLInputElement;
 const generateWorldButton = document.getElementById('generate-world-button') as HTMLButtonElement;
 const generationLoadingIndicator = document.getElementById('generation-loading-indicator')!;
+const generationStatusMessage = document.getElementById('generation-status-message')!;
 
 // Game UI
 const gameBackButton = document.getElementById('game-back-button')!;
@@ -221,6 +222,9 @@ const musicToggle = document.getElementById('music-toggle') as HTMLInputElement;
 const resetProgressButton = document.getElementById('reset-progress-button')!;
 const privacyPolicyLink = document.getElementById('privacy-policy-link')!;
 const acknowledgementsLink = document.getElementById('acknowledgements-link')!;
+const apiKeyInput = document.getElementById('api-key-input') as HTMLInputElement;
+const saveApiKeyButton = document.getElementById('save-api-key-button') as HTMLButtonElement;
+const apiKeyStatus = document.getElementById('api-key-status') as HTMLParagraphElement;
 
 
 interface SwipedLetterInfo {
@@ -1122,20 +1126,34 @@ function loadProgress() {
 // --- Gemini API World Generation ---
 // ... (handleGenerateWorldClick, validateGeneratedWorld, initGemini remain the same) ...
 function initGemini() {
-    if (!process.env.API_KEY) {
+    const apiKey = localStorage.getItem('geminiApiKey');
+    if (!apiKey) {
         console.error("API_KEY is not set for Gemini.");
-        showFeedback("World Generation is currently unavailable (API Key missing).", false, false, 3000);
         generateWorldButton.disabled = true;
         worldThemeInput.disabled = true;
         numLevelsInput.disabled = true;
+        if (generationStatusMessage) generationStatusMessage.textContent = "API Key not set. Please add one in Settings.";
+        if(apiKeyStatus) apiKeyStatus.textContent = "";
         return;
     }
     try {
-        genAI = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        genAI = new GoogleGenAI({ apiKey: apiKey });
+        generateWorldButton.disabled = false;
+        worldThemeInput.disabled = false;
+        numLevelsInput.disabled = false;
+        if (generationStatusMessage) generationStatusMessage.textContent = "";
+        if(apiKeyStatus) apiKeyStatus.textContent = "API Key Loaded.";
+        if(apiKeyStatus) apiKeyStatus.style.color = 'green';
+        setTimeout(() => {
+            if(apiKeyStatus) apiKeyStatus.textContent = "";
+        }, 3000);
     } catch (e) {
         console.error("Failed to initialize GoogleGenAI:", e);
         showFeedback("Failed to initialize World Generation service.", false, false, 3000);
         generateWorldButton.disabled = true;
+        if (generationStatusMessage) generationStatusMessage.textContent = "Invalid API Key. Please check settings.";
+        if(apiKeyStatus) apiKeyStatus.textContent = "Invalid API Key.";
+        if(apiKeyStatus) apiKeyStatus.style.color = 'red';
     }
 }
 
@@ -1481,6 +1499,10 @@ function closeSettingsModal() {
 function applySettingsToUI() {
     soundToggle.checked = gameSettings.soundEffectsEnabled;
     musicToggle.checked = gameSettings.musicEnabled;
+    const savedApiKey = localStorage.getItem('geminiApiKey');
+    if (savedApiKey) {
+        apiKeyInput.value = savedApiKey;
+    }
     // Add logic here to mute/unmute actual game sounds/music if implemented
 }
 
@@ -1497,6 +1519,27 @@ function handleSettingsChange() {
     console.log("Settings saved:", gameSettings);
     saveProgress();
     applySettings();
+}
+
+function handleSaveApiKey() {
+    const apiKey = apiKeyInput.value.trim();
+    if (apiKey) {
+        localStorage.setItem('geminiApiKey', apiKey);
+        apiKeyStatus.textContent = "API Key Saved!";
+        apiKeyStatus.style.color = 'green';
+        setTimeout(() => {
+            apiKeyStatus.textContent = "";
+        }, 3000);
+        initGemini(); // Re-initialize with the new key
+    } else {
+        localStorage.removeItem('geminiApiKey');
+        apiKeyStatus.textContent = "API Key Removed.";
+        apiKeyStatus.style.color = 'orange';
+        setTimeout(() => {
+            apiKeyStatus.textContent = "";
+        }, 3000);
+        initGemini(); // Re-initialize to disable the feature
+    }
 }
 
 function handleResetProgress() {
@@ -1570,6 +1613,7 @@ function attachEventListeners() {
     soundToggle.addEventListener('change', handleSettingsChange);
     musicToggle.addEventListener('change', handleSettingsChange);
     resetProgressButton.addEventListener('click', handleResetProgress);
+    saveApiKeyButton.addEventListener('click', handleSaveApiKey);
     privacyPolicyLink.addEventListener('click', (e) => { e.preventDefault(); showFeedback("Privacy Policy: To be implemented.", false, false, 2000); });
     acknowledgementsLink.addEventListener('click', (e) => { e.preventDefault(); showFeedback("Acknowledgements: To be implemented.", false, false, 2000); });
 

@@ -324,6 +324,7 @@ function triggerHapticFeedback(pattern: 'light' | 'success' | 'error') {
 }
 
 
+
 // --- Screen Navigation ---
 function showRoadmapScreen() {
     renderRoadmap();
@@ -399,6 +400,9 @@ function renderRoadmap() {
             case '--world-timber-bg': glowColorCSSVar = '--world-timber-glow'; break;
             case '--world-crystal-bg': glowColorCSSVar = '--world-crystal-glow'; break; 
             case '--world-cosmic-bg': glowColorCSSVar = '--world-cosmic-glow'; break;
+            case '--world-aqueous-bg': glowColorCSSVar = '--world-aqueous-glow'; break;
+            case '--world-galactic-bg': glowColorCSSVar = '--world-galactic-glow'; break;
+            case '--world-culinary-bg': glowColorCSSVar = '--world-culinary-glow'; break;
             case DEFAULT_GENERATED_WORLD_THEME_VAR: glowColorCSSVar = '--world-generated-glow'; break;
         }
         worldSection.style.setProperty('--current-world-glow-color', `var(${glowColorCSSVar})`);
@@ -637,6 +641,7 @@ function handlePointerUp(event: PointerEvent) {
     clearSwipeState();
 }
 
+
 function drawSwipeLines() {
     swipeLineCtx.clearRect(0, 0, swipeLineCanvas.width, swipeLineCanvas.height);
     if (currentSwipePath.length < 2) return;
@@ -756,13 +761,26 @@ function triggerScreenShake() {
 }
 
 function handleShuffleLetters() {
+    if (coins < SHUFFLE_COST) {
+        showFeedback("Not enough coins to shuffle!", false);
+        triggerScreenShake();
+        return;
+    }
+
+    coins -= SHUFFLE_COST;
+    updateScoreboardAndCoins();
+    saveProgress();
+
+    // Fisher-Yates shuffle algorithm
     for (let i = availableLetters.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [availableLetters[i], availableLetters[j]] = [availableLetters[j], availableLetters[i]];
     }
+
     clearSwipeState();
-    renderLetters();
+    renderLetters(); // Re-render the letter wheel with new positions
     showFeedback("Letters shuffled!", true, false, 1000);
+    triggerHapticFeedback('light');
 }
 
 function handleHint() {
@@ -1043,6 +1061,12 @@ function unlockNextLevel(completedLevel: LevelDefinition) {
     if (nextLevel) {
         nextLevel.unlocked = true;
     }
+}
+
+function isWorldCompleted(worldId: string): boolean {
+    const world = gameRoadmap.find(w => w.id === worldId);
+    if (!world) return false;
+    return world.levels.every(l => l.completed);
 }
 
 function saveProgress() {

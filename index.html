@@ -1288,6 +1288,7 @@
                     </div>
                     <button id="generate-world-button">Generate World</button>
                     <div id="generation-loading-indicator" class="hidden">Generating, please wait...</div>
+                    <div id="generation-status-message" style="margin-top: 10px; text-align: center; color: #ffdddd;"></div>
                 </section>
 
                 <main id="roadmap-main-content">
@@ -1332,6 +1333,10 @@
                 <button id="shuffle-button" class="control-button" aria-label="Shuffle letters">
                     <span class="material-symbols-outlined">shuffle</span>
                     <span id="shuffle-cost" class="hint-cost-badge">10</span>
+                </button>
+                <button id="reveal-letter-button" class="control-button" aria-label="Reveal a letter">
+                    <span class="material-symbols-outlined">flourescent</span>
+                    <span id="reveal-letter-cost" class="hint-cost-badge">25</span>
                 </button>
                 <button id="mic-button" class="control-button" aria-label="Use microphone to say word">
                     <span class="material-symbols-outlined">mic</span>
@@ -1436,6 +1441,17 @@
                             <input type="checkbox" id="music-toggle" checked>
                             <span class="toggle-slider"></span>
                         </label>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3 class="settings-section-title">API Settings</h3>
+                    <div class="setting-item">
+                        <label for="api-key-input">Gemini API Key</label>
+                        <input type="password" id="api-key-input" placeholder="Enter your API key" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; background-color: #f0f0f0; color: #333;">
+                    </div>
+                    <div class="setting-item">
+                        <button id="save-api-key-button" class="settings-button">Save Key</button>
+                        <p id="api-key-status" style="margin-left: 10px; font-size: 0.9em;"></p>
                     </div>
                 </div>
                 <div class="settings-section">

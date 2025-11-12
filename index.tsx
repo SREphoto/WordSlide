@@ -129,27 +129,14 @@ let gameRoadmap: WorldDefinition[] = [
         ]
     },
     {
-        id: "culinary", name: "CULINARY CANVAS", themeColorVar: "--world-culinary-bg", isGenerated: false, levels: [
-            { id: "cc-1", worldId: "culinary", levelInWorld: 1, displayName: "Level 1", letters: ['P', 'I', 'E'], targetWords: ["PIE", "IPE"], unlocked: false, completed: false },
-            { id: "cc-2", worldId: "culinary", levelInWorld: 2, displayName: "Level 2", letters: ['T', 'E', 'A'], targetWords: ["TEA", "ATE", "EAT"], unlocked: false, completed: false },
-            { id: "cc-3", worldId: "culinary", levelInWorld: 3, displayName: "Level 3", letters: ['S', 'O', 'U', 'P'], targetWords: ["SOUP", "SOP", "PUS"], unlocked: false, completed: false },
-            { id: "cc-4", worldId: "culinary", levelInWorld: 4, displayName: "Level 4", letters: ['C', 'A', 'K', 'E'], targetWords: ["CAKE", "ACE"], unlocked: false, completed: false },
-            { id: "cc-5", worldId: "culinary", levelInWorld: 5, displayName: "Level 5", letters: ['S', 'A', 'L', 'A', 'D'], targetWords: ["SALAD", "LAD", "SAD"], unlocked: false, completed: false },
-            { id: "cc-6", worldId: "culinary", levelInWorld: 6, displayName: "Level 6", letters: ['B', 'R', 'E', 'A', 'D'], targetWords: ["BREAD", "BEARD", "BARED", "BEAD", "DEAR", "READ", "BARE"], unlocked: false, completed: false },
-            { id: "cc-7", worldId: "culinary", levelInWorld: 7, displayName: "Level 7", letters: ['C', 'H', 'E', 'E', 'S', 'E'], targetWords: ["CHEESE", "SEE", "SHE"], unlocked: false, completed: false },
-            { id: "cc-8", worldId: "culinary", levelInWorld: 8, displayName: "Level 8", letters: ['P', 'A', 'S', 'T', 'A'], targetWords: ["PASTA", "PATS", "PAST", "SAT", "TAP"], unlocked: false, completed: false },
-            { id: "cc-9", worldId: "culinary", levelInWorld: 9, displayName: "Level 9", letters: ['G', 'R', 'A', 'V', 'Y'], targetWords: ["GRAVY", "VARY", "RAY"], unlocked: false, completed: false },
-            { id: "cc-10", worldId: "culinary", levelInWorld: 10, displayName: "Level 10", letters: ['C', 'U', 'R', 'R', 'Y'], targetWords: ["CURRY", "CRY", "RUE"], unlocked: false, completed: false },
-            { id: "cc-11", worldId: "culinary", levelInWorld: 11, displayName: "Level 11", letters: ['B', 'A', 'C', 'O', 'N'], targetWords: ["BACON", "CAN", "CON"], unlocked: false, completed: false },
-            { id: "cc-12", worldId: "culinary", levelInWorld: 12, displayName: "Level 12", letters: ['S', 'T', 'E', 'A', 'K'], targetWords: ["STEAK", "SEAT", "TAKE", "TEA", "EAT", "ATE", "SAT"], unlocked: false, completed: false },
-            { id: "cc-13", worldId: "culinary", levelInWorld: 13, displayName: "Level 13", letters: ['S', 'P', 'I', 'C', 'E'], targetWords: ["SPICE", "PIES", "ICE"], unlocked: false, completed: false },
-            { id: "cc-14", worldId: "culinary", levelInWorld: 14, displayName: "Level 14", letters: ['F', 'L', 'O', 'U', 'R'], targetWords: ["FLOUR", "FOUR", "FOR"], unlocked: false, completed: false },
-            { id: "cc-15", worldId: "culinary", levelInWorld: 15, displayName: "Level 15", letters: ['S', 'U', 'G', 'A', 'R'], targetWords: ["SUGAR", "RAGS", "RUG", "GAS", "GAR"], unlocked: false, completed: false },
-            { id: "cc-16", worldId: "culinary", levelInWorld: 16, displayName: "Level 16", letters: ['O', 'L', 'I', 'V', 'E'], targetWords: ["OLIVE", "LOVE", "LIVE", "VILE"], unlocked: false, completed: false },
-            { id: "cc-17", worldId: "culinary", levelInWorld: 17, displayName: "Level 17", letters: ['P', 'E', 'P', 'P', 'E', 'R'], targetWords: ["PEPPER", "PEER", "PREP", "REP"], unlocked: false, completed: false },
-            { id: "cc-18", worldId: "culinary", levelInWorld: 18, displayName: "Level 18", letters: ['O', 'N', 'I', 'O', 'N'], targetWords: ["ONION", "ION", "NIN"], unlocked: false, completed: false },
-            { id: "cc-19", worldId: "culinary", levelInWorld: 19, displayName: "Level 19", letters: ['G', 'A', 'R', 'L', 'I', 'C'], targetWords: ["GARLIC", "CAR", "RIG", "LAG"], unlocked: false, completed: false },
-            { id: "cc-20", worldId: "culinary", levelInWorld: 20, displayName: "Level 20", letters: ['C', 'H', 'O', 'C', 'O', 'L', 'A', 'T', 'E'], targetWords: ["CHOCOLATE", "LATE", "HATE", "COAL", "COOL", "HEAT", "CLOT", "COAT"], unlocked: false, completed: false },
+        id: "aqueous", name: "AQUEOUS ADVENTURES", themeColorVar: "--world-aqueous-bg", isGenerated: false, levels: [
+            { id: "aq-1", worldId: "aqueous", levelInWorld: 1, displayName: "Level 1", letters: ['P', 'O', 'D'], targetWords: ["POD", "DOP"], unlocked: false, completed: false },
+            { id: "aq-2", worldId: "aqueous", levelInWorld: 2, displayName: "Level 2", letters: ['W', 'E', 'T'], targetWords: ["WET", "TEW"], unlocked: false, completed: false },
+            { id: "aq-3", worldId: "aqueous", levelInWorld: 3, displayName: "Level 3", letters: ['W', 'A', 'V', 'E'], targetWords: ["WAVE", "AVE"], unlocked: false, completed: false },
+            { id: "aq-4", worldId: "aqueous", levelInWorld: 4, displayName: "Level 4", letters: ['F', 'I', 'S', 'H'], targetWords: ["FISH", "HIS"], unlocked: false, completed: false },
+            { id: "aq-5", worldId: "aqueous", levelInWorld: 5, displayName: "Level 5", letters: ['O', 'C', 'E', 'A', 'N'], targetWords: ["OCEAN", "CANOE", "CONE", "ONCE", "ACE"], unlocked: false, completed: false },
+            { id: "aq-6", worldId: "aqueous", levelInWorld: 6, displayName: "Level 6", letters: ['C', 'O', 'R', 'A', 'L'], targetWords: ["CORAL", "CAROL", "ORCA", "ORAL", "CAR"], unlocked: false, completed: false },
+            { id: "aq-7", worldId: "aqueous", levelInWorld: 7, displayName: "Level 7", letters: ['M', 'A', 'R', 'I', 'N', 'E'], targetWords: ["MARINE", "REMAIN", "AMINE", "MEAN", "RAIN"], unlocked: false, completed: false },
         ]
     }
 ];
@@ -167,7 +154,7 @@ const BONUS_COIN_VALUE = 1;
 let score = 0; 
 let coins = 100; 
 const HINT_COST = 50;
-const SHUFFLE_COST = 10;
+const REVEAL_LETTER_COST = 25;
 let gameSettings: GameSettings = {
     soundEffectsEnabled: true,
     musicEnabled: true,
@@ -198,6 +185,7 @@ const worldThemeInput = document.getElementById('world-theme-input') as HTMLInpu
 const numLevelsInput = document.getElementById('num-levels-input') as HTMLInputElement;
 const generateWorldButton = document.getElementById('generate-world-button') as HTMLButtonElement;
 const generationLoadingIndicator = document.getElementById('generation-loading-indicator')!;
+const generationStatusMessage = document.getElementById('generation-status-message')!;
 
 // Game UI
 const gameBackButton = document.getElementById('game-back-button')!;
@@ -212,7 +200,6 @@ const revealLetterButton = document.getElementById('reveal-letter-button')!;
 const micButton = document.getElementById('mic-button')! as HTMLButtonElement;
 const hintCostDisplay = document.getElementById('hint-cost')!;
 const revealLetterCostDisplay = document.getElementById('reveal-letter-cost')!;
-const shuffleCostDisplay = document.getElementById('shuffle-cost')!;
 const gameAchievementsButton = document.getElementById('game-achievements-button')!;
 const gameBonusBadge = document.getElementById('game-bonus-badge')!;
 const gameCoinsValue = document.getElementById('game-coins-value')! as HTMLSpanElement;
@@ -249,6 +236,9 @@ const musicToggle = document.getElementById('music-toggle') as HTMLInputElement;
 const resetProgressButton = document.getElementById('reset-progress-button')!;
 const privacyPolicyLink = document.getElementById('privacy-policy-link')!;
 const acknowledgementsLink = document.getElementById('acknowledgements-link')!;
+const apiKeyInput = document.getElementById('api-key-input') as HTMLInputElement;
+const saveApiKeyButton = document.getElementById('save-api-key-button') as HTMLButtonElement;
+const apiKeyStatus = document.getElementById('api-key-status') as HTMLParagraphElement;
 
 
 interface SwipedLetterInfo {
@@ -315,6 +305,22 @@ function triggerConfetti() {
         confettiContainer.appendChild(confetti);
     }
      setTimeout(() => confettiContainer.innerHTML = '', 3500); // Clear confetti after animation
+}
+
+function triggerHapticFeedback(pattern: 'light' | 'success' | 'error') {
+    if (gameSettings.soundEffectsEnabled && 'vibrate' in navigator) {
+        switch (pattern) {
+            case 'light':
+                navigator.vibrate(20); // A short, light vibration for selection
+                break;
+            case 'success':
+                navigator.vibrate([100, 50, 100]); // A double vibration for success
+                break;
+            case 'error':
+                navigator.vibrate(200); // A longer vibration for error/failure
+                break;
+        }
+    }
 }
 
 
@@ -491,14 +497,7 @@ function initGameLogicForLevel() {
     clearSwipeState();
     currentWordDisplay.textContent = '';
     hintCostDisplay.textContent = String(HINT_COST);
-    shuffleCostDisplay.textContent = String(SHUFFLE_COST);
-
-    // Unlock Shuffle power-up after the first world
-    if (isWorldCompleted('tutorial')) {
-        shuffleButton.style.display = 'flex';
-    } else {
-        shuffleButton.style.display = 'none';
-    }
+    revealLetterCostDisplay.textContent = String(REVEAL_LETTER_COST);
 }
 
 
@@ -617,6 +616,7 @@ function handlePointerMove(event: PointerEvent) {
         const originalIndex = parseInt(targetElement.dataset.originalIndex!, 10);
         targetElement.classList.add('swiped');
         currentSwipePath.push({ letter, originalIndex, element: targetElement, centerX: (targetElement as any).canvasCenterX, centerY: (targetElement as any).canvasCenterY });
+        triggerHapticFeedback('light');
         updateCurrentSwipedWordDisplay();
         drawSwipeLines();
     } else if (targetElement && targetElement.classList.contains('letter-button') && targetElement.classList.contains('swiped')) {
@@ -851,6 +851,80 @@ function handleHint() {
     }
 }
 
+function handleRevealLetter() {
+    if (!currentPlayingLevel) return;
+    if (coins < REVEAL_LETTER_COST) {
+        showFeedback("Not enough coins to reveal a letter!", false);
+        return;
+    }
+
+    const unfoundWords = currentPlayingLevel.targetWords.filter(w => !foundWords.includes(w));
+    if (unfoundWords.length === 0) {
+        showFeedback("All words found, no letters to reveal.", false, false, 2000);
+        return;
+    }
+
+    // Find all possible tiles to reveal
+    const revealableTiles: { tile: HTMLElement, letter: string }[] = [];
+    const wordRows = wordGridContainerEl.querySelectorAll('.word-row');
+
+    // This is a bit tricky; we need to associate rows with unfound words.
+    // Let's create a map of word length to unfound words.
+    const unfoundWordsByLength: { [key: number]: string[] } = {};
+    unfoundWords.forEach(word => {
+        if (!unfoundWordsByLength[word.length]) {
+            unfoundWordsByLength[word.length] = [];
+        }
+        unfoundWordsByLength[word.length].push(word);
+    });
+
+    wordRows.forEach(row => {
+        const tiles = Array.from(row.querySelectorAll('.letter-tile'));
+        if (unfoundWordsByLength[tiles.length]) {
+            // This row corresponds to unfound words of this length.
+            // Check if it's one of the unfound words by seeing if its filled letters match.
+            const potentialWords = unfoundWordsByLength[tiles.length];
+
+            potentialWords.forEach(potentialWord => {
+                let isMatch = true;
+                for(let i = 0; i < tiles.length; i++) {
+                    if (!tiles[i].classList.contains('empty') && tiles[i].textContent !== potentialWord[i]) {
+                        isMatch = false;
+                        break;
+                    }
+                }
+
+                if (isMatch) {
+                    // This row could be this potentialWord. Add its empty tiles.
+                    tiles.forEach((tile, i) => {
+                        if (tile.classList.contains('empty')) {
+                            revealableTiles.push({ tile: tile as HTMLElement, letter: potentialWord[i] });
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+    if (revealableTiles.length === 0) {
+        showFeedback("No more letters to reveal in the current words.", false, false, 2000);
+        return;
+    }
+
+    const randomTileInfo = revealableTiles[Math.floor(Math.random() * revealableTiles.length)];
+
+    coins -= REVEAL_LETTER_COST;
+    updateScoreboardAndCoins();
+    saveProgress();
+
+    randomTileInfo.tile.textContent = randomTileInfo.letter;
+    randomTileInfo.tile.classList.remove('empty');
+    randomTileInfo.tile.classList.add('filled', 'hinted-reveal'); // Re-use hint animation
+    setTimeout(() => randomTileInfo.tile.classList.remove('hinted-reveal'), 600);
+
+
+    showFeedback("A letter has been revealed!", true, false, 2000);
+}
 
 
 // --- Speech Recognition Logic ---
@@ -1055,27 +1129,14 @@ function getInitialDefaultRoadmap(): WorldDefinition[] {
             ]
         },
         {
-            id: "culinary", name: "CULINARY CANVAS", themeColorVar: "--world-culinary-bg", isGenerated: false, levels: [
-                { id: "cc-1", worldId: "culinary", levelInWorld: 1, displayName: "Level 1", letters: ['P', 'I', 'E'], targetWords: ["PIE", "IPE"], unlocked: false, completed: false },
-                { id: "cc-2", worldId: "culinary", levelInWorld: 2, displayName: "Level 2", letters: ['T', 'E', 'A'], targetWords: ["TEA", "ATE", "EAT"], unlocked: false, completed: false },
-                { id: "cc-3", worldId: "culinary", levelInWorld: 3, displayName: "Level 3", letters: ['S', 'O', 'U', 'P'], targetWords: ["SOUP", "SOP", "PUS"], unlocked: false, completed: false },
-                { id: "cc-4", worldId: "culinary", levelInWorld: 4, displayName: "Level 4", letters: ['C', 'A', 'K', 'E'], targetWords: ["CAKE", "ACE"], unlocked: false, completed: false },
-                { id: "cc-5", worldId: "culinary", levelInWorld: 5, displayName: "Level 5", letters: ['S', 'A', 'L', 'A', 'D'], targetWords: ["SALAD", "LAD", "SAD"], unlocked: false, completed: false },
-                { id: "cc-6", worldId: "culinary", levelInWorld: 6, displayName: "Level 6", letters: ['B', 'R', 'E', 'A', 'D'], targetWords: ["BREAD", "BEARD", "BARED", "BEAD", "DEAR", "READ", "BARE"], unlocked: false, completed: false },
-                { id: "cc-7", worldId: "culinary", levelInWorld: 7, displayName: "Level 7", letters: ['C', 'H', 'E', 'E', 'S', 'E'], targetWords: ["CHEESE", "SEE", "SHE"], unlocked: false, completed: false },
-                { id: "cc-8", worldId: "culinary", levelInWorld: 8, displayName: "Level 8", letters: ['P', 'A', 'S', 'T', 'A'], targetWords: ["PASTA", "PATS", "PAST", "SAT", "TAP"], unlocked: false, completed: false },
-                { id: "cc-9", worldId: "culinary", levelInWorld: 9, displayName: "Level 9", letters: ['G', 'R', 'A', 'V', 'Y'], targetWords: ["GRAVY", "VARY", "RAY"], unlocked: false, completed: false },
-                { id: "cc-10", worldId: "culinary", levelInWorld: 10, displayName: "Level 10", letters: ['C', 'U', 'R', 'R', 'Y'], targetWords: ["CURRY", "CRY", "RUE"], unlocked: false, completed: false },
-                { id: "cc-11", worldId: "culinary", levelInWorld: 11, displayName: "Level 11", letters: ['B', 'A', 'C', 'O', 'N'], targetWords: ["BACON", "CAN", "CON"], unlocked: false, completed: false },
-                { id: "cc-12", worldId: "culinary", levelInWorld: 12, displayName: "Level 12", letters: ['S', 'T', 'E', 'A', 'K'], targetWords: ["STEAK", "SEAT", "TAKE", "TEA", "EAT", "ATE", "SAT"], unlocked: false, completed: false },
-                { id: "cc-13", worldId: "culinary", levelInWorld: 13, displayName: "Level 13", letters: ['S', 'P', 'I', 'C', 'E'], targetWords: ["SPICE", "PIES", "ICE"], unlocked: false, completed: false },
-                { id: "cc-14", worldId: "culinary", levelInWorld: 14, displayName: "Level 14", letters: ['F', 'L', 'O', 'U', 'R'], targetWords: ["FLOUR", "FOUR", "FOR"], unlocked: false, completed: false },
-                { id: "cc-15", worldId: "culinary", levelInWorld: 15, displayName: "Level 15", letters: ['S', 'U', 'G', 'A', 'R'], targetWords: ["SUGAR", "RAGS", "RUG", "GAS", "GAR"], unlocked: false, completed: false },
-                { id: "cc-16", worldId: "culinary", levelInWorld: 16, displayName: "Level 16", letters: ['O', 'L', 'I', 'V', 'E'], targetWords: ["OLIVE", "LOVE", "LIVE", "VILE"], unlocked: false, completed: false },
-                { id: "cc-17", worldId: "culinary", levelInWorld: 17, displayName: "Level 17", letters: ['P', 'E', 'P', 'P', 'E', 'R'], targetWords: ["PEPPER", "PEER", "PREP", "REP"], unlocked: false, completed: false },
-                { id: "cc-18", worldId: "culinary", levelInWorld: 18, displayName: "Level 18", letters: ['O', 'N', 'I', 'O', 'N'], targetWords: ["ONION", "ION", "NIN"], unlocked: false, completed: false },
-                { id: "cc-19", worldId: "culinary", levelInWorld: 19, displayName: "Level 19", letters: ['G', 'A', 'R', 'L', 'I', 'C'], targetWords: ["GARLIC", "CAR", "RIG", "LAG"], unlocked: false, completed: false },
-                { id: "cc-20", worldId: "culinary", levelInWorld: 20, displayName: "Level 20", letters: ['C', 'H', 'O', 'C', 'O', 'L', 'A', 'T', 'E'], targetWords: ["CHOCOLATE", "LATE", "HATE", "COAL", "COOL", "HEAT", "CLOT", "COAT"], unlocked: false, completed: false },
+            id: "aqueous", name: "AQUEOUS ADVENTURES", themeColorVar: "--world-aqueous-bg", isGenerated: false, levels: [
+                { id: "aq-1", worldId: "aqueous", levelInWorld: 1, displayName: "Level 1", letters: ['P', 'O', 'D'], targetWords: ["POD", "DOP"], unlocked: false, completed: false },
+                { id: "aq-2", worldId: "aqueous", levelInWorld: 2, displayName: "Level 2", letters: ['W', 'E', 'T'], targetWords: ["WET", "TEW"], unlocked: false, completed: false },
+                { id: "aq-3", worldId: "aqueous", levelInWorld: 3, displayName: "Level 3", letters: ['W', 'A', 'V', 'E'], targetWords: ["WAVE", "AVE"], unlocked: false, completed: false },
+                { id: "aq-4", worldId: "aqueous", levelInWorld: 4, displayName: "Level 4", letters: ['F', 'I', 'S', 'H'], targetWords: ["FISH", "HIS"], unlocked: false, completed: false },
+                { id: "aq-5", worldId: "aqueous", levelInWorld: 5, displayName: "Level 5", letters: ['O', 'C', 'E', 'A', 'N'], targetWords: ["OCEAN", "CANOE", "CONE", "ONCE", "ACE"], unlocked: false, completed: false },
+                { id: "aq-6", worldId: "aqueous", levelInWorld: 6, displayName: "Level 6", letters: ['C', 'O', 'R', 'A', 'L'], targetWords: ["CORAL", "CAROL", "ORCA", "ORAL", "CAR"], unlocked: false, completed: false },
+                { id: "aq-7", worldId: "aqueous", levelInWorld: 7, displayName: "Level 7", letters: ['M', 'A', 'R', 'I', 'N', 'E'], targetWords: ["MARINE", "REMAIN", "AMINE", "MEAN", "RAIN"], unlocked: false, completed: false },
             ]
         }
     ];
@@ -1211,20 +1272,34 @@ function loadProgress() {
 // --- Gemini API World Generation ---
 // ... (handleGenerateWorldClick, validateGeneratedWorld, initGemini remain the same) ...
 function initGemini() {
-    if (!process.env.API_KEY) {
+    const apiKey = localStorage.getItem('geminiApiKey');
+    if (!apiKey) {
         console.error("API_KEY is not set for Gemini.");
-        showFeedback("World Generation is currently unavailable (API Key missing).", false, false, 3000);
         generateWorldButton.disabled = true;
         worldThemeInput.disabled = true;
         numLevelsInput.disabled = true;
+        if (generationStatusMessage) generationStatusMessage.textContent = "API Key not set. Please add one in Settings.";
+        if(apiKeyStatus) apiKeyStatus.textContent = "";
         return;
     }
     try {
-        genAI = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        genAI = new GoogleGenAI({ apiKey: apiKey });
+        generateWorldButton.disabled = false;
+        worldThemeInput.disabled = false;
+        numLevelsInput.disabled = false;
+        if (generationStatusMessage) generationStatusMessage.textContent = "";
+        if(apiKeyStatus) apiKeyStatus.textContent = "API Key Loaded.";
+        if(apiKeyStatus) apiKeyStatus.style.color = 'green';
+        setTimeout(() => {
+            if(apiKeyStatus) apiKeyStatus.textContent = "";
+        }, 3000);
     } catch (e) {
         console.error("Failed to initialize GoogleGenAI:", e);
         showFeedback("Failed to initialize World Generation service.", false, false, 3000);
         generateWorldButton.disabled = true;
+        if (generationStatusMessage) generationStatusMessage.textContent = "Invalid API Key. Please check settings.";
+        if(apiKeyStatus) apiKeyStatus.textContent = "Invalid API Key.";
+        if(apiKeyStatus) apiKeyStatus.style.color = 'red';
     }
 }
 
@@ -1570,6 +1645,10 @@ function closeSettingsModal() {
 function applySettingsToUI() {
     soundToggle.checked = gameSettings.soundEffectsEnabled;
     musicToggle.checked = gameSettings.musicEnabled;
+    const savedApiKey = localStorage.getItem('geminiApiKey');
+    if (savedApiKey) {
+        apiKeyInput.value = savedApiKey;
+    }
     // Add logic here to mute/unmute actual game sounds/music if implemented
 }
 
@@ -1586,6 +1665,27 @@ function handleSettingsChange() {
     console.log("Settings saved:", gameSettings);
     saveProgress();
     applySettings();
+}
+
+function handleSaveApiKey() {
+    const apiKey = apiKeyInput.value.trim();
+    if (apiKey) {
+        localStorage.setItem('geminiApiKey', apiKey);
+        apiKeyStatus.textContent = "API Key Saved!";
+        apiKeyStatus.style.color = 'green';
+        setTimeout(() => {
+            apiKeyStatus.textContent = "";
+        }, 3000);
+        initGemini(); // Re-initialize with the new key
+    } else {
+        localStorage.removeItem('geminiApiKey');
+        apiKeyStatus.textContent = "API Key Removed.";
+        apiKeyStatus.style.color = 'orange';
+        setTimeout(() => {
+            apiKeyStatus.textContent = "";
+        }, 3000);
+        initGemini(); // Re-initialize to disable the feature
+    }
 }
 
 function handleResetProgress() {
@@ -1611,6 +1711,7 @@ function attachEventListeners() {
     // Game Screen Buttons
     shuffleButton.addEventListener('click', handleShuffleLetters);
     hintButton.addEventListener('click', handleHint);
+    revealLetterButton.addEventListener('click', handleRevealLetter);
     micButton.addEventListener('click', handleMicButtonClick); 
     gameBackButton.addEventListener('click', showRoadmapScreen);
     gameSettingsButton.addEventListener('click', openSettingsModal);
@@ -1659,6 +1760,7 @@ function attachEventListeners() {
     soundToggle.addEventListener('change', handleSettingsChange);
     musicToggle.addEventListener('change', handleSettingsChange);
     resetProgressButton.addEventListener('click', handleResetProgress);
+    saveApiKeyButton.addEventListener('click', handleSaveApiKey);
     privacyPolicyLink.addEventListener('click', (e) => { e.preventDefault(); showFeedback("Privacy Policy: To be implemented.", false, false, 2000); });
     acknowledgementsLink.addEventListener('click', (e) => { e.preventDefault(); showFeedback("Acknowledgements: To be implemented.", false, false, 2000); });
 

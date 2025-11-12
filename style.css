@@ -176,6 +176,7 @@ html, body {
 }
 .word-row {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--tile-gap);
     justify-content: center;
 }
@@ -186,7 +187,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.7em;
+    font-size: 1.8em;
     font-weight: bold;
     text-transform: uppercase;
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
@@ -819,9 +820,9 @@ html, body {
         max-width: 300px; 
     }
     .letter-button {
-        width: 55px; 
-        height: 55px; 
-        font-size: 2em; 
+        width: 60px;
+        height: 60px;
+        font-size: 2.2em;
     }
     #letter-interaction-area {
         height: 60px; 

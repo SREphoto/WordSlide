@@ -143,6 +143,7 @@ const BONUS_COIN_VALUE = 1;
 let score = 0; 
 let coins = 100; 
 const HINT_COST = 50;
+const REVEAL_LETTER_COST = 25;
 let gameSettings: GameSettings = {
     soundEffectsEnabled: true,
     musicEnabled: true,
@@ -183,8 +184,10 @@ const currentWordDisplay = document.getElementById('current-word')!;
 const letterWheel = document.getElementById('letter-wheel')!;
 const shuffleButton = document.getElementById('shuffle-button')!;
 const hintButton = document.getElementById('hint-button')!;
+const revealLetterButton = document.getElementById('reveal-letter-button')!;
 const micButton = document.getElementById('mic-button')! as HTMLButtonElement;
 const hintCostDisplay = document.getElementById('hint-cost')!;
+const revealLetterCostDisplay = document.getElementById('reveal-letter-cost')!;
 const gameAchievementsButton = document.getElementById('game-achievements-button')!;
 const gameBonusBadge = document.getElementById('game-bonus-badge')!;
 const gameCoinsValue = document.getElementById('game-coins-value')! as HTMLSpanElement;
@@ -287,6 +290,22 @@ function triggerConfetti() {
         confettiContainer.appendChild(confetti);
     }
      setTimeout(() => confettiContainer.innerHTML = '', 3500); // Clear confetti after animation
+}
+
+function triggerHapticFeedback(pattern: 'light' | 'success' | 'error') {
+    if (gameSettings.soundEffectsEnabled && 'vibrate' in navigator) {
+        switch (pattern) {
+            case 'light':
+                navigator.vibrate(20); // A short, light vibration for selection
+                break;
+            case 'success':
+                navigator.vibrate([100, 50, 100]); // A double vibration for success
+                break;
+            case 'error':
+                navigator.vibrate(200); // A longer vibration for error/failure
+                break;
+        }
+    }
 }
 
 
@@ -459,6 +478,7 @@ function initGameLogicForLevel() {
     clearSwipeState();
     currentWordDisplay.textContent = '';
     hintCostDisplay.textContent = String(HINT_COST);
+    revealLetterCostDisplay.textContent = String(REVEAL_LETTER_COST);
 }
 
 
@@ -577,6 +597,7 @@ function handlePointerMove(event: PointerEvent) {
         const originalIndex = parseInt(targetElement.dataset.originalIndex!, 10);
         targetElement.classList.add('swiped');
         currentSwipePath.push({ letter, originalIndex, element: targetElement, centerX: (targetElement as any).canvasCenterX, centerY: (targetElement as any).canvasCenterY });
+        triggerHapticFeedback('light');
         updateCurrentSwipedWordDisplay();
         drawSwipeLines();
     } else if (targetElement && targetElement.classList.contains('letter-button') && targetElement.classList.contains('swiped')) {
@@ -668,6 +689,7 @@ function processSubmittedWord(word: string) {
         score += wordToCheck.length * 10; 
         coins += wordToCheck.length; 
         showFeedback(`Correct! "${wordToCheck}" added.`, true);
+        triggerHapticFeedback('success');
         renderWordGrid();
         updateScoreboardAndCoins();
         saveProgress(); // Save after coin update
@@ -693,6 +715,7 @@ function processSubmittedWord(word: string) {
         renderBonusWordsList();
         updateBonusBadgeOnAllScreens(newBonusWordsCount + 1);
         showFeedback(`Bonus word: "${wordToCheck}"! +${BONUS_COIN_VALUE} coin.`, true, false, 2000);
+        triggerHapticFeedback('success');
         
         if (bonusWordsFound.length === 1 && localStorage.getItem('bonusTipShown') !== 'true') {
             showBonusTip();
@@ -712,7 +735,8 @@ function processSubmittedWord(word: string) {
 }
 
 function triggerScreenShake() {
-    gameContainer.classList.add('screen-shake'); 
+    gameContainer.classList.add('screen-shake');
+    triggerHapticFeedback('error');
     setTimeout(() => gameContainer.classList.remove('screen-shake'), 300);
 }
 
@@ -793,6 +817,82 @@ function handleHint() {
         showFeedback(`Level Complete! All words found.`, true, true);
     }
 }
+
+function handleRevealLetter() {
+    if (!currentPlayingLevel) return;
+    if (coins < REVEAL_LETTER_COST) {
+        showFeedback("Not enough coins to reveal a letter!", false);
+        return;
+    }
+
+    const unfoundWords = currentPlayingLevel.targetWords.filter(w => !foundWords.includes(w));
+    if (unfoundWords.length === 0) {
+        showFeedback("All words found, no letters to reveal.", false, false, 2000);
+        return;
+    }
+
+    // Find all possible tiles to reveal
+    const revealableTiles: { tile: HTMLElement, letter: string }[] = [];
+    const wordRows = wordGridContainerEl.querySelectorAll('.word-row');
+
+    // This is a bit tricky; we need to associate rows with unfound words.
+    // Let's create a map of word length to unfound words.
+    const unfoundWordsByLength: { [key: number]: string[] } = {};
+    unfoundWords.forEach(word => {
+        if (!unfoundWordsByLength[word.length]) {
+            unfoundWordsByLength[word.length] = [];
+        }
+        unfoundWordsByLength[word.length].push(word);
+    });
+
+    wordRows.forEach(row => {
+        const tiles = Array.from(row.querySelectorAll('.letter-tile'));
+        if (unfoundWordsByLength[tiles.length]) {
+            // This row corresponds to unfound words of this length.
+            // Check if it's one of the unfound words by seeing if its filled letters match.
+            const potentialWords = unfoundWordsByLength[tiles.length];
+
+            potentialWords.forEach(potentialWord => {
+                let isMatch = true;
+                for(let i = 0; i < tiles.length; i++) {
+                    if (!tiles[i].classList.contains('empty') && tiles[i].textContent !== potentialWord[i]) {
+                        isMatch = false;
+                        break;
+                    }
+                }
+
+                if (isMatch) {
+                    // This row could be this potentialWord. Add its empty tiles.
+                    tiles.forEach((tile, i) => {
+                        if (tile.classList.contains('empty')) {
+                            revealableTiles.push({ tile: tile as HTMLElement, letter: potentialWord[i] });
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+    if (revealableTiles.length === 0) {
+        showFeedback("No more letters to reveal in the current words.", false, false, 2000);
+        return;
+    }
+
+    const randomTileInfo = revealableTiles[Math.floor(Math.random() * revealableTiles.length)];
+
+    coins -= REVEAL_LETTER_COST;
+    updateScoreboardAndCoins();
+    saveProgress();
+
+    randomTileInfo.tile.textContent = randomTileInfo.letter;
+    randomTileInfo.tile.classList.remove('empty');
+    randomTileInfo.tile.classList.add('filled', 'hinted-reveal'); // Re-use hint animation
+    setTimeout(() => randomTileInfo.tile.classList.remove('hinted-reveal'), 600);
+
+
+    showFeedback("A letter has been revealed!", true, false, 2000);
+}
+
 
 // --- Speech Recognition Logic ---
 function initSpeechRecognition() {
@@ -1522,6 +1622,7 @@ function attachEventListeners() {
     // Game Screen Buttons
     shuffleButton.addEventListener('click', handleShuffleLetters);
     hintButton.addEventListener('click', handleHint);
+    revealLetterButton.addEventListener('click', handleRevealLetter);
     micButton.addEventListener('click', handleMicButtonClick); 
     gameBackButton.addEventListener('click', showRoadmapScreen);
     gameSettingsButton.addEventListener('click', openSettingsModal);

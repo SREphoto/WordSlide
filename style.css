@@ -52,6 +52,8 @@
     --world-crystal-glow: #d0b6f0;
     --world-cosmic-bg: #2c3e50; 
     --world-cosmic-glow: #5dade2; 
+    --world-aqueous-bg: #45b3e0;
+    --world-aqueous-glow: #88d4f5;
     --world-generated-bg: #76d7c4; 
     --world-generated-glow: #45c4a8;
 
@@ -789,6 +791,7 @@ html, body {
 #world-timber { background-image: url('https://images.unsplash.com/photo-1440492328544-7abfc5395c84?auto=format&fit=crop&w=600&q=60'); background-color: var(--world-timber-bg); }
 #world-valley { background-image: url('https://images.unsplash.com/photo-1521650629425-990ce535277c?auto=format&fit=crop&w=600&q=60'); background-color: var(--world-crystal-bg); } /* Corrected selector for Hidden Valley */
 #world-cosmic { background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=60'); background-color: var(--world-cosmic-bg); }
+#world-aqueous { background-image: url('https://images.unsplash.com/photo-1494208027412-9e210a5f3d83?auto=format&fit=crop&w=600&q=60'); background-color: var(--world-aqueous-bg); }
 
 
 /* Responsive adjustments */

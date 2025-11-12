@@ -127,6 +127,17 @@ let gameRoadmap: WorldDefinition[] = [
             { id: "cs-2", worldId: "cosmic", levelInWorld: 2, displayName: "Level 2", letters: ['P', 'L', 'A', 'N'], targetWords: ["PLAN", "LAP", "PAN", "NAP"], unlocked: false, completed: false },
             { id: "cs-3", worldId: "cosmic", levelInWorld: 3, displayName: "Level 3", letters: ['S', 'P', 'A', 'C', 'E'], targetWords: ["SPACE", "CAPE", "PACE", "ACES", "APE"], unlocked: false, completed: false },
         ]
+    },
+    {
+        id: "aqueous", name: "AQUEOUS ADVENTURES", themeColorVar: "--world-aqueous-bg", isGenerated: false, levels: [
+            { id: "aq-1", worldId: "aqueous", levelInWorld: 1, displayName: "Level 1", letters: ['P', 'O', 'D'], targetWords: ["POD", "DOP"], unlocked: false, completed: false },
+            { id: "aq-2", worldId: "aqueous", levelInWorld: 2, displayName: "Level 2", letters: ['W', 'E', 'T'], targetWords: ["WET", "TEW"], unlocked: false, completed: false },
+            { id: "aq-3", worldId: "aqueous", levelInWorld: 3, displayName: "Level 3", letters: ['W', 'A', 'V', 'E'], targetWords: ["WAVE", "AVE"], unlocked: false, completed: false },
+            { id: "aq-4", worldId: "aqueous", levelInWorld: 4, displayName: "Level 4", letters: ['F', 'I', 'S', 'H'], targetWords: ["FISH", "HIS"], unlocked: false, completed: false },
+            { id: "aq-5", worldId: "aqueous", levelInWorld: 5, displayName: "Level 5", letters: ['O', 'C', 'E', 'A', 'N'], targetWords: ["OCEAN", "CANOE", "CONE", "ONCE", "ACE"], unlocked: false, completed: false },
+            { id: "aq-6", worldId: "aqueous", levelInWorld: 6, displayName: "Level 6", letters: ['C', 'O', 'R', 'A', 'L'], targetWords: ["CORAL", "CAROL", "ORCA", "ORAL", "CAR"], unlocked: false, completed: false },
+            { id: "aq-7", worldId: "aqueous", levelInWorld: 7, displayName: "Level 7", letters: ['M', 'A', 'R', 'I', 'N', 'E'], targetWords: ["MARINE", "REMAIN", "AMINE", "MEAN", "RAIN"], unlocked: false, completed: false },
+        ]
     }
 ];
 
@@ -1087,6 +1098,17 @@ function getInitialDefaultRoadmap(): WorldDefinition[] {
                 { id: "cs-1", worldId: "cosmic", levelInWorld: 1, displayName: "Level 1", letters: ['B', 'A', 'T'], targetWords: ["BAT", "TAB", "AT"], unlocked: false, completed: false },
                 { id: "cs-2", worldId: "cosmic", levelInWorld: 2, displayName: "Level 2", letters: ['P', 'L', 'A', 'N'], targetWords: ["PLAN", "LAP", "PAN", "NAP"], unlocked: false, completed: false },
                 { id: "cs-3", worldId: "cosmic", levelInWorld: 3, displayName: "Level 3", letters: ['S', 'P', 'A', 'C', 'E'], targetWords: ["SPACE", "CAPE", "PACE", "ACES", "APE"], unlocked: false, completed: false },
+            ]
+        },
+        {
+            id: "aqueous", name: "AQUEOUS ADVENTURES", themeColorVar: "--world-aqueous-bg", isGenerated: false, levels: [
+                { id: "aq-1", worldId: "aqueous", levelInWorld: 1, displayName: "Level 1", letters: ['P', 'O', 'D'], targetWords: ["POD", "DOP"], unlocked: false, completed: false },
+                { id: "aq-2", worldId: "aqueous", levelInWorld: 2, displayName: "Level 2", letters: ['W', 'E', 'T'], targetWords: ["WET", "TEW"], unlocked: false, completed: false },
+                { id: "aq-3", worldId: "aqueous", levelInWorld: 3, displayName: "Level 3", letters: ['W', 'A', 'V', 'E'], targetWords: ["WAVE", "AVE"], unlocked: false, completed: false },
+                { id: "aq-4", worldId: "aqueous", levelInWorld: 4, displayName: "Level 4", letters: ['F', 'I', 'S', 'H'], targetWords: ["FISH", "HIS"], unlocked: false, completed: false },
+                { id: "aq-5", worldId: "aqueous", levelInWorld: 5, displayName: "Level 5", letters: ['O', 'C', 'E', 'A', 'N'], targetWords: ["OCEAN", "CANOE", "CONE", "ONCE", "ACE"], unlocked: false, completed: false },
+                { id: "aq-6", worldId: "aqueous", levelInWorld: 6, displayName: "Level 6", letters: ['C', 'O', 'R', 'A', 'L'], targetWords: ["CORAL", "CAROL", "ORCA", "ORAL", "CAR"], unlocked: false, completed: false },
+                { id: "aq-7", worldId: "aqueous", levelInWorld: 7, displayName: "Level 7", letters: ['M', 'A', 'R', 'I', 'N', 'E'], targetWords: ["MARINE", "REMAIN", "AMINE", "MEAN", "RAIN"], unlocked: false, completed: false },
             ]
         }
     ];

@@ -62,6 +62,12 @@
             --world-crystal-glow: #d0b6f0;
             --world-cosmic-bg: #2c3e50; /* Dark Slate Blue for Cosmic */
             --world-cosmic-glow: #5dade2; /* Lighter vibrant blue for Cosmic glow */
+            --world-aqueous-bg: #45b3e0;
+            --world-aqueous-glow: #88d4f5;
+            --world-galactic-bg: #4a4e69;
+            --world-galactic-glow: #9a8c98;
+            --world-culinary-bg: #f5b7b1;
+            --world-culinary-glow: #f1948a;
             --world-generated-bg: #76d7c4; 
             --world-generated-glow: #45c4a8;
 
@@ -942,7 +948,9 @@
         #world-timber { background-image: url('https://images.unsplash.com/photo-1440492328544-7abfc5395c84?auto=format&fit=crop&w=600&q=60'); background-color: var(--world-timber-bg); }
         #world-valley { background-image: url('https://images.unsplash.com/photo-1521650629425-990ce535277c?auto=format&fit=crop&w=600&q=60'); background-color: var(--world-crystal-bg); }
         #world-cosmic { background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=60'); background-color: var(--world-cosmic-bg); }
-
+        #world-aqueous { background-image: url('https://images.unsplash.com/photo-1494208027412-9e210a5f3d83?auto=format&fit=crop&w=600&q=60'); background-color: var(--world-aqueous-bg); }
+        #world-galactic { background-image: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?auto=format&fit=crop&w=600&q=60'); background-color: var(--world-galactic-bg); }
+        #world-culinary { background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=60'); background-color: var(--world-culinary-bg); }
 
         /* Shop Modal Styles */
         #shop-tabs {
@@ -1323,6 +1331,7 @@
             <div id="letter-interaction-area">
                 <button id="shuffle-button" class="control-button" aria-label="Shuffle letters">
                     <span class="material-symbols-outlined">shuffle</span>
+                    <span id="shuffle-cost" class="hint-cost-badge">10</span>
                 </button>
                 <button id="mic-button" class="control-button" aria-label="Use microphone to say word">
                     <span class="material-symbols-outlined">mic</span>

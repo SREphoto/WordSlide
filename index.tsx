@@ -1,5 +1,5 @@
 
-import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
+// import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { SoundManager } from "./SoundManager";
 import { DictionaryManager } from "./DictionaryManager";
 
@@ -164,9 +164,7 @@ let gameSettings: GameSettings = {
 const soundManager = new SoundManager();
 const dictionaryManager = new DictionaryManager();
 
-// Gemini API
-let genAI: GoogleGenAI | null = null;
-const GEMINI_MODEL_TEXT = 'gemini-2.5-flash-preview-04-17';
+// Gemini API Removed
 const DEFAULT_GENERATED_WORLD_THEME_VAR = "--world-generated-bg";
 
 // --- DOM Elements ---
@@ -183,12 +181,7 @@ const roadmapBonusBadge = document.getElementById('roadmap-bonus-badge')!;
 const roadmapCoinsValue = document.getElementById('roadmap-coins-value')! as HTMLSpanElement;
 const roadmapShopButton = document.getElementById('roadmap-shop-button')!;
 
-// World Generation UI
-const worldThemeInput = document.getElementById('world-theme-input') as HTMLInputElement;
-const numLevelsInput = document.getElementById('num-levels-input') as HTMLInputElement;
-const generateWorldButton = document.getElementById('generate-world-button') as HTMLButtonElement;
-const generationLoadingIndicator = document.getElementById('generation-loading-indicator')!;
-const generationStatusMessage = document.getElementById('generation-status-message')!;
+// World Generation UI Removed
 
 // Game UI
 const gameBackButton = document.getElementById('game-back-button')!;
@@ -1098,76 +1091,163 @@ function saveProgress() {
     localStorage.setItem('wordFinderDeluxeProgress', JSON.stringify(progress));
 }
 
+
 function getInitialDefaultRoadmap(): WorldDefinition[] {
     const initialRoadmap: WorldDefinition[] = [
         {
-            id: "tutorial", name: "WELCOME TUTOR", themeColorVar: "--world-tutorial-bg", isGenerated: false, levels: [
-                { id: "tut-1", worldId: "tutorial", levelInWorld: 1, displayName: "Level 1", letters: ['C', 'A', 'T'], targetWords: ["CAT", "ACT"], unlocked: true, completed: false },
-                { id: "tut-2", worldId: "tutorial", levelInWorld: 2, displayName: "Level 2", letters: ['D', 'O', 'G'], targetWords: ["DOG", "GOD"], unlocked: false, completed: false },
-                { id: "tut-3", worldId: "tutorial", levelInWorld: 3, displayName: "Level 3", letters: ['P', 'L', 'A', 'Y'], targetWords: ["PLAY", "PAY", "LAP"], unlocked: false, completed: false },
+            id: "tutorial", name: "TUTORIAL", themeColorVar: "--world-tutorial-bg", isGenerated: false, levels: [
+                { id: "tut-1", worldId: "tutorial", levelInWorld: 1, displayName: "Basics", letters: ['C', 'A', 'T'], targetWords: ["CAT", "ACT"], unlocked: true, completed: false },
+                { id: "tut-2", worldId: "tutorial", levelInWorld: 2, displayName: "Warm Up", letters: ['D', 'O', 'G'], targetWords: ["DOG", "GOD"], unlocked: false, completed: false },
+                { id: "tut-3", worldId: "tutorial", levelInWorld: 3, displayName: "Challenge", letters: ['P', 'L', 'A', 'Y'], targetWords: ["PLAY", "PAY", "LAP"], unlocked: false, completed: false },
             ]
         },
         {
-            id: "outback", name: "OUTBACK", themeColorVar: "--world-outback-bg", isGenerated: false, levels: [
-                { id: "ob-1", worldId: "outback", levelInWorld: 1, displayName: "Level 1", letters: ['S', 'U', 'N'], targetWords: ["SUN"], unlocked: false, completed: false },
-                { id: "ob-2", worldId: "outback", levelInWorld: 2, displayName: "Level 2", letters: ['P', 'E', 'T', 'N'], targetWords: ["PET", "PEN", "TEN", "NET"], unlocked: false, completed: false },
-                { id: "ob-3", worldId: "outback", levelInWorld: 3, displayName: "Level 3", letters: ['L', 'A', 'K', 'E'], targetWords: ["LAKE", "ALE"], unlocked: false, completed: false },
-                { id: "ob-4", worldId: "outback", levelInWorld: 4, displayName: "Level 4", letters: ['R', 'O', 'A', 'D'], targetWords: ["ROAD", "ROD", "RAD"], unlocked: false, completed: false },
-                { id: "ob-5", worldId: "outback", levelInWorld: 5, displayName: "Level 5", letters: ['B', 'E', 'A', 'R'], targetWords: ["BEAR", "ARE", "BAR", "EAR", "ERA"], unlocked: false, completed: false },
-                { id: "ob-6", worldId: "outback", levelInWorld: 6, displayName: "Level 6", letters: ['S', 'T', 'O', 'N', 'E'], targetWords: ["STONE", "TONES", "NOTES", "NETS", "SENT", "NEST", "ONE", "TEN"], unlocked: false, completed: false },
-                { id: "ob-7", worldId: "outback", levelInWorld: 7, displayName: "Level 7", letters: ['C', 'A', 'M', 'P', 'E', 'R'], targetWords: ["CAMPER", "REAM", "RAMP", "CAMP", "CAPE", "MARE", "EARP"], unlocked: false, completed: false },
+            id: "kitchen", name: "CULINARY CHAOS", themeColorVar: "--world-culinary-bg", isGenerated: false, levels: [
+                { id: "kit-1", worldId: "kitchen", levelInWorld: 1, displayName: "Level 1", letters: ['E', 'G', 'G'], targetWords: ["EGG"], unlocked: false, completed: false },
+                { id: "kit-2", worldId: "kitchen", levelInWorld: 2, displayName: "Level 2", letters: ['P', 'O', 'T', 'S'], targetWords: ["POTS", "POT", "TOP", "STOP"], unlocked: false, completed: false },
+                { id: "kit-3", worldId: "kitchen", levelInWorld: 3, displayName: "Level 3", letters: ['P', 'I', 'E', 'S'], targetWords: ["PIES", "PIE", "SIP"], unlocked: false, completed: false },
+                { id: "kit-4", worldId: "kitchen", levelInWorld: 4, displayName: "Level 4", letters: ['T', 'E', 'A', 'S'], targetWords: ["TEAS", "TEA", "SEA", "EAT"], unlocked: false, completed: false },
+                { id: "kit-5", worldId: "kitchen", levelInWorld: 5, displayName: "Level 5", letters: ['P', 'E', 'A', 'R'], targetWords: ["PEAR", "PEA", "EAR", "APE"], unlocked: false, completed: false },
+                { id: "kit-6", worldId: "kitchen", levelInWorld: 6, displayName: "Level 6", letters: ['M', 'E', 'A', 'T', 'S'], targetWords: ["MEATS", "MEAT", "TEAM", "SEAT"], unlocked: false, completed: false },
+                { id: "kit-7", worldId: "kitchen", levelInWorld: 7, displayName: "Level 7", letters: ['B', 'R', 'E', 'A', 'D'], targetWords: ["BREAD", "READ", "BEAR", "DARE"], unlocked: false, completed: false },
             ]
         },
         {
-            id: "timber", name: "TIMBER", themeColorVar: "--world-timber-bg", isGenerated: false, levels: [
-                { id: "tm-1", worldId: "timber", levelInWorld: 1, displayName: "Level 1", letters: ['L', 'O', 'G'], targetWords: ["LOG", "GO"], unlocked: false, completed: false },
-                { id: "tm-2", worldId: "timber", levelInWorld: 2, displayName: "Level 2", letters: ['A', 'X', 'E'], targetWords: ["AXE", "AX"], unlocked: false, completed: false },
-                { id: "tm-3", worldId: "timber", levelInWorld: 3, displayName: "Level 3", letters: ['T', 'R', 'E', 'E'], targetWords: ["TREE", "TEE", "ERE"], unlocked: false, completed: false },
-                { id: "tm-4", worldId: "timber", levelInWorld: 4, displayName: "Level 4", letters: ['W', 'O', 'O', 'D'], targetWords: ["WOOD", "WOO", "DO"], unlocked: false, completed: false },
-                { id: "tm-5", worldId: "timber", levelInWorld: 5, displayName: "Level 5", letters: ['L', 'E', 'A', 'F'], targetWords: ["LEAF", "ALE", "ELF"], unlocked: false, completed: false },
-                { id: "tm-6", worldId: "timber", levelInWorld: 6, displayName: "Level 6", letters: ['B', 'R', 'A', 'N', 'C', 'H'], targetWords: ["BRANCH", "BARN", "ARCH", "CARB", "RAN", "CAN"], unlocked: false, completed: false },
-                { id: "tm-7", worldId: "timber", levelInWorld: 7, displayName: "Level 7", letters: ['F', 'O', 'R', 'E', 'S', 'T'], targetWords: ["FOREST", "FORTE", "REST", "STORE", "FORTS", "SOFT", "SET"], unlocked: false, completed: false },
+            id: "forest", name: "WHISPERING WOODS", themeColorVar: "--world-timber-bg", isGenerated: false, levels: [
+                { id: "for-1", worldId: "forest", levelInWorld: 1, displayName: "Level 1", letters: ['E', 'L', 'M'], targetWords: ["ELM"], unlocked: false, completed: false },
+                { id: "for-2", worldId: "forest", levelInWorld: 2, displayName: "Level 2", letters: ['O', 'W', 'L', 'S'], targetWords: ["OWLS", "OWL", "LOW", "SLOW"], unlocked: false, completed: false },
+                { id: "for-3", worldId: "forest", levelInWorld: 3, displayName: "Level 3", letters: ['T', 'E', 'N', 'T'], targetWords: ["TENT", "NET", "TEN"], unlocked: false, completed: false },
+                { id: "for-4", worldId: "forest", levelInWorld: 4, displayName: "Level 4", letters: ['P', 'A', 'T', 'H'], targetWords: ["PATH", "HAT", "PAT", "TAP"], unlocked: false, completed: false },
+                { id: "for-5", worldId: "forest", levelInWorld: 5, displayName: "Level 5", letters: ['L', 'E', 'A', 'F'], targetWords: ["LEAF", "ALE", "ELF"], unlocked: false, completed: false },
+                { id: "for-6", worldId: "forest", levelInWorld: 6, displayName: "Level 6", letters: ['D', 'E', 'E', 'R', 'S'], targetWords: ["DEERS", "DEER", "REDS", "SEED"], unlocked: false, completed: false },
+                { id: "for-7", worldId: "forest", levelInWorld: 7, displayName: "Level 7", letters: ['F', 'O', 'R', 'E', 'S', 'T'], targetWords: ["FOREST", "REST", "SOFT", "ROSE"], unlocked: false, completed: false },
             ]
         },
         {
-            id: "valley", name: "HIDDEN VALLEY", themeColorVar: "--world-crystal-bg", isGenerated: false, levels: [
-                { id: "hv-1", worldId: "valley", levelInWorld: 1, displayName: "Level 1", letters: ['C', 'U', 'P'], targetWords: ["CUP", "UP"], unlocked: false, completed: false },
-                { id: "hv-2", worldId: "valley", levelInWorld: 2, displayName: "Level 2", letters: ['H', 'A', 'T'], targetWords: ["HAT", "AT", "AH"], unlocked: false, completed: false },
-                { id: "hv-3", worldId: "valley", levelInWorld: 3, displayName: "Level 3", letters: ['P', 'A', 'T', 'H'], targetWords: ["PATH", "APT", "HAT", "PAT", "TAP"], unlocked: false, completed: false },
-                { id: "hv-4", worldId: "valley", levelInWorld: 4, displayName: "Level 4", letters: ['R', 'O', 'C', 'K'], targetWords: ["ROCK", "CORK", "ORC"], unlocked: false, completed: false },
-                { id: "hv-5", worldId: "valley", levelInWorld: 5, displayName: "Level 5", letters: ['C', 'A', 'V', 'E'], targetWords: ["CAVE", "ACE", "AVE"], unlocked: false, completed: false },
-                { id: "hv-6", worldId: "valley", levelInWorld: 6, displayName: "Level 6", letters: ['S', 'T', 'R', 'E', 'A', 'M'], targetWords: ["STREAM", "STEAM", "MARE", "RATE", "STAR", "TEAM", "RAM"], unlocked: false, completed: false },
-                { id: "hv-7", worldId: "valley", levelInWorld: 7, displayName: "Level 7", letters: ['P', 'L', 'A', 'T', 'E', 'U'], targetWords: ["PLEAT", "PLATE", "LATE", "TALE", "PEAT", "TAP"], unlocked: false, completed: false },
+            id: "ocean", name: "DEEP BLUE", themeColorVar: "--world-aqueous-bg", isGenerated: false, levels: [
+                { id: "oc-1", worldId: "ocean", levelInWorld: 1, displayName: "Level 1", letters: ['S', 'E', 'A'], targetWords: ["SEA"], unlocked: false, completed: false },
+                { id: "oc-2", worldId: "ocean", levelInWorld: 2, displayName: "Level 2", letters: ['C', 'O', 'D'], targetWords: ["COD", "DOC"], unlocked: false, completed: false },
+                { id: "oc-3", worldId: "ocean", levelInWorld: 3, displayName: "Level 3", letters: ['S', 'A', 'N', 'D'], targetWords: ["SAND", "SAD", "AND"], unlocked: false, completed: false },
+                { id: "oc-4", worldId: "ocean", levelInWorld: 4, displayName: "Level 4", letters: ['W', 'A', 'V', 'E'], targetWords: ["WAVE", "AVE"], unlocked: false, completed: false },
+                { id: "oc-5", worldId: "ocean", levelInWorld: 5, displayName: "Level 5", letters: ['S', 'H', 'I', 'P'], targetWords: ["SHIP", "HIP", "SIP", "HIS"], unlocked: false, completed: false },
+                { id: "oc-6", worldId: "ocean", levelInWorld: 6, displayName: "Level 6", letters: ['W', 'H', 'A', 'L', 'E'], targetWords: ["WHALE", "HEAL", "ALE"], unlocked: false, completed: false },
+                { id: "oc-7", worldId: "ocean", levelInWorld: 7, displayName: "Level 7", letters: ['S', 'H', 'A', 'R', 'K'], targetWords: ["SHARK", "RASH", "ARK", "HAS"], unlocked: false, completed: false },
             ]
         },
         {
-            id: "cosmic", name: "COSMIC CLUSTERS", themeColorVar: "--world-cosmic-bg", isGenerated: false, levels: [
-                { id: "cs-1", worldId: "cosmic", levelInWorld: 1, displayName: "Level 1", letters: ['B', 'A', 'T'], targetWords: ["BAT", "TAB", "AT"], unlocked: false, completed: false },
-                { id: "cs-2", worldId: "cosmic", levelInWorld: 2, displayName: "Level 2", letters: ['P', 'L', 'A', 'N'], targetWords: ["PLAN", "LAP", "PAN", "NAP"], unlocked: false, completed: false },
-                { id: "cs-3", worldId: "cosmic", levelInWorld: 3, displayName: "Level 3", letters: ['S', 'P', 'A', 'C', 'E'], targetWords: ["SPACE", "CAPE", "PACE", "ACES", "APE"], unlocked: false, completed: false },
+            id: "space", name: "COSMIC VOYAGE", themeColorVar: "--world-cosmic-bg", isGenerated: false, levels: [
+                { id: "sp-1", worldId: "space", levelInWorld: 1, displayName: "Level 1", letters: ['S', 'U', 'N'], targetWords: ["SUN"], unlocked: false, completed: false },
+                { id: "sp-2", worldId: "space", levelInWorld: 2, displayName: "Level 2", letters: ['S', 'T', 'A', 'R'], targetWords: ["STAR", "RAT", "TAR", "ART"], unlocked: false, completed: false },
+                { id: "sp-3", worldId: "space", levelInWorld: 3, displayName: "Level 3", letters: ['M', 'O', 'O', 'N'], targetWords: ["MOON", "MOO"], unlocked: false, completed: false },
+                { id: "sp-4", worldId: "space", levelInWorld: 4, displayName: "Level 4", letters: ['M', 'A', 'R', 'S'], targetWords: ["MARS", "ARM", "RAM"], unlocked: false, completed: false },
+                { id: "sp-5", worldId: "space", levelInWorld: 5, displayName: "Level 5", letters: ['V', 'O', 'I', 'D'], targetWords: ["VOID", "DO"], unlocked: false, completed: false },
+                { id: "sp-6", worldId: "space", levelInWorld: 6, displayName: "Level 6", letters: ['E', 'A', 'R', 'T', 'H'], targetWords: ["EARTH", "HEAR", "HEAT", "HAT", "ART"], unlocked: false, completed: false },
+                { id: "sp-7", worldId: "space", levelInWorld: 7, displayName: "Level 7", letters: ['P', 'L', 'A', 'N', 'E', 'T'], targetWords: ["PLANET", "PLANE", "PLANT", "PLATE", "LATE", "PANT"], unlocked: false, completed: false },
             ]
         },
         {
-            id: "aqueous", name: "AQUEOUS ADVENTURES", themeColorVar: "--world-aqueous-bg", isGenerated: false, levels: [
-                { id: "aq-1", worldId: "aqueous", levelInWorld: 1, displayName: "Level 1", letters: ['P', 'O', 'D'], targetWords: ["POD", "DOP"], unlocked: false, completed: false },
-                { id: "aq-2", worldId: "aqueous", levelInWorld: 2, displayName: "Level 2", letters: ['W', 'E', 'T'], targetWords: ["WET", "TEW"], unlocked: false, completed: false },
-                { id: "aq-3", worldId: "aqueous", levelInWorld: 3, displayName: "Level 3", letters: ['W', 'A', 'V', 'E'], targetWords: ["WAVE", "AVE"], unlocked: false, completed: false },
-                { id: "aq-4", worldId: "aqueous", levelInWorld: 4, displayName: "Level 4", letters: ['F', 'I', 'S', 'H'], targetWords: ["FISH", "HIS"], unlocked: false, completed: false },
-                { id: "aq-5", worldId: "aqueous", levelInWorld: 5, displayName: "Level 5", letters: ['O', 'C', 'E', 'A', 'N'], targetWords: ["OCEAN", "CANOE", "CONE", "ONCE", "ACE"], unlocked: false, completed: false },
-                { id: "aq-6", worldId: "aqueous", levelInWorld: 6, displayName: "Level 6", letters: ['C', 'O', 'R', 'A', 'L'], targetWords: ["CORAL", "CAROL", "ORCA", "ORAL", "CAR"], unlocked: false, completed: false },
-                { id: "aq-7", worldId: "aqueous", levelInWorld: 7, displayName: "Level 7", letters: ['M', 'A', 'R', 'I', 'N', 'E'], targetWords: ["MARINE", "REMAIN", "AMINE", "MEAN", "RAIN"], unlocked: false, completed: false },
+            id: "desert", name: "DESERT HEAT", themeColorVar: "--world-outback-bg", isGenerated: false, levels: [
+                { id: "des-1", worldId: "desert", levelInWorld: 1, displayName: "Level 1", letters: ['S', 'A', 'N', 'D'], targetWords: ["SAND", "SAD", "AND"], unlocked: false, completed: false },
+                { id: "des-2", worldId: "desert", levelInWorld: 2, displayName: "Level 2", letters: ['D', 'U', 'N', 'E'], targetWords: ["DUNE", "DUE"], unlocked: false, completed: false },
+                { id: "des-3", worldId: "desert", levelInWorld: 3, displayName: "Level 3", letters: ['H', 'E', 'A', 'T'], targetWords: ["HEAT", "HAT", "EAT"], unlocked: false, completed: false },
+                { id: "des-4", worldId: "desert", levelInWorld: 4, displayName: "Level 4", letters: ['C', 'A', 'C', 'T', 'U', 'S'], targetWords: ["CACTUS", "CATS", "CUTS"], unlocked: false, completed: false },
+                { id: "des-5", worldId: "desert", levelInWorld: 5, displayName: "Level 5", letters: ['C', 'A', 'M', 'E', 'L'], targetWords: ["CAMEL", "MEAL", "MALE", "LACE"], unlocked: false, completed: false },
+                { id: "des-6", worldId: "desert", levelInWorld: 6, displayName: "Level 6", letters: ['S', 'C', 'O', 'R', 'P'], targetWords: ["SCORP", "CROP", "PROS"], unlocked: false, completed: false },
+                { id: "des-7", worldId: "desert", levelInWorld: 7, displayName: "Level 7", letters: ['P', 'Y', 'R', 'A', 'M', 'I', 'D'], targetWords: ["PYRAMID", "DRAM", "DRIP", "PAID"], unlocked: false, completed: false },
+            ]
+        },
+        {
+            id: "arctic", name: "FROZEN TUNDRA", themeColorVar: "--world-crystal-bg", isGenerated: false, levels: [
+                { id: "arc-1", worldId: "arctic", levelInWorld: 1, displayName: "Level 1", letters: ['I', 'C', 'E'], targetWords: ["ICE"], unlocked: false, completed: false },
+                { id: "arc-2", worldId: "arctic", levelInWorld: 2, displayName: "Level 2", letters: ['C', 'O', 'L', 'D'], targetWords: ["COLD", "OLD", "COD"], unlocked: false, completed: false },
+                { id: "arc-3", worldId: "arctic", levelInWorld: 3, displayName: "Level 3", letters: ['S', 'N', 'O', 'W'], targetWords: ["SNOW", "NOW", "OWN", "WON"], unlocked: false, completed: false },
+                { id: "arc-4", worldId: "arctic", levelInWorld: 4, displayName: "Level 4", letters: ['B', 'E', 'A', 'R'], targetWords: ["BEAR", "ARE", "BAR", "EAR"], unlocked: false, completed: false },
+                { id: "arc-5", worldId: "arctic", levelInWorld: 5, displayName: "Level 5", letters: ['S', 'E', 'A', 'L'], targetWords: ["SEAL", "SALE", "SEA", "ALE"], unlocked: false, completed: false },
+                { id: "arc-6", worldId: "arctic", levelInWorld: 6, displayName: "Level 6", letters: ['W', 'H', 'A', 'L', 'E'], targetWords: ["WHALE", "HEAL", "HALE", "LAW"], unlocked: false, completed: false },
+                { id: "arc-7", worldId: "arctic", levelInWorld: 7, displayName: "Level 7", letters: ['G', 'L', 'A', 'C', 'I', 'E', 'R'], targetWords: ["GLACIER", "GRACE", "CARE", "RACE", "AGE", "ICE"], unlocked: false, completed: false },
+            ]
+        },
+        {
+            id: "mountain", name: "MYSTIC PEAKS", themeColorVar: "--world-timber-glow", isGenerated: false, levels: [
+                { id: "mnt-1", worldId: "mountain", levelInWorld: 1, displayName: "Level 1", letters: ['P', 'E', 'A', 'K'], targetWords: ["PEAK", "APE", "KEA"], unlocked: false, completed: false },
+                { id: "mnt-2", worldId: "mountain", levelInWorld: 2, displayName: "Level 2", letters: ['S', 'N', 'O', 'W'], targetWords: ["SNOW", "SOW", "WON"], unlocked: false, completed: false },
+                { id: "mnt-3", worldId: "mountain", levelInWorld: 3, displayName: "Level 3", letters: ['H', 'I', 'K', 'E'], targetWords: ["HIKE"], unlocked: false, completed: false },
+                { id: "mnt-4", worldId: "mountain", levelInWorld: 4, displayName: "Level 4", letters: ['C', 'L', 'I', 'M', 'B'], targetWords: ["CLIMB", "MILB", "LIMB"], unlocked: false, completed: false },
+                { id: "mnt-5", worldId: "mountain", levelInWorld: 5, displayName: "Level 5", letters: ['S', 'L', 'O', 'P', 'E'], targetWords: ["SLOPE", "POLE", "POSE", "LOSE"], unlocked: false, completed: false },
+                { id: "mnt-6", worldId: "mountain", levelInWorld: 6, displayName: "Level 6", letters: ['V', 'A', 'L', 'L', 'E', 'Y'], targetWords: ["VALLEY", "VEAL", "YELL", "VALE"], unlocked: false, completed: false },
+                { id: "mnt-7", worldId: "mountain", levelInWorld: 7, displayName: "Level 7", letters: ['S', 'U', 'M', 'M', 'I', 'T'], targetWords: ["SUMMIT", "MUST", "MIST", "SUIT"], unlocked: false, completed: false },
+            ]
+        },
+        {
+            id: "jungle", name: "RAINFOREST RYHTHM", themeColorVar: "--world-culinary-glow", isGenerated: false, levels: [
+                { id: "jun-1", worldId: "jungle", levelInWorld: 1, displayName: "Level 1", letters: ['A', 'P', 'E'], targetWords: ["APE"], unlocked: false, completed: false },
+                { id: "jun-2", worldId: "jungle", levelInWorld: 2, displayName: "Level 2", letters: ['V', 'I', 'N', 'E'], targetWords: ["VINE", "VIE"], unlocked: false, completed: false },
+                { id: "jun-3", worldId: "jungle", levelInWorld: 3, displayName: "Level 3", letters: ['R', 'A', 'I', 'N'], targetWords: ["RAIN", "RAN", "AIR"], unlocked: false, completed: false },
+                { id: "jun-4", worldId: "jungle", levelInWorld: 4, displayName: "Level 4", letters: ['T', 'R', 'E', 'E'], targetWords: ["TREE", "TEE"], unlocked: false, completed: false },
+                { id: "jun-5", worldId: "jungle", levelInWorld: 5, displayName: "Level 5", letters: ['T', 'I', 'G', 'E', 'R'], targetWords: ["TIGER", "TIER", "GRIT"], unlocked: false, completed: false },
+                { id: "jun-6", worldId: "jungle", levelInWorld: 6, displayName: "Level 6", letters: ['O', 'R', 'C', 'H', 'I', 'D'], targetWords: ["ORCHID", "RICH", "CHORD", "ROD"], unlocked: false, completed: false },
+                { id: "jun-7", worldId: "jungle", levelInWorld: 7, displayName: "Level 7", letters: ['P', 'A', 'N', 'T', 'H', 'E', 'R'], targetWords: ["PANTHER", "PARE", "NEAR", "PANT", "THEN"], unlocked: false, completed: false },
+            ]
+        },
+        {
+            id: "city", name: "NEON CITY", themeColorVar: "--world-cosmic-glow", isGenerated: false, levels: [
+                { id: "ct-1", worldId: "city", levelInWorld: 1, displayName: "Level 1", letters: ['C', 'A', 'R'], targetWords: ["CAR"], unlocked: false, completed: false },
+                { id: "ct-2", worldId: "city", levelInWorld: 2, displayName: "Level 2", letters: ['B', 'U', 'S'], targetWords: ["BUS"], unlocked: false, completed: false },
+                { id: "ct-3", worldId: "city", levelInWorld: 3, displayName: "Level 3", letters: ['T', 'A', 'X', 'I'], targetWords: ["TAXI"], unlocked: false, completed: false },
+                { id: "ct-4", worldId: "city", levelInWorld: 4, displayName: "Level 4", letters: ['P', 'A', 'R', 'K'], targetWords: ["PARK", "RAPA"], unlocked: false, completed: false },
+                { id: "ct-5", worldId: "city", levelInWorld: 5, displayName: "Level 5", letters: ['S', 'T', 'R', 'E', 'E', 'T'], targetWords: ["STREET", "TREES", "STEER", "REST"], unlocked: false, completed: false },
+                { id: "ct-6", worldId: "city", levelInWorld: 6, displayName: "Level 6", letters: ['M', 'E', 'T', 'R', 'O'], targetWords: ["METRO", "MORE", "TERM", "ROME"], unlocked: false, completed: false },
+                { id: "ct-7", worldId: "city", levelInWorld: 7, displayName: "Level 7", letters: ['S', 'K', 'Y', 'L', 'I', 'N', 'E'], targetWords: ["SKYLINE", "LINE", "SKIN", "LINK", "KEYS"], unlocked: false, completed: false },
+            ]
+        },
+        {
+            id: "meadow", name: "BLOSSOM MEADOW", themeColorVar: "--world-generated-glow", isGenerated: false, levels: [
+                { id: "md-1", worldId: "meadow", levelInWorld: 1, displayName: "Level 1", letters: ['B', 'E', 'E'], targetWords: ["BEE"], unlocked: false, completed: false },
+                { id: "md-2", worldId: "meadow", levelInWorld: 2, displayName: "Level 2", letters: ['B', 'U', 'G'], targetWords: ["BUG"], unlocked: false, completed: false },
+                { id: "md-3", worldId: "meadow", levelInWorld: 3, displayName: "Level 3", letters: ['S', 'U', 'N'], targetWords: ["SUN"], unlocked: false, completed: false },
+                { id: "md-4", worldId: "meadow", levelInWorld: 4, displayName: "Level 4", letters: ['F', 'L', 'O', 'W', 'E', 'R'], targetWords: ["FLOWER", "WOLF", "FLOW", "ROLE", "FEW"], unlocked: false, completed: false },
+                { id: "md-5", worldId: "meadow", levelInWorld: 5, displayName: "Level 5", letters: ['G', 'R', 'A', 'S', 'S'], targetWords: ["GRASS", "RAGS", "SAGS"], unlocked: false, completed: false },
+                { id: "md-6", worldId: "meadow", levelInWorld: 6, displayName: "Level 6", letters: ['C', 'L', 'O', 'V', 'E', 'R'], targetWords: ["CLOVER", "LOVE", "OVER", "ROLE", "COVE"], unlocked: false, completed: false },
+                { id: "md-7", worldId: "meadow", levelInWorld: 7, displayName: "Level 7", letters: ['B', 'L', 'O', 'S', 'S', 'O', 'M'], targetWords: ["BLOSSOM", "LOSS", "BOOM", "MOSS", "SOLO"], unlocked: false, completed: false },
+            ]
+        },
+        {
+            id: "volcano", name: "VOLCANIC VENT", themeColorVar: "--world-culinary-bg", isGenerated: false, levels: [
+                { id: "vol-1", worldId: "volcano", levelInWorld: 1, displayName: "Level 1", letters: ['A', 'S', 'H'], targetWords: ["ASH", "HAS"], unlocked: false, completed: false },
+                { id: "vol-2", worldId: "volcano", levelInWorld: 2, displayName: "Level 2", letters: ['L', 'A', 'V', 'A'], targetWords: ["LAVA"], unlocked: false, completed: false },
+                { id: "vol-3", worldId: "volcano", levelInWorld: 3, displayName: "Level 3", letters: ['F', 'I', 'R', 'E'], targetWords: ["FIRE", "IRE", "REF"], unlocked: false, completed: false },
+                { id: "vol-4", worldId: "volcano", levelInWorld: 4, displayName: "Level 4", letters: ['H', 'E', 'A', 'T'], targetWords: ["HEAT", "HAT", "EAT"], unlocked: false, completed: false },
+                { id: "vol-5", worldId: "volcano", levelInWorld: 5, displayName: "Level 5", letters: ['M', 'A', 'G', 'M', 'A'], targetWords: ["MAGMA", "MAMA", "GAMA"], unlocked: false, completed: false },
+                { id: "vol-6", worldId: "volcano", levelInWorld: 6, displayName: "Level 6", letters: ['E', 'R', 'U', 'P', 'T'], targetWords: ["ERUPT", "PURE", "TRUE", "PERT"], unlocked: false, completed: false },
+                { id: "vol-7", worldId: "volcano", levelInWorld: 7, displayName: "Level 7", letters: ['C', 'R', 'A', 'T', 'E', 'R'], targetWords: ["CRATER", "CARE", "REAR", "RACE", "TEAR"], unlocked: false, completed: false },
+            ]
+        },
+        {
+            id: "sky", name: "SKY FORTRESS", themeColorVar: "--world-tutorial-glow", isGenerated: false, levels: [
+                { id: "sky-1", worldId: "sky", levelInWorld: 1, displayName: "Level 1", letters: ['A', 'I', 'R'], targetWords: ["AIR"], unlocked: false, completed: false },
+                { id: "sky-2", worldId: "sky", levelInWorld: 2, displayName: "Level 2", letters: ['B', 'I', 'R', 'D'], targetWords: ["BIRD", "RID"], unlocked: false, completed: false },
+                { id: "sky-3", worldId: "sky", levelInWorld: 3, displayName: "Level 3", letters: ['W', 'I', 'N', 'D'], targetWords: ["WIND", "WIN", "DIN"], unlocked: false, completed: false },
+                { id: "sky-4", worldId: "sky", levelInWorld: 4, displayName: "Level 4", letters: ['C', 'L', 'O', 'U', 'D'], targetWords: ["CLOUD", "LOUD", "COLD", "DUO"], unlocked: false, completed: false },
+                { id: "sky-5", worldId: "sky", levelInWorld: 5, displayName: "Level 5", letters: ['S', 'T', 'O', 'R', 'M'], targetWords: ["STORM", "MOST", "SORT", "ROM"], unlocked: false, completed: false },
+                { id: "sky-6", worldId: "sky", levelInWorld: 6, displayName: "Level 6", letters: ['F', 'L', 'I', 'G', 'H', 'T'], targetWords: ["FLIGHT", "GIFT", "LIFT"], unlocked: false, completed: false },
+                { id: "sky-7", worldId: "sky", levelInWorld: 7, displayName: "Level 7", letters: ['C', 'A', 'S', 'T', 'L', 'E'], targetWords: ["CASTLE", "CASE", "LAST", "SALT", "SALE", "TEAL"], unlocked: false, completed: false },
+            ]
+        },
+        {
+            id: "crystal", name: "CRYSTAL CAVERNS", themeColorVar: "--world-crystal-glow", isGenerated: false, levels: [
+                { id: "cry-1", worldId: "crystal", levelInWorld: 1, displayName: "Level 1", letters: ['G', 'E', 'M'], targetWords: ["GEM"], unlocked: false, completed: false },
+                { id: "cry-2", worldId: "crystal", levelInWorld: 2, displayName: "Level 2", letters: ['O', 'R', 'E'], targetWords: ["ORE", "ROE"], unlocked: false, completed: false },
+                { id: "cry-3", worldId: "crystal", levelInWorld: 3, displayName: "Level 3", letters: ['D', 'I', 'G'], targetWords: ["DIG"], unlocked: false, completed: false },
+                { id: "cry-4", worldId: "crystal", levelInWorld: 4, displayName: "Level 4", letters: ['G', 'L', 'O', 'W'], targetWords: ["GLOW", "LOW", "OWL"], unlocked: false, completed: false },
+                { id: "cry-5", worldId: "crystal", levelInWorld: 5, displayName: "Level 5", letters: ['S', 'H', 'I', 'N', 'E'], targetWords: ["SHINE", "SHIN", "HENS", "SINS"], unlocked: false, completed: false },
+                { id: "cry-6", worldId: "crystal", levelInWorld: 6, displayName: "Level 6", letters: ['Q', 'U', 'A', 'R', 'T', 'Z'], targetWords: ["QUARTZ", "ART"], unlocked: false, completed: false },
+                { id: "cry-7", worldId: "crystal", levelInWorld: 7, displayName: "Level 7", letters: ['D', 'I', 'A', 'M', 'O', 'N', 'D'], targetWords: ["DIAMOND", "AMID", "MIND", "MAIN"], unlocked: false, completed: false },
             ]
         }
     ];
 
     if (initialRoadmap.length > 0 && initialRoadmap[0].levels.length > 0) {
         initialRoadmap[0].levels[0].unlocked = true;
-        for (let i = 1; i < initialRoadmap[0].levels.length; i++) {
-            initialRoadmap[0].levels[i].unlocked = false;
-        }
-        for (let wIdx = 1; wIdx < initialRoadmap.length; wIdx++) {
-            initialRoadmap[wIdx].levels.forEach(l => l.unlocked = false);
-        }
     }
     return JSON.parse(JSON.stringify(initialRoadmap));
 }
@@ -1193,362 +1273,46 @@ function loadProgress() {
             gameSettings = { ...defaultSettings, ...(progress.settings || {}) };
 
             if (progress.gameRoadmap && Array.isArray(progress.gameRoadmap)) {
-                const loadedRoadmap = progress.gameRoadmap as WorldDefinition[];
-                const defaultLevelsMap = new Map<string, LevelDefinition>();
-                initialDefaultRoadmap.filter(w => !w.isGenerated).forEach(world => world.levels.forEach(level => defaultLevelsMap.set(level.id, level)));
+                const savedRoadmap = progress.gameRoadmap as WorldDefinition[];
+                const savedLevelsMap = new Map<string, { unlocked: boolean, completed: boolean }>();
+                savedRoadmap.forEach(w => w.levels.forEach(l => savedLevelsMap.set(l.id, { unlocked: l.unlocked, completed: l.completed })));
 
-                const newRoadmap: WorldDefinition[] = [];
-                loadedRoadmap.forEach(savedWorld => {
-                    const newWorld: WorldDefinition = { ...savedWorld, levels: [] };
-                    const defaultWorldStructure = initialDefaultRoadmap.find(w => w.id === savedWorld.id && !w.isGenerated);
-
-                    if (savedWorld.levels && Array.isArray(savedWorld.levels)) {
-                        savedWorld.levels.forEach(savedLevel => {
-                            const defaultLevelData = defaultLevelsMap.get(savedLevel.id);
-                            if (defaultLevelData && !savedWorld.isGenerated) {
-                                newWorld.levels.push({
-                                    ...defaultLevelData,
-                                    unlocked: savedLevel.unlocked,
-                                    completed: savedLevel.completed,
-                                } as LevelDefinition);
-                            } else if (savedWorld.isGenerated) {
-                                newWorld.levels.push({ ...savedLevel });
-                            }
-                        });
-                    }
-
-                    if (defaultWorldStructure) {
-                        defaultWorldStructure.levels.forEach(defLvl => {
-                            if (!newWorld.levels.find(svLvl => svLvl.id === defLvl.id)) {
-                                const freshDefaultLevel = JSON.parse(JSON.stringify(defLvl));
-                                const isFirstWorldOverall = initialDefaultRoadmap.length > 0 && initialDefaultRoadmap[0].id === freshDefaultLevel.worldId;
-                                freshDefaultLevel.unlocked = isFirstWorldOverall && freshDefaultLevel.levelInWorld === 1 && !newWorld.levels.some(l => l.unlocked);
-                                freshDefaultLevel.completed = false;
-                                newWorld.levels.push(freshDefaultLevel);
-                            }
-                        });
-                        newWorld.levels.sort((a, b) => a.levelInWorld - b.levelInWorld);
-                    }
-
-
-                    if (newWorld.levels.length > 0 || savedWorld.isGenerated) {
-                        newRoadmap.push(newWorld);
-                    }
+                initialDefaultRoadmap.forEach(world => {
+                    world.levels.forEach(level => {
+                        const savedStatus = savedLevelsMap.get(level.id);
+                        if (savedStatus) {
+                            level.unlocked = savedStatus.unlocked;
+                            level.completed = savedStatus.completed;
+                        }
+                    });
                 });
-
-                initialDefaultRoadmap.forEach(defaultWorld => {
-                    if (!newRoadmap.find(w => w.id === defaultWorld.id)) {
-                        const newDefaultWorld = JSON.parse(JSON.stringify(defaultWorld));
-                        newDefaultWorld.levels.forEach((l: LevelDefinition, idx: number) => {
-                            const isFirstWorldOfAll = initialDefaultRoadmap.length > 0 && initialDefaultRoadmap[0].id === newDefaultWorld.id;
-                            l.completed = false;
-                            l.unlocked = isFirstWorldOfAll && idx === 0;
-                        });
-                        newRoadmap.push(newDefaultWorld);
-                    }
-                });
-
-                gameRoadmap = newRoadmap.sort((a, b) => {
-                    const aIndexInitial = initialDefaultRoadmap.findIndex(dw => dw.id === a.id);
-                    const bIndexInitial = initialDefaultRoadmap.findIndex(dw => dw.id === b.id);
-
-                    const aIsDefault = aIndexInitial !== -1;
-                    const bIsDefault = bIndexInitial !== -1;
-
-                    if (aIsDefault && !bIsDefault) return -1;
-                    if (!aIsDefault && bIsDefault) return 1;
-                    if (aIsDefault && bIsDefault) {
-                        return aIndexInitial - bIndexInitial;
-                    }
-                    if (!aIsDefault && !bIsDefault) {
-                        return (a.id < b.id) ? -1 : 1;
-                    }
-                    return 0;
-                });
-
-            } else {
-                gameRoadmap = initialDefaultRoadmap;
             }
-        } catch (e) {
-            console.error("Error loading progress, resetting to default:", e);
-            coins = 100;
-            bonusWordsFound = [];
             gameRoadmap = initialDefaultRoadmap;
-            gameSettings = defaultSettings;
+        } catch (e) {
+            gameRoadmap = initialDefaultRoadmap;
         }
     } else {
         gameRoadmap = initialDefaultRoadmap;
         gameSettings = defaultSettings;
     }
+
+    // Ensure at least the first level is unlocked
     if (gameRoadmap.length > 0 && gameRoadmap[0].levels.length > 0) {
-        const anyUnlocked = gameRoadmap.some(world => world.levels.some(level => level.unlocked));
-        if (!anyUnlocked) {
+        if (!gameRoadmap.some(w => w.levels.some(l => l.unlocked))) {
             gameRoadmap[0].levels[0].unlocked = true;
         }
     }
+
     updateGlobalUIElements();
-    applySettings(); // Apply loaded settings to UI
+    applySettings();
     applyTheme(gameSettings.currentThemeId);
 }
 
-// --- Gemini API World Generation ---
-// ... (handleGenerateWorldClick, validateGeneratedWorld, initGemini remain the same) ...
-function initGemini() {
-    const apiKey = localStorage.getItem('geminiApiKey');
-    if (!apiKey) {
-        console.error("API_KEY is not set for Gemini.");
-        generateWorldButton.disabled = true;
-        worldThemeInput.disabled = true;
-        numLevelsInput.disabled = true;
-        if (generationStatusMessage) generationStatusMessage.textContent = "API Key not set. Please add one in Settings.";
-        if (apiKeyStatus) apiKeyStatus.textContent = "";
-        return;
-    }
-    try {
-        genAI = new GoogleGenAI({ apiKey: apiKey });
-        generateWorldButton.disabled = false;
-        worldThemeInput.disabled = false;
-        numLevelsInput.disabled = false;
-        if (generationStatusMessage) generationStatusMessage.textContent = "";
-        if (apiKeyStatus) apiKeyStatus.textContent = "API Key Loaded.";
-        if (apiKeyStatus) apiKeyStatus.style.color = 'green';
-        setTimeout(() => {
-            if (apiKeyStatus) apiKeyStatus.textContent = "";
-        }, 3000);
-    } catch (e) {
-        console.error("Failed to initialize GoogleGenAI:", e);
-        showFeedback("Failed to initialize World Generation service.", false, false, 3000);
-        generateWorldButton.disabled = true;
-        if (generationStatusMessage) generationStatusMessage.textContent = "Invalid API Key. Please check settings.";
-        if (apiKeyStatus) apiKeyStatus.textContent = "Invalid API Key.";
-        if (apiKeyStatus) apiKeyStatus.style.color = 'red';
-    }
-}
-
-async function handleGenerateWorldClick() {
-    if (!genAI) {
-        showFeedback("World Generation service is not initialized.", false, false, 2000);
-        return;
-    }
-
-    const theme = worldThemeInput.value.trim();
-    const numLevels = parseInt(numLevelsInput.value, 10);
-
-    if (!theme) {
-        showFeedback("Please enter a theme for your world.", false, false, 2000);
-        return;
-    }
-    if (isNaN(numLevels) || numLevels < 1 || numLevels > 7) {
-        showFeedback("Please enter a valid number of levels (1-7).", false, false, 2000);
-        return;
-    }
-
-    generateWorldButton.disabled = true;
-    generationLoadingIndicator.classList.remove('hidden');
-
-    let levelStructurePrompt = "";
-    if (numLevels === 7) {
-        levelStructurePrompt = `
-The world should have a specific structure of 7 levels:
-- Level 1: 3 unique uppercase English letters.
-- Level 2: 3 unique uppercase English letters.
-- Level 3: 4 unique uppercase English letters.
-- Level 4: 4 unique uppercase English letters.
-- Level 5: 4 unique uppercase English letters.
-- Level 6: 5 unique uppercase English letters.
-- Level 7: 6 unique uppercase English letters.
-Ensure the 'letters' array for each level reflects this count accurately.
-`;
-    } else {
-        levelStructurePrompt = `
-The world should have ${numLevels} levels.
-Each level's 'letters' array MUST be an array of 3 to 7 **unique** uppercase English letters.
-`;
-    }
+// Gemini API functions removed
+// Gemini handlers removed
 
 
-    const prompt = `
-You are a creative game designer for a word puzzle game.
-The player wants a new world with the theme: "${theme}".
-${levelStructurePrompt}
-
-Provide the output in a single, valid JSON object format, strictly adhering to this structure:
-{
-  "worldName": "A creative, capitalized name for the world based on the theme (e.g., 'SANDY REALMS', 'FROZEN EXPANSE'). Maximum 20 characters.",
-  "levels": [
-    {
-      "letters": ["L", "E", "T", "R", "S"],
-      "targetWords": ["WORDONE", "WORDTWO"]
-    }
-    // ... more level objects
-  ]
-}
-
-Critical constraints for EACH level object within the 'levels' array:
-1.  'letters':
-    *   Follow the unique letter count as specified by the level structure for ${numLevels} levels. All letters must be uppercase English letters.
-2.  'targetWords':
-    *   MUST be an array of 1 to 5 common English words.
-    *   Each word in 'targetWords' MUST be 2 to 7 letters long (allow 2-letter words for 3-letter puzzles, otherwise prefer 3+ letters).
-    *   Each word in 'targetWords' MUST be composed **only** of letters from its corresponding 'letters' array for that level. All words must be uppercase.
-    *   VERY IMPORTANT: When forming a word, each letter from the 'letters' array can be used **at most once** per word.
-    *   **THEME REQUIREMENT:** The 'targetWords' should try to fit the theme "${theme}" as much as possible, while still being valid common English words formable from the letters. If a thematic word isn't available, use a common word.
-    *   Words should be common and appropriate for a general audience.
-3.  The total number of level objects in the "levels" array MUST exactly match the requested ${numLevels}.
-
-Example of a single valid level object for a 6-letter puzzle (Level 7 of a 7-level world):
-{
-  "letters": ["F", "O", "R", "E", "S", "T"],
-  "targetWords": ["FOREST", "REST", "FOR", "SET", "SORT"]
-}
-
-
-Ensure the entire output is a single, valid JSON object, starting with '{' and ending with '}'. Do not include any explanatory text, markdown, or comments outside the JSON structure itself.
-`;
-
-    try {
-        const response: GenerateContentResponse = await genAI.models.generateContent({
-            model: GEMINI_MODEL_TEXT,
-            contents: prompt,
-            config: { responseMimeType: "application/json" }
-        });
-
-        let jsonStr = response.text.trim();
-        const fenceRegex = /^```(\w*)?\s*\n?(.*?)\n?\s*```$/s;
-        const match = jsonStr.match(fenceRegex);
-        if (match && match[2]) {
-            jsonStr = match[2].trim();
-        }
-
-        const generatedData = JSON.parse(jsonStr) as GeminiWorldResponse;
-
-        if (!validateGeneratedWorld(generatedData, numLevels, numLevels === 7)) {
-            throw new Error("Gemini response validation failed. Please try a different theme or adjust number of levels.");
-        }
-
-        const newWorldId = `gen-world-${Date.now()}`;
-        const newWorld: WorldDefinition = {
-            id: newWorldId,
-            name: generatedData.worldName.toUpperCase().substring(0, 20),
-            themeColorVar: DEFAULT_GENERATED_WORLD_THEME_VAR,
-            isGenerated: true,
-            levels: generatedData.levels.map((levelData, index) => ({
-                id: `${newWorldId}-lvl-${index + 1}`,
-                worldId: newWorldId,
-                levelInWorld: index + 1,
-                displayName: `Level ${index + 1}`,
-                letters: levelData.letters.map(l => l.toUpperCase()),
-                targetWords: levelData.targetWords.map(w => w.toUpperCase()),
-                unlocked: index === 0,
-                completed: false,
-            }))
-        };
-
-        let makeFirstLevelUnlocked = true;
-        if (gameRoadmap.some(world => world.levels.some(level => level.unlocked && !level.completed))) {
-            makeFirstLevelUnlocked = false;
-        }
-
-        newWorld.levels.forEach((level, index) => {
-            level.unlocked = (index === 0 && makeFirstLevelUnlocked);
-        });
-
-
-        gameRoadmap.push(newWorld);
-        if (makeFirstLevelUnlocked) {
-            gameRoadmap.forEach(world => {
-                if (world.id !== newWorldId) {
-                    world.levels.forEach(level => {
-                        // No change to existing logic which allows multiple active levels
-                    });
-                }
-            });
-        }
-
-
-        renderRoadmap();
-        saveProgress();
-        showFeedback(`New world "${newWorld.name}" generated successfully!`, true, false, 3000);
-        worldThemeInput.value = '';
-
-    } catch (error: any) {
-        console.error("Error generating world:", error);
-        let userMessage = "Failed to generate world. Please try again.";
-        if (error instanceof Error) {
-            if (error.message.toLowerCase().includes("json parse error") || error.message.toLowerCase().includes("unexpected token")) {
-                userMessage = "Failed to generate world: received an invalid format. Please try again.";
-            } else if (error.message.includes("Gemini response validation failed")) {
-                userMessage = error.message + " Try a different theme or simplify your request.";
-            } else {
-                userMessage = `Failed to generate world: ${error.message}. Try a different theme or simplify your request.`;
-            }
-        }
-        showFeedback(userMessage, false, false, 0);
-    } finally {
-        generateWorldButton.disabled = false;
-        generationLoadingIndicator.classList.add('hidden');
-    }
-}
-
-function validateGeneratedWorld(data: GeminiWorldResponse, expectedNumLevels: number, strictStructure: boolean = false): boolean {
-    if (!data || !data.worldName || typeof data.worldName !== 'string' || data.worldName.trim() === '') {
-        console.error("Validation failed: Invalid or missing worldName", data?.worldName);
-        return false;
-    }
-    if (data.worldName.length > 20) {
-        console.warn("Validation warning: worldName exceeds 20 characters, will be truncated.", data.worldName)
-    }
-
-    if (!data.levels || !Array.isArray(data.levels) || data.levels.length !== expectedNumLevels) {
-        console.error(`Validation failed: Levels array issues. Expected ${expectedNumLevels}, got ${data.levels?.length}`, data.levels);
-        return false;
-    }
-
-    const expectedLetterCountsFor7Level = [3, 3, 4, 4, 4, 5, 6];
-
-    for (let i = 0; i < data.levels.length; i++) {
-        const level = data.levels[i];
-        const expectedLCount = (strictStructure && expectedNumLevels === 7) ? expectedLetterCountsFor7Level[i] : null;
-
-        if (!level.letters || !Array.isArray(level.letters) || level.letters.length < 3 || level.letters.length > 7) {
-            console.error(`Validation failed: Invalid letters array structure or general length for level ${i + 1}`, level);
-            return false;
-        }
-        if (expectedLCount && level.letters.length !== expectedLCount) {
-            console.error(`Validation failed: Level ${i + 1} expected ${expectedLCount} letters, got ${level.letters.length}`, level.letters);
-            return false;
-        }
-
-        if (!level.letters.every(l => typeof l === 'string' && /^[A-Z]$/.test(l.toUpperCase()))) {
-            console.error(`Validation failed: Letters are not all single uppercase English characters for level ${i + 1}`, level.letters);
-            return false;
-        }
-        const uniqueLetters = new Set(level.letters.map(l => l.toUpperCase()));
-        if (uniqueLetters.size !== level.letters.length) {
-            console.error(`Validation failed: Letters are not unique for level ${i + 1}`, level.letters);
-            return false;
-        }
-
-        if (!level.targetWords || !Array.isArray(level.targetWords) || level.targetWords.length < 1 || level.targetWords.length > 5) {
-            console.error(`Validation failed: Invalid targetWords array structure or length for level ${i + 1}`, level);
-            return false;
-        }
-        for (const word of level.targetWords) {
-            const upperWord = word.toUpperCase();
-            const minWordLength = level.letters.length === 3 ? 2 : 3;
-            if (typeof word !== 'string' || upperWord.length < minWordLength || upperWord.length > 7 || !/^[A-Z]+$/.test(upperWord)) {
-                console.error(`Validation failed: Invalid target word format, characters, or length (expected ${minWordLength}-7) for word "${word}" in level ${i + 1}`, `(letters: ${level.letters.join('')})`);
-                return false;
-            }
-            const upperLetters = level.letters.map(l => l.toUpperCase());
-            if (!isWordFormable(upperWord, upperLetters)) {
-                console.error(`Validation failed: Word "${upperWord}" not formable from letters "${upperLetters.join('')}" in level ${i + 1}`, level);
-                return false;
-            }
-        }
-    }
-    return true;
-}
+// Gemini API logic removed
 
 
 // --- Shop Logic ---
@@ -1755,26 +1519,7 @@ function handleSettingsChange() {
     applySettings();
 }
 
-function handleSaveApiKey() {
-    const apiKey = apiKeyInput.value.trim();
-    if (apiKey) {
-        localStorage.setItem('geminiApiKey', apiKey);
-        apiKeyStatus.textContent = "API Key Saved!";
-        apiKeyStatus.style.color = 'green';
-        setTimeout(() => {
-            apiKeyStatus.textContent = "";
-        }, 3000);
-        initGemini(); // Re-initialize with the new key
-    } else {
-        localStorage.removeItem('geminiApiKey');
-        apiKeyStatus.textContent = "API Key Removed.";
-        apiKeyStatus.style.color = 'orange';
-        setTimeout(() => {
-            apiKeyStatus.textContent = "";
-        }, 3000);
-        initGemini(); // Re-initialize to disable the feature
-    }
-}
+// handleSaveApiKey removed
 
 function handleResetProgress() {
     if (confirm("Are you sure you want to reset all your progress? This cannot be undone!")) {
@@ -1817,7 +1562,6 @@ function attachEventListeners() {
     roadmapSettingsButton.addEventListener('click', openSettingsModal);
     roadmapAchievementsButton.addEventListener('click', openBonusModal);
     roadmapShopButton.addEventListener('click', openShopModal);
-    generateWorldButton.addEventListener('click', handleGenerateWorldClick);
 
     // Shared UI
     feedbackOkButton.addEventListener('click', () => {
@@ -1854,7 +1598,6 @@ function attachEventListeners() {
     soundToggle.addEventListener('change', handleSettingsChange);
     musicToggle.addEventListener('change', handleSettingsChange);
     resetProgressButton.addEventListener('click', handleResetProgress);
-    saveApiKeyButton.addEventListener('click', handleSaveApiKey);
     privacyPolicyLink.addEventListener('click', (e) => { e.preventDefault(); showFeedback("Privacy Policy: To be implemented.", false, false, 2000); });
     acknowledgementsLink.addEventListener('click', (e) => { e.preventDefault(); showFeedback("Acknowledgements: To be implemented.", false, false, 2000); });
 
@@ -1870,7 +1613,7 @@ function attachEventListeners() {
 
 // --- Application Initialization ---
 function main() {
-    initGemini();
+    // initGemini removed
     loadProgress(); // Loads game data and settings
     initSpeechRecognition();
     attachEventListeners();

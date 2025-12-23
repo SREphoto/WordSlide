@@ -147,11 +147,28 @@ let isSwiping = false;
 let foundWords: string[] = [];
 let bonusWordsFound: string[] = [];
 let newBonusWordsCount = 0;
-const BONUS_COIN_VALUE = 1;
-let score = 0;
-let coins = 100;
+const BONUS_COIN_VALUE = 2; // Coins earned for a bonus word
 const HINT_COST = 50;
 const REVEAL_LETTER_COST = 25;
+
+const WORLD_BACKGROUNDS: Record<string, string> = {
+    'tutorial': 'https://images.unsplash.com/photo-1541814120807-6577382d6215?auto=format&fit=crop&w=1200&q=80',
+    'kitchen': 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=80',
+    'forest': 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1200&q=80',
+    'ocean': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
+    'space': 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
+    'desert': 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?auto=format&fit=crop&w=1200&q=80',
+    'arctic': 'https://images.unsplash.com/photo-1517783999520-f068d7431a60?auto=format&fit=crop&w=1200&q=80',
+    'mountain': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
+    'jungle': 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=1200&q=80',
+    'city': 'https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=1200&q=80',
+    'meadow': 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80',
+    'volcano': 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80',
+    'sky': 'https://images.unsplash.com/photo-1534067783941-51c9c23ecefd?auto=format&fit=crop&w=1200&q=80',
+    'crystal': 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80'
+};
+let score = 0;
+let coins = 100;
 const SHUFFLE_COST = 10;
 let gameSettings: GameSettings = {
     soundEffectsEnabled: true,
@@ -391,24 +408,13 @@ function renderRoadmap() {
         const worldSection = document.createElement('div');
         worldSection.classList.add('world-section');
         worldSection.id = `world-${world.id}`;
-
-        let glowColorCSSVar = '--world-generated-glow';
-        switch (world.themeColorVar) {
-            case '--world-tutorial-bg': glowColorCSSVar = '--world-tutorial-glow'; break;
-            case '--world-outback-bg': glowColorCSSVar = '--world-outback-glow'; break;
-            case '--world-timber-bg': glowColorCSSVar = '--world-timber-glow'; break;
-            case '--world-crystal-bg': glowColorCSSVar = '--world-crystal-glow'; break;
-            case '--world-cosmic-bg': glowColorCSSVar = '--world-cosmic-glow'; break;
-            case '--world-aqueous-bg': glowColorCSSVar = '--world-aqueous-glow'; break;
-            case '--world-galactic-bg': glowColorCSSVar = '--world-galactic-glow'; break;
-            case '--world-culinary-bg': glowColorCSSVar = '--world-culinary-glow'; break;
-            case DEFAULT_GENERATED_WORLD_THEME_VAR: glowColorCSSVar = '--world-generated-glow'; break;
-        }
-        worldSection.style.setProperty('--current-world-glow-color', `var(${glowColorCSSVar})`);
-
-        if (world.isGenerated) {
-            worldSection.classList.add('generated-world-card');
-            worldSection.style.backgroundColor = `var(${world.themeColorVar}, #ccc)`;
+        
+        const bgColor = getComputedStyle(document.documentElement).getPropertyValue(`--world-${world.id}-bg`).trim() || 'var(--primary)';
+        worldSection.style.setProperty('--world-color', bgColor);
+        
+        if (WORLD_BACKGROUNDS[world.id]) {
+            worldSection.style.backgroundImage = `linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), url(${WORLD_BACKGROUNDS[world.id]})`;
+            worldSection.style.backgroundSize = 'cover';
         }
 
         const worldInfo = document.createElement('div');
@@ -478,6 +484,12 @@ function startGameForLevel(levelDef: LevelDefinition) {
     availableLetters = [...levelDef.letters];
     foundWords = [];
     score = 0;
+
+    // Set world background
+    const appContainer = document.getElementById('app-container');
+    if (appContainer && WORLD_BACKGROUNDS[levelDef.worldId]) {
+        appContainer.style.setProperty('--bg-image', `url(${WORLD_BACKGROUNDS[levelDef.worldId]})`);
+    }
 
     showGameScreen();
     initGameLogicForLevel();
@@ -1093,163 +1105,168 @@ function saveProgress() {
 
 
 function getInitialDefaultRoadmap(): WorldDefinition[] {
-    const initialRoadmap: WorldDefinition[] = [
-        {
-            id: "tutorial", name: "TUTORIAL", themeColorVar: "--world-tutorial-bg", isGenerated: false, levels: [
-                { id: "tut-1", worldId: "tutorial", levelInWorld: 1, displayName: "Basics", letters: ['C', 'A', 'T'], targetWords: ["CAT", "ACT"], unlocked: true, completed: false },
-                { id: "tut-2", worldId: "tutorial", levelInWorld: 2, displayName: "Warm Up", letters: ['D', 'O', 'G'], targetWords: ["DOG", "GOD"], unlocked: false, completed: false },
-                { id: "tut-3", worldId: "tutorial", levelInWorld: 3, displayName: "Challenge", letters: ['P', 'L', 'A', 'Y'], targetWords: ["PLAY", "PAY", "LAP"], unlocked: false, completed: false },
-            ]
-        },
-        {
-            id: "kitchen", name: "CULINARY CHAOS", themeColorVar: "--world-culinary-bg", isGenerated: false, levels: [
-                { id: "kit-1", worldId: "kitchen", levelInWorld: 1, displayName: "Level 1", letters: ['E', 'G', 'G'], targetWords: ["EGG"], unlocked: false, completed: false },
-                { id: "kit-2", worldId: "kitchen", levelInWorld: 2, displayName: "Level 2", letters: ['P', 'O', 'T', 'S'], targetWords: ["POTS", "POT", "TOP", "STOP"], unlocked: false, completed: false },
-                { id: "kit-3", worldId: "kitchen", levelInWorld: 3, displayName: "Level 3", letters: ['P', 'I', 'E', 'S'], targetWords: ["PIES", "PIE", "SIP"], unlocked: false, completed: false },
-                { id: "kit-4", worldId: "kitchen", levelInWorld: 4, displayName: "Level 4", letters: ['T', 'E', 'A', 'S'], targetWords: ["TEAS", "TEA", "SEA", "EAT"], unlocked: false, completed: false },
-                { id: "kit-5", worldId: "kitchen", levelInWorld: 5, displayName: "Level 5", letters: ['P', 'E', 'A', 'R'], targetWords: ["PEAR", "PEA", "EAR", "APE"], unlocked: false, completed: false },
-                { id: "kit-6", worldId: "kitchen", levelInWorld: 6, displayName: "Level 6", letters: ['M', 'E', 'A', 'T', 'S'], targetWords: ["MEATS", "MEAT", "TEAM", "SEAT"], unlocked: false, completed: false },
-                { id: "kit-7", worldId: "kitchen", levelInWorld: 7, displayName: "Level 7", letters: ['B', 'R', 'E', 'A', 'D'], targetWords: ["BREAD", "READ", "BEAR", "DARE"], unlocked: false, completed: false },
-            ]
-        },
-        {
-            id: "forest", name: "WHISPERING WOODS", themeColorVar: "--world-timber-bg", isGenerated: false, levels: [
-                { id: "for-1", worldId: "forest", levelInWorld: 1, displayName: "Level 1", letters: ['E', 'L', 'M'], targetWords: ["ELM"], unlocked: false, completed: false },
-                { id: "for-2", worldId: "forest", levelInWorld: 2, displayName: "Level 2", letters: ['O', 'W', 'L', 'S'], targetWords: ["OWLS", "OWL", "LOW", "SLOW"], unlocked: false, completed: false },
-                { id: "for-3", worldId: "forest", levelInWorld: 3, displayName: "Level 3", letters: ['T', 'E', 'N', 'T'], targetWords: ["TENT", "NET", "TEN"], unlocked: false, completed: false },
-                { id: "for-4", worldId: "forest", levelInWorld: 4, displayName: "Level 4", letters: ['P', 'A', 'T', 'H'], targetWords: ["PATH", "HAT", "PAT", "TAP"], unlocked: false, completed: false },
-                { id: "for-5", worldId: "forest", levelInWorld: 5, displayName: "Level 5", letters: ['L', 'E', 'A', 'F'], targetWords: ["LEAF", "ALE", "ELF"], unlocked: false, completed: false },
-                { id: "for-6", worldId: "forest", levelInWorld: 6, displayName: "Level 6", letters: ['D', 'E', 'E', 'R', 'S'], targetWords: ["DEERS", "DEER", "REDS", "SEED"], unlocked: false, completed: false },
-                { id: "for-7", worldId: "forest", levelInWorld: 7, displayName: "Level 7", letters: ['F', 'O', 'R', 'E', 'S', 'T'], targetWords: ["FOREST", "REST", "SOFT", "ROSE"], unlocked: false, completed: false },
-            ]
-        },
-        {
-            id: "ocean", name: "DEEP BLUE", themeColorVar: "--world-aqueous-bg", isGenerated: false, levels: [
-                { id: "oc-1", worldId: "ocean", levelInWorld: 1, displayName: "Level 1", letters: ['S', 'E', 'A'], targetWords: ["SEA"], unlocked: false, completed: false },
-                { id: "oc-2", worldId: "ocean", levelInWorld: 2, displayName: "Level 2", letters: ['C', 'O', 'D'], targetWords: ["COD", "DOC"], unlocked: false, completed: false },
-                { id: "oc-3", worldId: "ocean", levelInWorld: 3, displayName: "Level 3", letters: ['S', 'A', 'N', 'D'], targetWords: ["SAND", "SAD", "AND"], unlocked: false, completed: false },
-                { id: "oc-4", worldId: "ocean", levelInWorld: 4, displayName: "Level 4", letters: ['W', 'A', 'V', 'E'], targetWords: ["WAVE", "AVE"], unlocked: false, completed: false },
-                { id: "oc-5", worldId: "ocean", levelInWorld: 5, displayName: "Level 5", letters: ['S', 'H', 'I', 'P'], targetWords: ["SHIP", "HIP", "SIP", "HIS"], unlocked: false, completed: false },
-                { id: "oc-6", worldId: "ocean", levelInWorld: 6, displayName: "Level 6", letters: ['W', 'H', 'A', 'L', 'E'], targetWords: ["WHALE", "HEAL", "ALE"], unlocked: false, completed: false },
-                { id: "oc-7", worldId: "ocean", levelInWorld: 7, displayName: "Level 7", letters: ['S', 'H', 'A', 'R', 'K'], targetWords: ["SHARK", "RASH", "ARK", "HAS"], unlocked: false, completed: false },
-            ]
-        },
-        {
-            id: "space", name: "COSMIC VOYAGE", themeColorVar: "--world-cosmic-bg", isGenerated: false, levels: [
-                { id: "sp-1", worldId: "space", levelInWorld: 1, displayName: "Level 1", letters: ['S', 'U', 'N'], targetWords: ["SUN"], unlocked: false, completed: false },
-                { id: "sp-2", worldId: "space", levelInWorld: 2, displayName: "Level 2", letters: ['S', 'T', 'A', 'R'], targetWords: ["STAR", "RAT", "TAR", "ART"], unlocked: false, completed: false },
-                { id: "sp-3", worldId: "space", levelInWorld: 3, displayName: "Level 3", letters: ['M', 'O', 'O', 'N'], targetWords: ["MOON", "MOO"], unlocked: false, completed: false },
-                { id: "sp-4", worldId: "space", levelInWorld: 4, displayName: "Level 4", letters: ['M', 'A', 'R', 'S'], targetWords: ["MARS", "ARM", "RAM"], unlocked: false, completed: false },
-                { id: "sp-5", worldId: "space", levelInWorld: 5, displayName: "Level 5", letters: ['V', 'O', 'I', 'D'], targetWords: ["VOID", "DO"], unlocked: false, completed: false },
-                { id: "sp-6", worldId: "space", levelInWorld: 6, displayName: "Level 6", letters: ['E', 'A', 'R', 'T', 'H'], targetWords: ["EARTH", "HEAR", "HEAT", "HAT", "ART"], unlocked: false, completed: false },
-                { id: "sp-7", worldId: "space", levelInWorld: 7, displayName: "Level 7", letters: ['P', 'L', 'A', 'N', 'E', 'T'], targetWords: ["PLANET", "PLANE", "PLANT", "PLATE", "LATE", "PANT"], unlocked: false, completed: false },
-            ]
-        },
-        {
-            id: "desert", name: "DESERT HEAT", themeColorVar: "--world-outback-bg", isGenerated: false, levels: [
-                { id: "des-1", worldId: "desert", levelInWorld: 1, displayName: "Level 1", letters: ['S', 'A', 'N', 'D'], targetWords: ["SAND", "SAD", "AND"], unlocked: false, completed: false },
-                { id: "des-2", worldId: "desert", levelInWorld: 2, displayName: "Level 2", letters: ['D', 'U', 'N', 'E'], targetWords: ["DUNE", "DUE"], unlocked: false, completed: false },
-                { id: "des-3", worldId: "desert", levelInWorld: 3, displayName: "Level 3", letters: ['H', 'E', 'A', 'T'], targetWords: ["HEAT", "HAT", "EAT"], unlocked: false, completed: false },
-                { id: "des-4", worldId: "desert", levelInWorld: 4, displayName: "Level 4", letters: ['C', 'A', 'C', 'T', 'U', 'S'], targetWords: ["CACTUS", "CATS", "CUTS"], unlocked: false, completed: false },
-                { id: "des-5", worldId: "desert", levelInWorld: 5, displayName: "Level 5", letters: ['C', 'A', 'M', 'E', 'L'], targetWords: ["CAMEL", "MEAL", "MALE", "LACE"], unlocked: false, completed: false },
-                { id: "des-6", worldId: "desert", levelInWorld: 6, displayName: "Level 6", letters: ['S', 'C', 'O', 'R', 'P'], targetWords: ["SCORP", "CROP", "PROS"], unlocked: false, completed: false },
-                { id: "des-7", worldId: "desert", levelInWorld: 7, displayName: "Level 7", letters: ['P', 'Y', 'R', 'A', 'M', 'I', 'D'], targetWords: ["PYRAMID", "DRAM", "DRIP", "PAID"], unlocked: false, completed: false },
-            ]
-        },
-        {
-            id: "arctic", name: "FROZEN TUNDRA", themeColorVar: "--world-crystal-bg", isGenerated: false, levels: [
-                { id: "arc-1", worldId: "arctic", levelInWorld: 1, displayName: "Level 1", letters: ['I', 'C', 'E'], targetWords: ["ICE"], unlocked: false, completed: false },
-                { id: "arc-2", worldId: "arctic", levelInWorld: 2, displayName: "Level 2", letters: ['C', 'O', 'L', 'D'], targetWords: ["COLD", "OLD", "COD"], unlocked: false, completed: false },
-                { id: "arc-3", worldId: "arctic", levelInWorld: 3, displayName: "Level 3", letters: ['S', 'N', 'O', 'W'], targetWords: ["SNOW", "NOW", "OWN", "WON"], unlocked: false, completed: false },
-                { id: "arc-4", worldId: "arctic", levelInWorld: 4, displayName: "Level 4", letters: ['B', 'E', 'A', 'R'], targetWords: ["BEAR", "ARE", "BAR", "EAR"], unlocked: false, completed: false },
-                { id: "arc-5", worldId: "arctic", levelInWorld: 5, displayName: "Level 5", letters: ['S', 'E', 'A', 'L'], targetWords: ["SEAL", "SALE", "SEA", "ALE"], unlocked: false, completed: false },
-                { id: "arc-6", worldId: "arctic", levelInWorld: 6, displayName: "Level 6", letters: ['W', 'H', 'A', 'L', 'E'], targetWords: ["WHALE", "HEAL", "HALE", "LAW"], unlocked: false, completed: false },
-                { id: "arc-7", worldId: "arctic", levelInWorld: 7, displayName: "Level 7", letters: ['G', 'L', 'A', 'C', 'I', 'E', 'R'], targetWords: ["GLACIER", "GRACE", "CARE", "RACE", "AGE", "ICE"], unlocked: false, completed: false },
-            ]
-        },
-        {
-            id: "mountain", name: "MYSTIC PEAKS", themeColorVar: "--world-timber-glow", isGenerated: false, levels: [
-                { id: "mnt-1", worldId: "mountain", levelInWorld: 1, displayName: "Level 1", letters: ['P', 'E', 'A', 'K'], targetWords: ["PEAK", "APE", "KEA"], unlocked: false, completed: false },
-                { id: "mnt-2", worldId: "mountain", levelInWorld: 2, displayName: "Level 2", letters: ['S', 'N', 'O', 'W'], targetWords: ["SNOW", "SOW", "WON"], unlocked: false, completed: false },
-                { id: "mnt-3", worldId: "mountain", levelInWorld: 3, displayName: "Level 3", letters: ['H', 'I', 'K', 'E'], targetWords: ["HIKE"], unlocked: false, completed: false },
-                { id: "mnt-4", worldId: "mountain", levelInWorld: 4, displayName: "Level 4", letters: ['C', 'L', 'I', 'M', 'B'], targetWords: ["CLIMB", "MILB", "LIMB"], unlocked: false, completed: false },
-                { id: "mnt-5", worldId: "mountain", levelInWorld: 5, displayName: "Level 5", letters: ['S', 'L', 'O', 'P', 'E'], targetWords: ["SLOPE", "POLE", "POSE", "LOSE"], unlocked: false, completed: false },
-                { id: "mnt-6", worldId: "mountain", levelInWorld: 6, displayName: "Level 6", letters: ['V', 'A', 'L', 'L', 'E', 'Y'], targetWords: ["VALLEY", "VEAL", "YELL", "VALE"], unlocked: false, completed: false },
-                { id: "mnt-7", worldId: "mountain", levelInWorld: 7, displayName: "Level 7", letters: ['S', 'U', 'M', 'M', 'I', 'T'], targetWords: ["SUMMIT", "MUST", "MIST", "SUIT"], unlocked: false, completed: false },
-            ]
-        },
-        {
-            id: "jungle", name: "RAINFOREST RYHTHM", themeColorVar: "--world-culinary-glow", isGenerated: false, levels: [
-                { id: "jun-1", worldId: "jungle", levelInWorld: 1, displayName: "Level 1", letters: ['A', 'P', 'E'], targetWords: ["APE"], unlocked: false, completed: false },
-                { id: "jun-2", worldId: "jungle", levelInWorld: 2, displayName: "Level 2", letters: ['V', 'I', 'N', 'E'], targetWords: ["VINE", "VIE"], unlocked: false, completed: false },
-                { id: "jun-3", worldId: "jungle", levelInWorld: 3, displayName: "Level 3", letters: ['R', 'A', 'I', 'N'], targetWords: ["RAIN", "RAN", "AIR"], unlocked: false, completed: false },
-                { id: "jun-4", worldId: "jungle", levelInWorld: 4, displayName: "Level 4", letters: ['T', 'R', 'E', 'E'], targetWords: ["TREE", "TEE"], unlocked: false, completed: false },
-                { id: "jun-5", worldId: "jungle", levelInWorld: 5, displayName: "Level 5", letters: ['T', 'I', 'G', 'E', 'R'], targetWords: ["TIGER", "TIER", "GRIT"], unlocked: false, completed: false },
-                { id: "jun-6", worldId: "jungle", levelInWorld: 6, displayName: "Level 6", letters: ['O', 'R', 'C', 'H', 'I', 'D'], targetWords: ["ORCHID", "RICH", "CHORD", "ROD"], unlocked: false, completed: false },
-                { id: "jun-7", worldId: "jungle", levelInWorld: 7, displayName: "Level 7", letters: ['P', 'A', 'N', 'T', 'H', 'E', 'R'], targetWords: ["PANTHER", "PARE", "NEAR", "PANT", "THEN"], unlocked: false, completed: false },
-            ]
-        },
-        {
-            id: "city", name: "NEON CITY", themeColorVar: "--world-cosmic-glow", isGenerated: false, levels: [
-                { id: "ct-1", worldId: "city", levelInWorld: 1, displayName: "Level 1", letters: ['C', 'A', 'R'], targetWords: ["CAR"], unlocked: false, completed: false },
-                { id: "ct-2", worldId: "city", levelInWorld: 2, displayName: "Level 2", letters: ['B', 'U', 'S'], targetWords: ["BUS"], unlocked: false, completed: false },
-                { id: "ct-3", worldId: "city", levelInWorld: 3, displayName: "Level 3", letters: ['T', 'A', 'X', 'I'], targetWords: ["TAXI"], unlocked: false, completed: false },
-                { id: "ct-4", worldId: "city", levelInWorld: 4, displayName: "Level 4", letters: ['P', 'A', 'R', 'K'], targetWords: ["PARK", "RAPA"], unlocked: false, completed: false },
-                { id: "ct-5", worldId: "city", levelInWorld: 5, displayName: "Level 5", letters: ['S', 'T', 'R', 'E', 'E', 'T'], targetWords: ["STREET", "TREES", "STEER", "REST"], unlocked: false, completed: false },
-                { id: "ct-6", worldId: "city", levelInWorld: 6, displayName: "Level 6", letters: ['M', 'E', 'T', 'R', 'O'], targetWords: ["METRO", "MORE", "TERM", "ROME"], unlocked: false, completed: false },
-                { id: "ct-7", worldId: "city", levelInWorld: 7, displayName: "Level 7", letters: ['S', 'K', 'Y', 'L', 'I', 'N', 'E'], targetWords: ["SKYLINE", "LINE", "SKIN", "LINK", "KEYS"], unlocked: false, completed: false },
-            ]
-        },
-        {
-            id: "meadow", name: "BLOSSOM MEADOW", themeColorVar: "--world-generated-glow", isGenerated: false, levels: [
-                { id: "md-1", worldId: "meadow", levelInWorld: 1, displayName: "Level 1", letters: ['B', 'E', 'E'], targetWords: ["BEE"], unlocked: false, completed: false },
-                { id: "md-2", worldId: "meadow", levelInWorld: 2, displayName: "Level 2", letters: ['B', 'U', 'G'], targetWords: ["BUG"], unlocked: false, completed: false },
-                { id: "md-3", worldId: "meadow", levelInWorld: 3, displayName: "Level 3", letters: ['S', 'U', 'N'], targetWords: ["SUN"], unlocked: false, completed: false },
-                { id: "md-4", worldId: "meadow", levelInWorld: 4, displayName: "Level 4", letters: ['F', 'L', 'O', 'W', 'E', 'R'], targetWords: ["FLOWER", "WOLF", "FLOW", "ROLE", "FEW"], unlocked: false, completed: false },
-                { id: "md-5", worldId: "meadow", levelInWorld: 5, displayName: "Level 5", letters: ['G', 'R', 'A', 'S', 'S'], targetWords: ["GRASS", "RAGS", "SAGS"], unlocked: false, completed: false },
-                { id: "md-6", worldId: "meadow", levelInWorld: 6, displayName: "Level 6", letters: ['C', 'L', 'O', 'V', 'E', 'R'], targetWords: ["CLOVER", "LOVE", "OVER", "ROLE", "COVE"], unlocked: false, completed: false },
-                { id: "md-7", worldId: "meadow", levelInWorld: 7, displayName: "Level 7", letters: ['B', 'L', 'O', 'S', 'S', 'O', 'M'], targetWords: ["BLOSSOM", "LOSS", "BOOM", "MOSS", "SOLO"], unlocked: false, completed: false },
-            ]
-        },
-        {
-            id: "volcano", name: "VOLCANIC VENT", themeColorVar: "--world-culinary-bg", isGenerated: false, levels: [
-                { id: "vol-1", worldId: "volcano", levelInWorld: 1, displayName: "Level 1", letters: ['A', 'S', 'H'], targetWords: ["ASH", "HAS"], unlocked: false, completed: false },
-                { id: "vol-2", worldId: "volcano", levelInWorld: 2, displayName: "Level 2", letters: ['L', 'A', 'V', 'A'], targetWords: ["LAVA"], unlocked: false, completed: false },
-                { id: "vol-3", worldId: "volcano", levelInWorld: 3, displayName: "Level 3", letters: ['F', 'I', 'R', 'E'], targetWords: ["FIRE", "IRE", "REF"], unlocked: false, completed: false },
-                { id: "vol-4", worldId: "volcano", levelInWorld: 4, displayName: "Level 4", letters: ['H', 'E', 'A', 'T'], targetWords: ["HEAT", "HAT", "EAT"], unlocked: false, completed: false },
-                { id: "vol-5", worldId: "volcano", levelInWorld: 5, displayName: "Level 5", letters: ['M', 'A', 'G', 'M', 'A'], targetWords: ["MAGMA", "MAMA", "GAMA"], unlocked: false, completed: false },
-                { id: "vol-6", worldId: "volcano", levelInWorld: 6, displayName: "Level 6", letters: ['E', 'R', 'U', 'P', 'T'], targetWords: ["ERUPT", "PURE", "TRUE", "PERT"], unlocked: false, completed: false },
-                { id: "vol-7", worldId: "volcano", levelInWorld: 7, displayName: "Level 7", letters: ['C', 'R', 'A', 'T', 'E', 'R'], targetWords: ["CRATER", "CARE", "REAR", "RACE", "TEAR"], unlocked: false, completed: false },
-            ]
-        },
-        {
-            id: "sky", name: "SKY FORTRESS", themeColorVar: "--world-tutorial-glow", isGenerated: false, levels: [
-                { id: "sky-1", worldId: "sky", levelInWorld: 1, displayName: "Level 1", letters: ['A', 'I', 'R'], targetWords: ["AIR"], unlocked: false, completed: false },
-                { id: "sky-2", worldId: "sky", levelInWorld: 2, displayName: "Level 2", letters: ['B', 'I', 'R', 'D'], targetWords: ["BIRD", "RID"], unlocked: false, completed: false },
-                { id: "sky-3", worldId: "sky", levelInWorld: 3, displayName: "Level 3", letters: ['W', 'I', 'N', 'D'], targetWords: ["WIND", "WIN", "DIN"], unlocked: false, completed: false },
-                { id: "sky-4", worldId: "sky", levelInWorld: 4, displayName: "Level 4", letters: ['C', 'L', 'O', 'U', 'D'], targetWords: ["CLOUD", "LOUD", "COLD", "DUO"], unlocked: false, completed: false },
-                { id: "sky-5", worldId: "sky", levelInWorld: 5, displayName: "Level 5", letters: ['S', 'T', 'O', 'R', 'M'], targetWords: ["STORM", "MOST", "SORT", "ROM"], unlocked: false, completed: false },
-                { id: "sky-6", worldId: "sky", levelInWorld: 6, displayName: "Level 6", letters: ['F', 'L', 'I', 'G', 'H', 'T'], targetWords: ["FLIGHT", "GIFT", "LIFT"], unlocked: false, completed: false },
-                { id: "sky-7", worldId: "sky", levelInWorld: 7, displayName: "Level 7", letters: ['C', 'A', 'S', 'T', 'L', 'E'], targetWords: ["CASTLE", "CASE", "LAST", "SALT", "SALE", "TEAL"], unlocked: false, completed: false },
-            ]
-        },
-        {
-            id: "crystal", name: "CRYSTAL CAVERNS", themeColorVar: "--world-crystal-glow", isGenerated: false, levels: [
-                { id: "cry-1", worldId: "crystal", levelInWorld: 1, displayName: "Level 1", letters: ['G', 'E', 'M'], targetWords: ["GEM"], unlocked: false, completed: false },
-                { id: "cry-2", worldId: "crystal", levelInWorld: 2, displayName: "Level 2", letters: ['O', 'R', 'E'], targetWords: ["ORE", "ROE"], unlocked: false, completed: false },
-                { id: "cry-3", worldId: "crystal", levelInWorld: 3, displayName: "Level 3", letters: ['D', 'I', 'G'], targetWords: ["DIG"], unlocked: false, completed: false },
-                { id: "cry-4", worldId: "crystal", levelInWorld: 4, displayName: "Level 4", letters: ['G', 'L', 'O', 'W'], targetWords: ["GLOW", "LOW", "OWL"], unlocked: false, completed: false },
-                { id: "cry-5", worldId: "crystal", levelInWorld: 5, displayName: "Level 5", letters: ['S', 'H', 'I', 'N', 'E'], targetWords: ["SHINE", "SHIN", "HENS", "SINS"], unlocked: false, completed: false },
-                { id: "cry-6", worldId: "crystal", levelInWorld: 6, displayName: "Level 6", letters: ['Q', 'U', 'A', 'R', 'T', 'Z'], targetWords: ["QUARTZ", "ART"], unlocked: false, completed: false },
-                { id: "cry-7", worldId: "crystal", levelInWorld: 7, displayName: "Level 7", letters: ['D', 'I', 'A', 'M', 'O', 'N', 'D'], targetWords: ["DIAMOND", "AMID", "MIND", "MAIN"], unlocked: false, completed: false },
-            ]
-        }
+    const rawData = [
+        { id: "tutorial", name: "Tutorial", levels: [
+            { letters: ['A', 'T'], targetWords: ["AT"] },
+            { letters: ['C', 'A', 'T'], targetWords: ["CAT", "ACT"] },
+            { letters: ['D', 'O', 'G'], targetWords: ["DOG", "GOD"] },
+            { letters: ['S', 'U', 'N'], targetWords: ["SUN"] },
+            { letters: ['P', 'E', 'N'], targetWords: ["PEN"] }
+        ]},
+        { id: "kitchen", name: "Culinary Chaos", levels: [
+            { letters: ['E', 'G', 'G', 'S'], targetWords: ["EGGS", "EGG"] },
+            { letters: ['P', 'A', 'N', 'S'], targetWords: ["PANS", "PAN", "NAP", "SNAP"] },
+            { letters: ['C', 'O', 'O', 'K'], targetWords: ["COOK"] },
+            { letters: ['F', 'O', 'R', 'K'], targetWords: ["FORK"] },
+            { letters: ['D', 'I', 'S', 'H'], targetWords: ["DISH"] },
+            { letters: ['M', 'E', 'A', 'L'], targetWords: ["MEAL", "MALE"] },
+            { letters: ['B', 'A', 'K', 'E'], targetWords: ["BAKE"] },
+            { letters: ['S', 'O', 'U', 'P'], targetWords: ["SOUP"] }
+        ]},
+        { id: "forest", name: "Whispering Woods", levels: [
+            { letters: ['T', 'R', 'E', 'E'], targetWords: ["TREE", "TEE"] },
+            { letters: ['L', 'E', 'A', 'F'], targetWords: ["LEAF", "ALE", "ELF"] },
+            { letters: ['W', 'O', 'O', 'D'], targetWords: ["WOOD"] },
+            { letters: ['B', 'I', 'R', 'D'], targetWords: ["BIRD", "RID"] },
+            { letters: ['D', 'E', 'E', 'R'], targetWords: ["DEER", "REED"] },
+            { letters: ['B', 'E', 'A', 'R'], targetWords: ["BEAR", "ARE", "BAR"] },
+            { letters: ['L', 'A', 'K', 'E'], targetWords: ["LAKE"] },
+            { letters: ['F', 'R', 'O', 'G'], targetWords: ["FROG"] }
+        ]},
+        { id: "ocean", name: "Deep Blue", levels: [
+            { letters: ['F', 'I', 'S', 'H'], targetWords: ["FISH"] },
+            { letters: ['W', 'A', 'V', 'E'], targetWords: ["WAVE", "AVE"] },
+            { letters: ['B', 'O', 'A', 'T'], targetWords: ["BOAT"] },
+            { letters: ['S', 'A', 'N', 'D'], targetWords: ["SAND", "SAD", "AND"] },
+            { letters: ['S', 'H', 'I', 'P'], targetWords: ["SHIP", "HIP", "SIP"] },
+            { letters: ['S', 'E', 'A', 'L'], targetWords: ["SEAL", "SEA", "ALE"] },
+            { letters: ['D', 'I', 'V', 'E'], targetWords: ["DIVE"] },
+            { letters: ['S', 'W', 'I', 'M'], targetWords: ["SWIM"] }
+        ]},
+        { id: "space", name: "Cosmic Voyage", levels: [
+            { letters: ['S', 'T', 'A', 'R'], targetWords: ["STAR", "RAT", "ART", "TAR"] },
+            { letters: ['M', 'O', 'O', 'N'], targetWords: ["MOON", "MOO"] },
+            { letters: ['M', 'A', 'R', 'S'], targetWords: ["MARS", "ARM", "RAM"] },
+            { letters: ['S', 'U', 'N', 'S'], targetWords: ["SUNS", "SUN"] },
+            { letters: ['V', 'O', 'I', 'D'], targetWords: ["VOID"] },
+            { letters: ['N', 'O', 'V', 'A'], targetWords: ["NOVA"] },
+            { letters: ['A', 'T', 'O', 'M'], targetWords: ["ATOM"] },
+            { letters: ['G', 'L', 'O', 'W'], targetWords: ["GLOW", "LOW", "OWL"] }
+        ]},
+        { id: "desert", name: "Desert Heat", levels: [
+            { letters: ['S', 'A', 'N', 'D'], targetWords: ["SAND", "SAD", "AND"] },
+            { letters: ['D', 'U', 'N', 'E'], targetWords: ["DUNE", "DUE"] },
+            { letters: ['H', 'E', 'A', 'T'], targetWords: ["HEAT", "HAT", "EAT"] },
+            { letters: ['C', 'A', 'M', 'E', 'L'], targetWords: ["CAMEL", "MEAL", "MALE"] },
+            { letters: ['O', 'A', 'S', 'I', 'S'], targetWords: ["OASIS"] },
+            { letters: ['P', 'A', 'L', 'M'], targetWords: ["PALM", "MAP", "LAP"] },
+            { letters: ['D', 'U', 'S', 'T'], targetWords: ["DUST"] },
+            { letters: ['W', 'A', 'N', 'D'], targetWords: ["WAND"] }
+        ]},
+        { id: "arctic", name: "Frozen Tundra", levels: [
+            { letters: ['I', 'C', 'E', 'S'], targetWords: ["ICES", "ICE"] },
+            { letters: ['S', 'N', 'O', 'W'], targetWords: ["SNOW", "NOW", "OWN", "WON"] },
+            { letters: ['C', 'O', 'L', 'D'], targetWords: ["COLD", "OLD", "COD"] },
+            { letters: ['S', 'E', 'A', 'L'], targetWords: ["SEAL", "SEA", "ALE"] },
+            { letters: ['P', 'O', 'L', 'E'], targetWords: ["POLE"] },
+            { letters: ['B', 'E', 'A', 'R'], targetWords: ["BEAR", "ARE", "BAR"] },
+            { letters: ['F', 'R', 'O', 'S', 'T'], targetWords: ["FROST", "SOFT", "ROTS"] },
+            { letters: ['H', 'A', 'I', 'L'], targetWords: ["HAIL"] }
+        ]},
+        { id: "mountain", name: "Mystic Peaks", levels: [
+            { letters: ['P', 'E', 'A', 'K'], targetWords: ["PEAK", "APE", "KEA"] },
+            { letters: ['H', 'I', 'K', 'E'], targetWords: ["HIKE"] },
+            { letters: ['S', 'N', 'O', 'W'], targetWords: ["SNOW", "SOW", "WON"] },
+            { letters: ['C', 'L', 'I', 'M', 'B'], targetWords: ["CLIMB", "LIMB"] },
+            { letters: ['M', 'O', 'S', 'S'], targetWords: ["MOSS"] },
+            { letters: ['R', 'O', 'C', 'K'], targetWords: ["ROCK"] },
+            { letters: ['C', 'O', 'L', 'D'], targetWords: ["COLD", "OLD"] },
+            { letters: ['V', 'I', 'E', 'W'], targetWords: ["VIEW"] }
+        ]},
+        { id: "jungle", name: "Rainforest", levels: [
+            { letters: ['A', 'P', 'E', 'S'], targetWords: ["APES", "APE", "SEA"] },
+            { letters: ['V', 'I', 'N', 'E'], targetWords: ["VINE", "VIE"] },
+            { letters: ['R', 'A', 'I', 'N'], targetWords: ["RAIN", "RAN", "AIR"] },
+            { letters: ['F', 'R', 'O', 'G'], targetWords: ["FROG"] },
+            { letters: ['T', 'I', 'G', 'E', 'R'], targetWords: ["TIGER", "TIER", "GRIT"] },
+            { letters: ['L', 'E', 'A', 'F'], targetWords: ["LEAF", "ALE"] },
+            { letters: ['W', 'I', 'L', 'D'], targetWords: ["WILD"] },
+            { letters: ['F', 'E', 'L', 'L'], targetWords: ["FELL"] }
+        ]},
+        { id: "city", name: "Neon City", levels: [
+            { letters: ['C', 'A', 'R', 'S'], targetWords: ["CARS", "CAR", "ARC"] },
+            { letters: ['B', 'I', 'K', 'E'], targetWords: ["BIKE"] },
+            { letters: ['T', 'A', 'X', 'I'], targetWords: ["TAXI"] },
+            { letters: ['R', 'O', 'A', 'D'], targetWords: ["ROAD"] },
+            { letters: ['P', 'A', 'R', 'K'], targetWords: ["PARK", "RAPA"] },
+            { letters: ['W', 'A', 'L', 'K'], targetWords: ["WALK"] },
+            { letters: ['S', 'T', 'O', 'P'], targetWords: ["STOP", "TOP", "POT"] },
+            { letters: ['M', 'E', 'T', 'R', 'O'], targetWords: ["METRO", "MORE", "ROME"] }
+        ]},
+        { id: "meadow", name: "Blossom Meadow", levels: [
+            { letters: ['B', 'E', 'E', 'S'], targetWords: ["BEES", "BEE", "SEE"] },
+            { letters: ['F', 'L', 'O', 'W'], targetWords: ["FLOW", "LOW", "OWL"] },
+            { letters: ['L', 'I', 'L', 'Y'], targetWords: ["LILY"] },
+            { letters: ['P', 'I', 'N', 'K'], targetWords: ["PINK"] },
+            { letters: ['R', 'O', 'S', 'E'], targetWords: ["ROSE", "SORE"] },
+            { letters: ['L', 'A', 'W', 'N'], targetWords: ["LAWN"] },
+            { letters: ['W', 'E', 'E', 'D'], targetWords: ["WEED"] },
+            { letters: ['F', 'L', 'U', 'S', 'H'], targetWords: ["FLUSH"] }
+        ]},
+        { id: "volcano", name: "Volcanic Vent", levels: [
+            { letters: ['A', 'S', 'H'], targetWords: ["ASH", "HAS"] },
+            { letters: ['L', 'A', 'V', 'A'], targetWords: ["LAVA"] },
+            { letters: ['F', 'I', 'R', 'E'], targetWords: ["FIRE", "IRE"] },
+            { letters: ['H', 'E', 'A', 'T'], targetWords: ["HEAT", "HAT", "EAT"] },
+            { letters: ['L', 'A', 'V', 'A', 'S'], targetWords: ["LAVAS", "LAVA"] },
+            { letters: ['C', 'O', 'R', 'E'], targetWords: ["CORE"] },
+            { letters: ['R', 'O', 'K', 'S'], targetWords: ["ROKS"] },
+            { letters: ['F', 'L', 'A', 'M', 'E'], targetWords: ["FLAME", "MEAL", "MALE", "LAME"] }
+        ]},
+        { id: "sky", name: "Sky Fortress", levels: [
+            { letters: ['A', 'I', 'R'], targetWords: ["AIR"] },
+            { letters: ['B', 'I', 'R', 'D'], targetWords: ["BIRD", "RID"] },
+            { letters: ['W', 'I', 'N', 'D'], targetWords: ["WIND", "WIN", "DIN"] },
+            { letters: ['C', 'L', 'O', 'U', 'D'], targetWords: ["CLOUD", "LOUD", "COLD"] },
+            { letters: ['S', 'T', 'O', 'R', 'M'], targetWords: ["STORM", "MOST", "SORT"] },
+            { letters: ['H', 'I', 'G', 'H'], targetWords: ["HIGH"] },
+            { letters: ['B', 'L', 'U', 'E'], targetWords: ["BLUE"] },
+            { letters: ['W', 'I', 'N', 'G'], targetWords: ["WING"] }
+        ]},
+        { id: "crystal", name: "Crystal Caverns", levels: [
+            { letters: ['G', 'E', 'M', 'S'], targetWords: ["GEMS", "GEM"] },
+            { letters: ['G', 'O', 'L', 'D'], targetWords: ["GOLD", "OLD", "GOD"] },
+            { letters: ['M', 'I', 'N', 'E'], targetWords: ["MINE"] },
+            { letters: ['O', 'R', 'E'], targetWords: ["ORE", "ROE"] },
+            { letters: ['C', 'A', 'V', 'E'], targetWords: ["CAVE"] },
+            { letters: ['G', 'L', 'O', 'W', 'S'], targetWords: ["GLOWS", "GLOW", "LOWS", "SLOW"] },
+            { letters: ['P', 'R', 'I', 'Z', 'E'], targetWords: ["PRIZE"] },
+            { letters: ['R', 'A', 'R', 'E'], targetWords: ["RARE", "REAR", "ERA"] },
+            { letters: ['R', 'O', 'C', 'K', 'S'], targetWords: ["ROCKS", "ROCK", "CORK"] }
+        ]}
     ];
+
+    const initialRoadmap: WorldDefinition[] = rawData.map(world => ({
+        id: world.id,
+        name: world.name,
+        themeColorVar: `--world-${world.id}-bg`,
+        isGenerated: false,
+        levels: world.levels.map((l, idx) => ({
+            id: `${world.id}-${idx + 1}`,
+            worldId: world.id,
+            levelInWorld: idx + 1,
+            displayName: `Level ${idx + 1}`,
+            letters: l.letters,
+            targetWords: l.targetWords,
+            unlocked: false,
+            completed: false
+        }))
+    }));
 
     if (initialRoadmap.length > 0 && initialRoadmap[0].levels.length > 0) {
         initialRoadmap[0].levels[0].unlocked = true;
     }
-    return JSON.parse(JSON.stringify(initialRoadmap));
+    return initialRoadmap;
 }
 
 
@@ -1621,9 +1638,6 @@ function main() {
 
     if (localStorage.getItem('bonusTipShown') === 'true') {
         bonusWordsTip.classList.add('hidden');
-    }
-    if (numLevelsInput) {
-        numLevelsInput.max = "7";
     }
 }
 

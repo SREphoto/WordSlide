@@ -84,59 +84,7 @@ const ALL_THREE_LETTER_WORDS: readonly string[] = Object.freeze([
     "ZAP", "ZIP", "ZOO"
 ]);
 
-let gameRoadmap: WorldDefinition[] = [
-    {
-        id: "tutorial", name: "TUTORIAL", themeColorVar: "--world-tutorial-bg", isGenerated: false, levels: [
-            { id: "tut-1", worldId: "tutorial", levelInWorld: 1, displayName: "Basics", letters: ['C', 'A', 'T'], targetWords: ["CAT", "ACT"], unlocked: true, completed: false },
-            { id: "tut-2", worldId: "tutorial", levelInWorld: 2, displayName: "Warm Up", letters: ['D', 'O', 'G'], targetWords: ["DOG", "GOD", "GO"], unlocked: false, completed: false },
-            { id: "tut-3", worldId: "tutorial", levelInWorld: 3, displayName: "Challenge", letters: ['P', 'L', 'A', 'Y'], targetWords: ["PLAY", "PAY", "LAP", "PAL"], unlocked: false, completed: false },
-        ]
-    },
-    {
-        id: "kitchen", name: "CULINARY CHAOS", themeColorVar: "--world-culinary-bg", isGenerated: false, levels: [
-            { id: "kit-1", worldId: "kitchen", levelInWorld: 1, displayName: "Breakfast", letters: ['E', 'G', 'G'], targetWords: ["EGG"], unlocked: false, completed: false },
-            { id: "kit-2", worldId: "kitchen", levelInWorld: 2, displayName: "Utensils", letters: ['P', 'O', 'T', 'S'], targetWords: ["POTS", "POT", "TOP", "TOPS", "STOP"], unlocked: false, completed: false },
-            { id: "kit-3", worldId: "kitchen", levelInWorld: 3, displayName: "Baking", letters: ['P', 'I', 'E', 'S'], targetWords: ["PIES", "PIE", "SIP"], unlocked: false, completed: false },
-            { id: "kit-4", worldId: "kitchen", levelInWorld: 4, displayName: "Drinks", letters: ['T', 'E', 'A', 'S'], targetWords: ["TEAS", "TEA", "SEA", "EAT", "SET", "SAT"], unlocked: false, completed: false },
-            { id: "kit-5", worldId: "kitchen", levelInWorld: 5, displayName: "Fruits", letters: ['P', 'E', 'A', 'R'], targetWords: ["PEAR", "PEA", "EAR", "RAP", "PAR", "APE"], unlocked: false, completed: false },
-            { id: "kit-6", worldId: "kitchen", levelInWorld: 6, displayName: "Main Course", letters: ['M', 'E', 'A', 'T', 'S'], targetWords: ["MEATS", "MEAT", "TEAM", "EATS", "SEAT", "MATS", "TAME"], unlocked: false, completed: false },
-            { id: "kit-7", worldId: "kitchen", levelInWorld: 7, displayName: "Chef's Special", letters: ['B', 'R', 'E', 'A', 'D'], targetWords: ["BREAD", "READ", "BEAR", "DARE", "DEAR", "BAD", "BED", "RED", "EAR"], unlocked: false, completed: false },
-        ]
-    },
-    {
-        id: "forest", name: "WHISPERING WOODS", themeColorVar: "--world-timber-bg", isGenerated: false, levels: [
-            { id: "for-1", worldId: "forest", levelInWorld: 1, displayName: "Trees", letters: ['E', 'L', 'M'], targetWords: ["ELM"], unlocked: false, completed: false },
-            { id: "for-2", worldId: "forest", levelInWorld: 2, displayName: "Animals", letters: ['O', 'W', 'L', 'S'], targetWords: ["OWLS", "OWL", "LOW", "SLOW"], unlocked: false, completed: false },
-            { id: "for-3", worldId: "forest", levelInWorld: 3, displayName: "Camping", letters: ['T', 'E', 'N', 'T'], targetWords: ["TENT", "NET", "TEN"], unlocked: false, completed: false },
-            { id: "for-4", worldId: "forest", levelInWorld: 4, displayName: "Hiking", letters: ['P', 'A', 'T', 'H'], targetWords: ["PATH", "HAT", "PAT", "TAP", "APT"], unlocked: false, completed: false },
-            { id: "for-5", worldId: "forest", levelInWorld: 5, displayName: "Nature", letters: ['L', 'E', 'A', 'F'], targetWords: ["LEAF", "ALE", "ELF"], unlocked: false, completed: false },
-            { id: "for-6", worldId: "forest", levelInWorld: 6, displayName: "Wildlife", letters: ['D', 'E', 'E', 'R', 'S'], targetWords: ["DEERS", "DEER", "REDS", "SEED", "SEE", "RED"], unlocked: false, completed: false },
-            { id: "for-7", worldId: "forest", levelInWorld: 7, displayName: "The Grove", letters: ['F', 'O', 'R', 'E', 'S', 'T'], targetWords: ["FOREST", "REST", "SOFT", "ROSE", "SORE", "FORT", "TOE", "SET", "FOR"], unlocked: false, completed: false },
-        ]
-    },
-    {
-        id: "ocean", name: "DEEP BLUE", themeColorVar: "--world-aqueous-bg", isGenerated: false, levels: [
-            { id: "oc-1", worldId: "ocean", levelInWorld: 1, displayName: "Water", letters: ['S', 'E', 'A'], targetWords: ["SEA"], unlocked: false, completed: false },
-            { id: "oc-2", worldId: "ocean", levelInWorld: 2, displayName: "Fish", letters: ['C', 'O', 'D'], targetWords: ["COD", "DOC"], unlocked: false, completed: false },
-            { id: "oc-3", worldId: "ocean", levelInWorld: 3, displayName: "Beach", letters: ['S', 'A', 'N', 'D'], targetWords: ["SAND", "SAD", "AND"], unlocked: false, completed: false },
-            { id: "oc-4", worldId: "ocean", levelInWorld: 4, displayName: "Tides", letters: ['W', 'A', 'V', 'E'], targetWords: ["WAVE", "AVE"], unlocked: false, completed: false },
-            { id: "oc-5", worldId: "ocean", levelInWorld: 5, displayName: "Boats", letters: ['S', 'H', 'I', 'P'], targetWords: ["SHIP", "HIP", "SIP", "HIS"], unlocked: false, completed: false },
-            { id: "oc-6", worldId: "ocean", levelInWorld: 6, displayName: "Creatures", letters: ['W', 'H', 'A', 'L', 'E'], targetWords: ["WHALE", "HEAL", "HALE", "LAW", "AWE"], unlocked: false, completed: false },
-            { id: "oc-7", worldId: "ocean", levelInWorld: 7, displayName: "The Reef", letters: ['S', 'H', 'A', 'R', 'K', 'S'], targetWords: ["SHARKS", "SHARK", "RASH", "ARK", "ASK", "HAS"], unlocked: false, completed: false },
-        ]
-    },
-    {
-        id: "space", name: "COSMIC VOYAGE", themeColorVar: "--world-cosmic-bg", isGenerated: false, levels: [
-            { id: "sp-1", worldId: "space", levelInWorld: 1, displayName: "Sky", letters: ['S', 'U', 'N'], targetWords: ["SUN", "US"], unlocked: false, completed: false },
-            { id: "sp-2", worldId: "space", levelInWorld: 2, displayName: "Night", letters: ['S', 'T', 'A', 'R'], targetWords: ["STAR", "RAT", "TAR", "ART"], unlocked: false, completed: false },
-            { id: "sp-3", worldId: "space", levelInWorld: 3, displayName: "Moon", letters: ['L', 'U', 'N', 'A'], targetWords: ["LUNA"], unlocked: false, completed: false },
-            { id: "sp-4", worldId: "space", levelInWorld: 4, displayName: "Red Planet", letters: ['M', 'A', 'R', 'S'], targetWords: ["MARS", "ARM", "RAM", "RAMS", "ARMS"], unlocked: false, completed: false },
-            { id: "sp-5", worldId: "space", levelInWorld: 5, displayName: "Void", letters: ['V', 'O', 'I', 'D'], targetWords: ["VOID", "DO"], unlocked: false, completed: false },
-            { id: "sp-6", worldId: "space", levelInWorld: 6, displayName: "Orbit", letters: ['E', 'A', 'R', 'T', 'H'], targetWords: ["EARTH", "HEART", "HEAR", "HEAT", "HATE", "RATE", "TEAR", "EAR", "THE", "HAT", "ART"], unlocked: false, completed: false },
-            { id: "sp-7", worldId: "space", levelInWorld: 7, displayName: "Galaxy", letters: ['P', 'L', 'A', 'N', 'E', 'T'], targetWords: ["PLANET", "PLANE", "PLANT", "PLATE", "LATE", "TALE", "LANE", "LEAN", "NEAT", "PANT", "TAPE", "PAT", "PAN", "PEN", "NET", "TEN", "ANT", "TAN", "TEA", "EAT", "APE", "LAP", "PAL", "LET", "PET"], unlocked: false, completed: false },
-        ]
-    }
-];
+let gameRoadmap: WorldDefinition[] = [];
 
 
 // --- Game State ---

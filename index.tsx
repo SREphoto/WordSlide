@@ -311,6 +311,7 @@ function triggerHapticFeedback(pattern: 'light' | 'success' | 'error') {
 
 // --- Screen Navigation ---
 function showRoadmapScreen() {
+    console.log('showRoadmapScreen called. gameRoadmap length:', gameRoadmap.length);
     renderRoadmap();
     levelSelectionScreen.classList.remove('hidden');
     gameContainer.classList.add('hidden');
@@ -371,6 +372,7 @@ function createPhaseGroupEl(levels: LevelDefinition[], phaseNumber: number, phas
 }
 
 function renderRoadmap() {
+    console.log('renderRoadmap called. gameRoadmap length:', gameRoadmap.length);
     roadmapMainContent.innerHTML = '';
     gameRoadmap.forEach(world => {
         const worldSection = document.createElement('div');
@@ -412,6 +414,7 @@ function renderRoadmap() {
         worldSection.appendChild(levelsGrid);
         roadmapMainContent.appendChild(worldSection);
     });
+    console.log('renderRoadmap complete. Worlds rendered:', gameRoadmap.length);
     updateGlobalUIElements();
 }
 
@@ -1563,6 +1566,9 @@ function loadProgress() {
             gameRoadmap[0].levels[0].unlocked = true;
         }
     }
+
+    console.log('loadProgress complete. gameRoadmap length:', gameRoadmap.length);
+    console.log('First world:', gameRoadmap[0]?.name);
 
     updateGlobalUIElements();
     applySettings();

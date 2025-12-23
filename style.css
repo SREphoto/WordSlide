@@ -57,6 +57,18 @@
     --world-viking-bg: #1e3a8a;
     --world-pirate-bg: #0f172a;
     --world-candy-bg: #fb7185;
+    
+    /* Level Expansion 2 Styles */
+    --world-underground-bg: #4b3621;
+    --world-safari-bg: #eab308;
+    --world-circus-bg: #ef4444;
+    --world-medieval-bg: #64748b;
+    --world-future-bg: #3b82f6;
+    --world-library-bg: #92400e;
+    --world-toybox-bg: #f472b6;
+    --world-farm-bg: #10b981;
+    --world-bamboo-bg: #15803d;
+    --world-station-bg: #1e1b4b;
 }
 
 * {

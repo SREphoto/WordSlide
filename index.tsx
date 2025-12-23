@@ -175,7 +175,17 @@ const WORLD_BACKGROUNDS: Record<string, string> = {
     'mars': 'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=1200&q=80',
     'viking': 'https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?auto=format&fit=crop&w=1200&q=80',
     'pirate': 'https://images.unsplash.com/photo-1519114056088-b877fe073a5e?auto=format&fit=crop&w=1200&q=80',
-    'candy': 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&w=1200&q=80'
+    'candy': 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&w=1200&q=80',
+    'underground': 'https://images.unsplash.com/photo-1508197145814-0cc040ca392b?auto=format&fit=crop&w=1200&q=80',
+    'safari': 'https://images.unsplash.com/photo-1547471080-7cc2032e3dbe?auto=format&fit=crop&w=1200&q=80',
+    'circus': 'https://images.unsplash.com/photo-1502139214982-d0ad755818d8?auto=format&fit=crop&w=1200&q=80',
+    'medieval': 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80',
+    'future': 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1200&q=80',
+    'library': 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1200&q=80',
+    'toybox': 'https://images.unsplash.com/photo-1558060370-d644479cb6f7?auto=format&fit=crop&w=1200&q=80',
+    'farm': 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80',
+    'bamboo': 'https://images.unsplash.com/photo-1516245842810-749e757d5a57?auto=format&fit=crop&w=1200&q=80',
+    'station': 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80'
 };
 let score = 0;
 let coins = 100;
@@ -1388,6 +1398,146 @@ function getInitialDefaultRoadmap(): WorldDefinition[] {
                 { letters: ['S', 'O', 'F', 'T'], targetWords: ["SOFT"] },
                 { letters: ['M', 'I', 'N', 'T'], targetWords: ["MINT", "TIN", "NIT"] },
                 { letters: ['S', 'U', 'G', 'A', 'R'], targetWords: ["SUGAR", "RAG", "GAS", "SUE"] }
+            ]
+        },
+        {
+            id: "underground", name: "The Deep", levels: [
+                { letters: ['D', 'I', 'G'], targetWords: ["DIG"] },
+                { letters: ['D', 'I', 'R', 'T'], targetWords: ["DIRT", "RID"] },
+                { letters: ['M', 'U', 'D'], targetWords: ["MUD"] },
+                { letters: ['C', 'A', 'V', 'E'], targetWords: ["CAVE"] },
+                { letters: ['S', 'O', 'I', 'L'], targetWords: ["SOIL", "OIL"] },
+                { letters: ['M', 'I', 'N', 'E'], targetWords: ["MINE"] },
+                { letters: ['R', 'O', 'C', 'K'], targetWords: ["ROCK"] },
+                { letters: ['D', 'E', 'E', 'P'], targetWords: ["DEEP"] },
+                { letters: ['W', 'O', 'R', 'M'], targetWords: ["WORM"] },
+                { letters: ['D', 'A', 'R', 'K'], targetWords: ["DARK"] }
+            ]
+        },
+        {
+            id: "safari", name: "Wild Safari", levels: [
+                { letters: ['L', 'I', 'O', 'N'], targetWords: ["LION", "NIL", "ION"] },
+                { letters: ['W', 'I', 'L', 'D'], targetWords: ["WILD", "LID"] },
+                { letters: ['P', 'L', 'A', 'I', 'N'], targetWords: ["PLAIN", "PLAN", "NAP", "PAN", "PIN"] },
+                { letters: ['Z', 'E', 'B', 'R', 'A'], targetWords: ["ZEBRA", "ARE", "BAR"] },
+                { letters: ['C', 'A', 'M', 'P'], targetWords: ["CAMP", "MAP", "CAP"] },
+                { letters: ['B', 'I', 'R', 'D'], targetWords: ["BIRD"] },
+                { letters: ['T', 'R', 'E', 'E'], targetWords: ["TREE"] },
+                { letters: ['H', 'U', 'N', 'T'], targetWords: ["HUNT"] },
+                { letters: ['R', 'O', 'A', 'R'], targetWords: ["ROAR"] },
+                { letters: ['S', 'A', 'V', 'A', 'N', 'A'], targetWords: ["SAVANA", "VAN", "SAN"] }
+            ]
+        },
+        {
+            id: "circus", name: "Grand Circus", levels: [
+                { letters: ['F', 'U', 'N'], targetWords: ["FUN"] },
+                { letters: ['T', 'E', 'N', 'T'], targetWords: ["TENT", "TEN", "NET"] },
+                { letters: ['L', 'I', 'O', 'N'], targetWords: ["LION"] },
+                { letters: ['B', 'A', 'L', 'L'], targetWords: ["BALL", "ALL"] },
+                { letters: ['S', 'H', 'O', 'W'], targetWords: ["SHOW", "WHO", "SOW"] },
+                { letters: ['R', 'I', 'N', 'G'], targetWords: ["RING"] },
+                { letters: ['H', 'O', 'O', 'P'], targetWords: ["HOOP"] },
+                { letters: ['A', 'C', 'R', 'O'], targetWords: ["ACRO", "ARC", "CAR"] },
+                { letters: ['J', 'U', 'M', 'P'], targetWords: ["JUMP"] },
+                { letters: ['C', 'L', 'O', 'W', 'N'], targetWords: ["CLOWN", "LOW", "OWN"] }
+            ]
+        },
+        {
+            id: "medieval", name: "Knight's Tale", levels: [
+                { letters: ['S', 'W', 'O', 'R', 'D'], targetWords: ["SWORD", "WORD", "ROD"] },
+                { letters: ['K', 'I', 'N', 'G'], targetWords: ["KING"] },
+                { letters: ['C', 'A', 'S', 'T', 'L', 'E'], targetWords: ["CASTLE", "LAST", "SALT", "SALE"] },
+                { letters: ['F', 'O', 'R', 'T'], targetWords: ["FORT"] },
+                { letters: ['H', 'E', 'R', 'O'], targetWords: ["HERO", "ROE"] },
+                { letters: ['L', 'A', 'N', 'D'], targetWords: ["LAND", "AND"] },
+                { letters: ['R', 'U', 'L', 'E'], targetWords: ["RULE"] },
+                { letters: ['N', 'O', 'B', 'L', 'E'], targetWords: ["NOBLE", "ONE", "BEL"] },
+                { letters: ['G', 'U', 'A', 'R', 'D'], targetWords: ["GUARD", "RAD", "RAG"] },
+                { letters: ['K', 'N', 'I', 'G', 'H', 'T'], targetWords: ["KNIGHT", "THIN", "NIGHT", "TIN", "GIN"] }
+            ]
+        },
+        {
+            id: "future", name: "Neo Era", levels: [
+                { letters: ['T', 'E', 'C', 'H'], targetWords: ["TECH"] },
+                { letters: ['B', 'O', 'T'], targetWords: ["BOT"] },
+                { letters: ['W', 'O', 'R', 'L', 'D'], targetWords: ["WORLD", "ROD", "OLD"] },
+                { letters: ['C', 'I', 'T', 'Y'], targetWords: ["CITY"] },
+                { letters: ['S', 'P', 'A', 'C', 'E'], targetWords: ["SPACE", "ACE", "SEA", "APE"] },
+                { letters: ['S', 'T', 'A', 'R'], targetWords: ["STAR"] },
+                { letters: ['G', 'L', 'O', 'W'], targetWords: ["GLOW"] },
+                { letters: ['B', 'E', 'A', 'M'], targetWords: ["BEAM"] },
+                { letters: ['V', 'I', 'E', 'W'], targetWords: ["VIEW"] },
+                { letters: ['C', 'Y', 'B', 'E', 'R'], targetWords: ["CYBER", "BYE", "BEER"] }
+            ]
+        },
+        {
+            id: "library", name: "Ancient Library", levels: [
+                { letters: ['B', 'O', 'O', 'K'], targetWords: ["BOOK"] },
+                { letters: ['R', 'E', 'A', 'D'], targetWords: ["READ", "ERA", "RED"] },
+                { letters: ['P', 'A', 'P', 'E', 'R'], targetWords: ["PAPER", "APE", "PER", "ARE"] },
+                { letters: ['I', 'N', 'K'], targetWords: ["INK"] },
+                { letters: ['P', 'E', 'N'], targetWords: ["PEN"] },
+                { letters: ['S', 'H', 'E', 'L', 'F'], targetWords: ["SHELF", "SELF", "SHE"] },
+                { letters: ['P', 'A', 'G', 'E'], targetWords: ["PAGE", "AGE"] },
+                { letters: ['T', 'A', 'L', 'E'], targetWords: ["TALE", "ATE", "LET"] },
+                { letters: ['K', 'N', 'O', 'W'], targetWords: ["KNOW", "NOW", "OWN"] },
+                { letters: ['L', 'E', 'A', 'R', 'N'], targetWords: ["LEARN", "NEAR", "REAL", "EAR", "ERA"] }
+            ]
+        },
+        {
+            id: "toybox", name: "Block Land", levels: [
+                { letters: ['B', 'L', 'O', 'C', 'K'], targetWords: ["BLOCK"] },
+                { letters: ['T', 'O', 'Y'], targetWords: ["TOY"] },
+                { letters: ['P', 'L', 'A', 'Y'], targetWords: ["PLAY", "PAY", "LAP"] },
+                { letters: ['C', 'A', 'R'], targetWords: ["CAR"] },
+                { letters: ['B', 'A', 'B', 'Y'], targetWords: ["BABY", "BAY"] },
+                { letters: ['D', 'O', 'L', 'L'], targetWords: ["DOLL"] },
+                { letters: ['K', 'I', 'T', 'E'], targetWords: ["KITE"] },
+                { letters: ['G', 'A', 'M', 'E'], targetWords: ["GAME", "AGE", "GEM"] },
+                { letters: ['B', 'E', 'A', 'R'], targetWords: ["BEAR"] },
+                { letters: ['F', 'L', 'A', 'G'], targetWords: ["FLAG", "LAG", "GAL"] }
+            ]
+        },
+        {
+            id: "farm", name: "Quiet Farm", levels: [
+                { letters: ['C', 'O', 'W'], targetWords: ["COW"] },
+                { letters: ['P', 'I', 'G'], targetWords: ["PIG"] },
+                { letters: ['H', 'E', 'N'], targetWords: ["HEN"] },
+                { letters: ['D', 'O', 'G'], targetWords: ["DOG"] },
+                { letters: ['C', 'A', 'T'], targetWords: ["CAT"] },
+                { letters: ['C', 'O', 'R', 'N'], targetWords: ["CORN", "NOR", "CON"] },
+                { letters: ['B', 'A', 'R', 'N'], targetWords: ["BARN", "BAN", "RAN"] },
+                { letters: ['P', 'L', 'O', 'W'], targetWords: ["PLOW", "LOW", "OWL"] },
+                { letters: ['S', 'E', 'E', 'D'], targetWords: ["SEED", "SEE"] },
+                { letters: ['F', 'I', 'E', 'L', 'D'], targetWords: ["FIELD", "FILE", "DIE", "ELD"] }
+            ]
+        },
+        {
+            id: "bamboo", name: "Bamboo Forest", levels: [
+                { letters: ['Z', 'E', 'N'], targetWords: ["ZEN"] },
+                { letters: ['P', 'A', 'N', 'D', 'A'], targetWords: ["PANDA", "AND", "NAP", "PAN"] },
+                { letters: ['L', 'E', 'A', 'F'], targetWords: ["LEAF", "ALE", "ELF"] },
+                { letters: ['T', 'R', 'E', 'E'], targetWords: ["TREE"] },
+                { letters: ['B', 'A', 'M', 'B', 'O', 'O'], targetWords: ["BAMBOO", "BOO", "MOB"] },
+                { letters: ['G', 'L', 'O', 'W'], targetWords: ["GLOW"] },
+                { letters: ['M', 'I', 'S', 'T'], targetWords: ["MIST"] },
+                { letters: ['W', 'I', 'L', 'D'], targetWords: ["WILD"] },
+                { letters: ['F', 'E', 'E', 'D'], targetWords: ["FEED"] },
+                { letters: ['S', 'I', 'L', 'E', 'N', 'T'], targetWords: ["SILENT", "LINE", "LENT", "SENT", "TEN"] }
+            ]
+        },
+        {
+            id: "station", name: "Star Station", levels: [
+                { letters: ['S', 'T', 'A', 'R'], targetWords: ["STAR", "RAT", "ART"] },
+                { letters: ['S', 'H', 'I', 'P'], targetWords: ["SHIP", "HIP", "SIP"] },
+                { letters: ['M', 'O', 'O', 'N'], targetWords: ["MOON", "MOO"] },
+                { letters: ['V', 'O', 'I', 'D'], targetWords: ["VOID"] },
+                { letters: ['A', 'T', 'O', 'M'], targetWords: ["ATOM"] },
+                { letters: ['C', 'O', 'M', 'E', 'T'], targetWords: ["COMET", "MET", "COT"] },
+                { letters: ['S', 'O', 'L', 'A', 'R'], targetWords: ["SOLAR", "OAR"] },
+                { letters: ['P', 'L', 'A', 'N', 'E', 'T'], targetWords: ["PLANET", "PLANE", "PANT", "TEN"] },
+                { letters: ['O', 'R', 'B', 'I', 'T'], targetWords: ["ORBIT", "BIT", "ROT"] },
+                { letters: ['G', 'A', 'L', 'A', 'X', 'Y'], targetWords: ["GALAXY", "GAY", "LAY"] }
             ]
         }
     ];

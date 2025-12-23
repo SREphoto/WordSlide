@@ -45,6 +45,18 @@
     --world-sky-bg: #60a5fa;
     --world-crystal-bg: #c084fc;
     --world-generated-bg: #6366f1;
+
+    /* New World Styles */
+    --world-cyber-bg: #06b6d4;
+    --world-ruins-bg: #d97706;
+    --world-steam-bg: #78350f;
+    --world-enchanted-bg: #db2777;
+    --world-ghost-bg: #4c1d95;
+    --world-sakura-bg: #fda4af;
+    --world-mars-bg: #ea580c;
+    --world-viking-bg: #1e3a8a;
+    --world-pirate-bg: #0f172a;
+    --world-candy-bg: #fb7185;
 }
 
 * {
@@ -189,10 +201,29 @@ h3 {
 #roadmap-content-wrapper {
     flex: 1;
     overflow-y: auto;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
+    padding: 2rem;
+}
+
+#roadmap-main-content {
+    display: grid;
+    grid-template-columns: repeat(var(--roadmap-cols, 3), 1fr);
     gap: 2rem;
+}
+
+@media (max-width: 1200px) {
+    :root {
+        --roadmap-cols: 2;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --roadmap-cols: 1;
+    }
+
+    #roadmap-content-wrapper {
+        padding: 1rem;
+    }
 }
 
 .world-section {
@@ -247,21 +278,27 @@ h3 {
 }
 
 .levels-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: flex-start;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.75rem;
+    padding: 0.5rem;
+}
+
+@media (max-width: 1400px) {
+    .levels-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 .level-gem {
-    width: 52px;
-    height: 52px;
-    border-radius: 16px;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: 700;
-    font-size: 1.25rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
@@ -290,15 +327,6 @@ h3 {
     filter: brightness(1.1);
 }
 
-/* Phase Grouping */
-.phase-group {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    padding: 0.5rem;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 18px;
-}
 
 /* Game Screen */
 .main-game-area {

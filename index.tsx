@@ -216,11 +216,6 @@ const closeSettingsModalButton = document.getElementById('close-settings-modal')
 const soundToggle = document.getElementById('sound-toggle') as HTMLInputElement;
 const musicToggle = document.getElementById('music-toggle') as HTMLInputElement;
 const resetProgressButton = document.getElementById('reset-progress-button')!;
-const privacyPolicyLink = document.getElementById('privacy-policy-link')!;
-const acknowledgementsLink = document.getElementById('acknowledgements-link')!;
-const apiKeyInput = document.getElementById('api-key-input') as HTMLInputElement;
-const saveApiKeyButton = document.getElementById('save-api-key-button') as HTMLButtonElement;
-const apiKeyStatus = document.getElementById('api-key-status') as HTMLParagraphElement;
 
 
 interface SwipedLetterInfo {
@@ -1762,10 +1757,6 @@ function closeSettingsModal() {
 function applySettingsToUI() {
     soundToggle.checked = gameSettings.soundEffectsEnabled;
     musicToggle.checked = gameSettings.musicEnabled;
-    const savedApiKey = localStorage.getItem('geminiApiKey');
-    if (savedApiKey) {
-        apiKeyInput.value = savedApiKey;
-    }
     // Add logic here to mute/unmute actual game sounds/music if implemented
 }
 
@@ -1865,8 +1856,6 @@ function attachEventListeners() {
     soundToggle.addEventListener('change', handleSettingsChange);
     musicToggle.addEventListener('change', handleSettingsChange);
     resetProgressButton.addEventListener('click', handleResetProgress);
-    privacyPolicyLink.addEventListener('click', (e) => { e.preventDefault(); showFeedback("Privacy Policy: To be implemented.", false, false, 2000); });
-    acknowledgementsLink.addEventListener('click', (e) => { e.preventDefault(); showFeedback("Acknowledgements: To be implemented.", false, false, 2000); });
 
 
     window.addEventListener('resize', () => {
@@ -1880,14 +1869,39 @@ function attachEventListeners() {
 
 // --- Application Initialization ---
 function main() {
-    // initGemini removed
-    loadProgress(); // Loads game data and settings
-    initSpeechRecognition();
-    attachEventListeners();
-    showRoadmapScreen();
+    try {
+        console.log('Main function starting...');
 
-    if (localStorage.getItem('bonusTipShown') === 'true') {
-        bonusWordsTip.classList.add('hidden');
+        // Force settings modal to be hidden
+        settingsModal.classList.add('hidden');
+        bonusWordsModal.classList.add('hidden');
+        shopModal.classList.add('hidden');
+
+        console.log('Loading progress...');
+        loadProgress(); // Loads game data and settings
+
+        console.log('Initializing speech recognition...');
+        initSpeechRecognition();
+
+        console.log('Attaching event listeners...');
+        attachEventListeners();
+
+        console.log('Showing roadmap screen...');
+        showRoadmapScreen();
+
+        if (localStorage.getItem('bonusTipShown') === 'true') {
+            bonusWordsTip.classList.add('hidden');
+        }
+
+        console.log('Main function complete!');
+    } catch (error) {
+        console.error('Error in main():', error);
+        // Show error to user
+        document.body.innerHTML = `<div style="color: white; padding: 2rem; text-align: center;">
+            <h1>Error Loading Game</h1>
+            <p>${error}</p>
+            <p>Please check the console for details.</p>
+        </div>`;
     }
 }
 

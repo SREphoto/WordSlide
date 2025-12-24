@@ -1871,17 +1871,20 @@ function attachEventListeners() {
 function main() {
     try {
         console.log('Main function starting...');
+        console.log('levelSelectionScreen:', levelSelectionScreen);
+        console.log('settingsModal:', settingsModal);
 
         // Force settings modal to be hidden
         settingsModal.classList.add('hidden');
         bonusWordsModal.classList.add('hidden');
         shopModal.classList.add('hidden');
+        console.log('Modals hidden');
 
         console.log('Loading progress...');
         loadProgress(); // Loads game data and settings
 
-        console.log('Initializing speech recognition...');
-        initSpeechRecognition();
+        // Speech recognition removed - not needed
+        // initSpeechRecognition();
 
         console.log('Attaching event listeners...');
         attachEventListeners();
@@ -1894,6 +1897,20 @@ function main() {
         }
 
         console.log('Main function complete!');
+        console.log('levelSelectionScreen classes:', levelSelectionScreen.className);
+        console.log('settingsModal classes:', settingsModal.className);
+        console.log('gameRoadmap length:', gameRoadmap.length);
+
+        // Add visual debug info
+        const debugDiv = document.createElement('div');
+        debugDiv.style.cssText = 'position:fixed;top:10px;right:10px;background:rgba(0,0,0,0.8);color:lime;padding:10px;z-index:9999;font-family:monospace;font-size:12px;';
+        debugDiv.innerHTML = `
+            <div>Roadmap Length: ${gameRoadmap.length}</div>
+            <div>Level Screen Hidden: ${levelSelectionScreen.classList.contains('hidden')}</div>
+            <div>Settings Hidden: ${settingsModal.classList.contains('hidden')}</div>
+        `;
+        document.body.appendChild(debugDiv);
+
     } catch (error) {
         console.error('Error in main():', error);
         // Show error to user

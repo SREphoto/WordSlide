@@ -57,7 +57,7 @@
     --world-viking-bg: #1e3a8a;
     --world-pirate-bg: #0f172a;
     --world-candy-bg: #fb7185;
-    
+
     /* Level Expansion 2 Styles */
     --world-underground-bg: #4b3621;
     --world-safari-bg: #eab308;
@@ -517,6 +517,12 @@ h3 {
     justify-content: center;
     align-items: center;
     z-index: 100;
+}
+
+.modal-overlay.hidden {
+    display: none;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .modal-dialog {

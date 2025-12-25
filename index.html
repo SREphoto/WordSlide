@@ -17,8 +17,8 @@
       }
     }
     </script>
-  <script type="module" crossorigin src="/WordSlide/assets/index-D0QWrERY.js"></script>
-  <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-Dkq74xDs.css">
+  <script type="module" crossorigin src="/WordSlide/assets/index-Bpd7SpxX.js"></script>
+  <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-yFWTwNJ9.css">
 </head>
 
 <body>
@@ -383,6 +383,42 @@
                 <div class="footer-item">
                     <span class="material-symbols-outlined coin-icon">monetization_on</span>
                     <span id="conn-coins-value" class="coins-value-display">100</span>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Strands Game Screen -->
+        <div id="strands-container" class="app-screen hidden">
+            <header class="header">
+                <button id="strands-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+                <div class="header-title">Strands</div>
+                <div id="strands-hint-container">
+                    <button id="strands-hint-button" class="header-button material-symbols-outlined">lightbulb</button>
+                </div>
+            </header>
+
+            <main class="strands-game-area">
+                <div class="strands-theme">
+                    Theme: <span id="strands-theme-text">???</span>
+                </div>
+
+                <div id="strands-grid" class="strands-grid">
+                    <!-- 6x8 grid of letters -->
+                </div>
+
+                <div class="strands-status">
+                    <div id="strands-current-guess" class="strands-current-guess"></div>
+                </div>
+
+                <div id="strands-found-list" class="strands-found-list">
+                    <!-- Found words chips -->
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="strands-coins-value" class="coins-value-display">100</span>
                 </div>
             </footer>
         </div>

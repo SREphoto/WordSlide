@@ -17,8 +17,8 @@
       }
     }
     </script>
-  <script type="module" crossorigin src="/WordSlide/assets/index-DkSzbRDZ.js"></script>
-  <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-BII160g7.css">
+  <script type="module" crossorigin src="/WordSlide/assets/index-BhhdPhmU.js"></script>
+  <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-l6qf9YBB.css">
 </head>
 
 <body>
@@ -497,6 +497,45 @@
                 <div class="footer-item">
                     <span class="material-symbols-outlined coin-icon">monetization_on</span>
                     <span id="boxed-coins-value" class="coins-value-display">100</span>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Sudoku Game Screen -->
+        <div id="sudoku-container" class="app-screen hidden">
+            <header class="header">
+                <button id="sudoku-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+                <div class="header-title">Sudoku</div>
+                <button id="sudoku-settings-button" class="header-button material-symbols-outlined">settings</button>
+            </header>
+
+            <main class="sudoku-game-area">
+                <div class="sudoku-stats">
+                    <div id="sudoku-mistakes">Mistakes: 0/3</div>
+                    <div id="sudoku-difficulty">Easy</div>
+                </div>
+
+                <div id="sudoku-grid" class="sudoku-grid">
+                    <!-- 81 cells -->
+                </div>
+
+                <div class="sudoku-numpad" id="sudoku-numpad">
+                    <button class="numpad-btn" data-val="1">1</button>
+                    <button class="numpad-btn" data-val="2">2</button>
+                    <button class="numpad-btn" data-val="3">3</button>
+                    <button class="numpad-btn" data-val="4">4</button>
+                    <button class="numpad-btn" data-val="5">5</button>
+                    <button class="numpad-btn" data-val="6">6</button>
+                    <button class="numpad-btn" data-val="7">7</button>
+                    <button class="numpad-btn" data-val="8">8</button>
+                    <button class="numpad-btn" data-val="9">9</button>
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="sudoku-coins-value" class="coins-value-display">100</span>
                 </div>
             </footer>
         </div>

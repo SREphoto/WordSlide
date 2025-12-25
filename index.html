@@ -17,8 +17,8 @@
       }
     }
     </script>
-  <script type="module" crossorigin src="/WordSlide/assets/index-CHoslpng.js"></script>
-  <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-U0Xev5qG.css">
+  <script type="module" crossorigin src="/WordSlide/assets/index-D0QWrERY.js"></script>
+  <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-Dkq74xDs.css">
 </head>
 
 <body>
@@ -339,6 +339,50 @@
                 <div class="footer-item">
                     <span class="material-symbols-outlined coin-icon">monetization_on</span>
                     <span id="bee-coins-value" class="coins-value-display">100</span>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Connections Game Screen -->
+        <div id="connections-container" class="app-screen hidden">
+            <header class="header">
+                <button id="conn-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+                <div class="header-title">Connections</div>
+                <button id="conn-help-button" class="header-button material-symbols-outlined">help_outline</button>
+            </header>
+
+            <main class="conn-game-area">
+                <div class="conn-instructions">Create four groups of four!</div>
+
+                <div id="conn-found-area" class="conn-solved-list">
+                    <!-- Solved categories will appear here -->
+                </div>
+
+                <div id="conn-grid" class="conn-grid">
+                    <!-- 16 or fewer words appear here -->
+                </div>
+
+                <div class="conn-status">
+                    Mistakes remaining:
+                    <div id="mistake-markers" class="mistake-circles">
+                        <span class="dot filled"></span>
+                        <span class="dot filled"></span>
+                        <span class="dot filled"></span>
+                        <span class="dot filled"></span>
+                    </div>
+                </div>
+
+                <div class="conn-controls">
+                    <button id="conn-shuffle" class="conn-btn-alt">Shuffle</button>
+                    <button id="conn-deselect" class="conn-btn-alt">Deselect All</button>
+                    <button id="conn-submit" class="conn-btn-main">Submit</button>
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="conn-coins-value" class="coins-value-display">100</span>
                 </div>
             </footer>
         </div>

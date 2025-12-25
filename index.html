@@ -17,14 +17,106 @@
       }
     }
     </script>
-  <script type="module" crossorigin src="/WordSlide/assets/index-zzYV1QXl.js"></script>
-  <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-mmpk4EyB.css">
+  <script type="module" crossorigin src="/WordSlide/assets/index-cydkrRy5.js"></script>
+  <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-BWLsCpN4.css">
 </head>
 
 <body>
     <div id="app-container">
+        <!-- Main Menu / Game Selector Screen -->
+        <div id="main-menu-screen" class="app-screen">
+            <header class="header">
+                <div class="header-title">Puzzle Hub</div>
+                <button id="main-settings-button" class="header-button material-symbols-outlined">settings</button>
+            </header>
+
+            <div id="game-selector-wrapper">
+                <h2 class="game-selector-title">Choose Your Game</h2>
+                <div id="game-mode-grid">
+                    <!-- WordSlide Card -->
+                    <button class="game-mode-card" data-game="wordslide">
+                        <div class="game-icon">🔤</div>
+                        <h3 class="game-title">WordSlide</h3>
+                        <p class="game-description">Swipe letters to form words</p>
+                        <span class="game-levels">340+ Levels</span>
+                    </button>
+
+                    <!-- Wordle Card -->
+                    <button class="game-mode-card" data-game="wordle">
+                        <div class="game-icon">🎯</div>
+                        <h3 class="game-title">Wordle</h3>
+                        <p class="game-description">Guess the 5-letter word</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+
+                    <!-- Spelling Bee Card -->
+                    <button class="game-mode-card" data-game="spelling-bee">
+                        <div class="game-icon">🐝</div>
+                        <h3 class="game-title">Spelling Bee</h3>
+                        <p class="game-description">Make words with given letters</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+
+                    <!-- Connections Card -->
+                    <button class="game-mode-card" data-game="connections">
+                        <div class="game-icon">🔗</div>
+                        <h3 class="game-title">Connections</h3>
+                        <p class="game-description">Group words by category</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+
+                    <!-- Strands Card -->
+                    <button class="game-mode-card" data-game="strands">
+                        <div class="game-icon">🧵</div>
+                        <h3 class="game-title">Strands</h3>
+                        <p class="game-description">Find themed words</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+
+                    <!-- Letter Boxed Card -->
+                    <button class="game-mode-card" data-game="letter-boxed">
+                        <div class="game-icon">📦</div>
+                        <h3 class="game-title">Letter Boxed</h3>
+                        <p class="game-description">Connect letters to form words</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+
+                    <!-- Tiles Card -->
+                    <button class="game-mode-card" data-game="tiles">
+                        <div class="game-icon">🎴</div>
+                        <h3 class="game-title">Tiles</h3>
+                        <p class="game-description">Match tiles to clear the board</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+
+                    <!-- Pips Card -->
+                    <button class="game-mode-card" data-game="pips">
+                        <div class="game-icon">🎲</div>
+                        <h3 class="game-title">Pips</h3>
+                        <p class="game-description">Dice and domino puzzle challenge</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+
+                    <!-- Sudoku Card -->
+                    <button class="game-mode-card" data-game="sudoku">
+                        <div class="game-icon">🔢</div>
+                        <h3 class="game-title">Sudoku</h3>
+                        <p class="game-description">Fill the 9x9 grid</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="main-menu-coins" class="coins-value-display">100</span>
+                </div>
+            </footer>
+        </div>
+
         <!-- Level Selection / Roadmap Screen -->
-        <div id="level-selection-screen" class="app-screen">
+        <div id="level-selection-screen" class="app-screen hidden">
             <header class="header">
                 <button id="roadmap-back-button" class="header-button material-symbols-outlined">arrow_back</button>
                 <div class="header-title">Roadmap</div>
@@ -101,6 +193,75 @@
                 <button id="game-shop-button" class="footer-button footer-item">
                     <span class="material-symbols-outlined">shopping_cart</span>
                 </button>
+            </footer>
+        </div>
+
+        <!-- Wordle Game Screen -->
+        <div id="wordle-container" class="app-screen hidden">
+            <header class="header">
+                <button id="wordle-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+                <div class="header-title">Wordle</div>
+                <button id="wordle-settings-button" class="header-button material-symbols-outlined">settings</button>
+            </header>
+
+            <main class="wordle-game-area">
+                <!-- Game Info -->
+                <div id="wordle-info">
+                    <div id="wordle-attempts">Attempt <span id="current-attempt">1</span>/6</div>
+                    <div id="wordle-message"></div>
+                </div>
+
+                <!-- 5x6 Word Grid -->
+                <div id="wordle-grid">
+                    <!-- Rows will be dynamically created -->
+                </div>
+
+                <!-- On-Screen Keyboard -->
+                <div id="wordle-keyboard">
+                    <div class="keyboard-row">
+                        <button class="key-button" data-key="Q">Q</button>
+                        <button class="key-button" data-key="W">W</button>
+                        <button class="key-button" data-key="E">E</button>
+                        <button class="key-button" data-key="R">R</button>
+                        <button class="key-button" data-key="T">T</button>
+                        <button class="key-button" data-key="Y">Y</button>
+                        <button class="key-button" data-key="U">U</button>
+                        <button class="key-button" data-key="I">I</button>
+                        <button class="key-button" data-key="O">O</button>
+                        <button class="key-button" data-key="P">P</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <div class="spacer-half"></div>
+                        <button class="key-button" data-key="A">A</button>
+                        <button class="key-button" data-key="S">S</button>
+                        <button class="key-button" data-key="D">D</button>
+                        <button class="key-button" data-key="F">F</button>
+                        <button class="key-button" data-key="G">G</button>
+                        <button class="key-button" data-key="H">H</button>
+                        <button class="key-button" data-key="J">J</button>
+                        <button class="key-button" data-key="K">K</button>
+                        <button class="key-button" data-key="L">L</button>
+                        <div class="spacer-half"></div>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key-button key-special" data-key="ENTER">ENTER</button>
+                        <button class="key-button" data-key="Z">Z</button>
+                        <button class="key-button" data-key="X">X</button>
+                        <button class="key-button" data-key="C">C</button>
+                        <button class="key-button" data-key="V">V</button>
+                        <button class="key-button" data-key="B">B</button>
+                        <button class="key-button" data-key="N">N</button>
+                        <button class="key-button" data-key="M">M</button>
+                        <button class="key-button key-special" data-key="BACKSPACE">⌫</button>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="wordle-coins-value" class="coins-value-display">100</span>
+                </div>
             </footer>
         </div>
     </div>

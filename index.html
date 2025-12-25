@@ -17,8 +17,8 @@
       }
     }
     </script>
-  <script type="module" crossorigin src="/WordSlide/assets/index-cydkrRy5.js"></script>
-  <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-BWLsCpN4.css">
+  <script type="module" crossorigin src="/WordSlide/assets/index-CHoslpng.js"></script>
+  <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-U0Xev5qG.css">
 </head>
 
 <body>
@@ -261,6 +261,84 @@
                 <div class="footer-item">
                     <span class="material-symbols-outlined coin-icon">monetization_on</span>
                     <span id="wordle-coins-value" class="coins-value-display">100</span>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Spelling Bee Game Screen -->
+        <div id="spelling-bee-container" class="app-screen hidden">
+            <header class="header">
+                <button id="bee-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+                <div class="header-title">Spelling Bee</div>
+                <button id="bee-found-toggle" class="header-button material-symbols-outlined">list_alt</button>
+            </header>
+
+            <main class="bee-game-area">
+                <div class="bee-status">
+                    <div class="bee-rank-container">
+                        <span id="bee-rank">Beginner</span>
+                        <div class="bee-score-progress">
+                            <div id="bee-score-fill" style="width: 0%"></div>
+                        </div>
+                        <span id="bee-score">0</span>
+                    </div>
+                </div>
+
+                <div id="bee-message" class="bee-message"></div>
+
+                <div class="bee-input-display">
+                    <span id="bee-current-word"></span>
+                    <span class="bee-cursor">|</span>
+                </div>
+
+                <div class="honeycomb">
+                    <div class="hive-cell center" id="bee-cell-center">
+                        <div class="cell-content"></div>
+                    </div>
+                    <div class="hive-cell outer" id="bee-cell-0">
+                        <div class="cell-content"></div>
+                    </div>
+                    <div class="hive-cell outer" id="bee-cell-1">
+                        <div class="cell-content"></div>
+                    </div>
+                    <div class="hive-cell outer" id="bee-cell-2">
+                        <div class="cell-content"></div>
+                    </div>
+                    <div class="hive-cell outer" id="bee-cell-3">
+                        <div class="cell-content"></div>
+                    </div>
+                    <div class="hive-cell outer" id="bee-cell-4">
+                        <div class="cell-content"></div>
+                    </div>
+                    <div class="hive-cell outer" id="bee-cell-5">
+                        <div class="cell-content"></div>
+                    </div>
+                </div>
+
+                <div class="bee-controls">
+                    <button id="bee-delete" class="bee-btn">Delete</button>
+                    <button id="bee-shuffle" class="bee-btn material-symbols-outlined">refresh</button>
+                    <button id="bee-enter" class="bee-btn">Enter</button>
+                </div>
+
+                <!-- Found Words Overlay -->
+                <div id="bee-found-words-modal" class="modal-overlay hidden">
+                    <div class="modal-dialog">
+                        <div class="modal-header">
+                            <h2 class="modal-title">Words Found (<span id="bee-found-count">0</span>)</h2>
+                            <button id="bee-close-found" class="modal-close-button">&times;</button>
+                        </div>
+                        <div id="bee-found-list" class="bee-words-grid">
+                            <!-- Found words go here -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="bee-coins-value" class="coins-value-display">100</span>
                 </div>
             </footer>
         </div>

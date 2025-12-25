@@ -4,26 +4,26 @@ description: Plan for expanding WordSlide into a multi-game puzzle hub
 
 # Game Expansion Plan
 
-## Phase 1: Infrastructure ✅ (In Progress)
+## Phase 1: Infrastructure ✅
 
-- [ ] Create main menu/game selector screen
-- [ ] Add game mode cards with icons
-- [ ] Refactor WordSlide to be one game mode
-- [ ] Set up navigation between games
+- [x] Create main menu/game selector screen
+- [x] Add game mode cards with icons
+- [x] Refactor WordSlide to be one game mode
+- [x] Set up navigation between games
 
-## Phase 2: Word Games (Priority Order)
+## Phase 2: Word Games ✅
 
-1. **Wordle** - 6 guesses, 5-letter word, color hints
-2. **Spelling Bee** - Make words from 7 letters, one required
-3. **Connections** - Group 16 words into 4 categories
-4. **Strands** - Find themed words in a grid
-5. **Letter Boxed** - Form words using letters from box sides
+1. **Wordle** ✅ - 6 guesses, 5-letter word, color hints
+2. **Spelling Bee** ✅ - Make words from 7 letters, one required
+3. **Connections** ✅ - Group 16 words into 4 categories
+4. **Strands** ✅ - Find themed words in a grid
+5. **Letter Boxed** ✅ - Form words using letters from box sides
 
-## Phase 3: Additional Games
+## Phase 3: Additional Games ✅
 
-6. **Sudoku** - Classic 9x9 number puzzle
-2. **Tiles** - Tile matching puzzle
-3. **Pips** - Dice/domino game
+6. **Sudoku** ✅ - Classic 9x9 number puzzle
+2. **Tiles** ✅ - Tile matching puzzle
+3. **Pips** ✅ - Dice matching puzzle
 
 ## Design Philosophy
 

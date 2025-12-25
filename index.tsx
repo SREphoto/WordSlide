@@ -2,6 +2,14 @@
 // import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { SoundManager } from "./SoundManager";
 import { DictionaryManager } from "./DictionaryManager";
+import { WordleGame, type LetterResult } from "./WordleGame";
+import { SpellingBeeGame } from "./SpellingBeeGame";
+import { ConnectionsGame } from "./ConnectionsGame";
+import { StrandsGame } from "./StrandsGame";
+import { LetterBoxedGame } from "./LetterBoxedGame";
+import { SudokuGame } from "./SudokuGame";
+import { TilesGame } from "./TilesGame";
+import { PipsGame } from "./PipsGame";
 
 // --- Interfaces ---
 interface LevelDefinition {
@@ -172,6 +180,107 @@ const roadmapBonusBadge = document.getElementById('roadmap-bonus-badge')!;
 const roadmapCoinsValue = document.getElementById('roadmap-coins-value')! as HTMLSpanElement;
 const roadmapShopButton = document.getElementById('roadmap-shop-button')!;
 
+// Wordle UI
+const wordleContainer = document.getElementById('wordle-container')!;
+const wordleBackButton = document.getElementById('wordle-back-button')!;
+const wordleSettingsButton = document.getElementById('wordle-settings-button')!;
+const wordleGrid = document.getElementById('wordle-grid')!;
+const wordleKeyboard = document.getElementById('wordle-keyboard')!;
+const currentAttemptSpan = document.getElementById('current-attempt')!;
+const wordleMessage = document.getElementById('wordle-message')!;
+const wordleCoins = document.getElementById('wordle-coins-value')!;
+
+// Spelling Bee UI
+const beeContainer = document.getElementById('spelling-bee-container')!;
+const beeBackButton = document.getElementById('bee-back-button')!;
+const beeFoundToggle = document.getElementById('bee-found-toggle')!;
+const beeRankDisplay = document.getElementById('bee-rank')!;
+const beeScoreDisplay = document.getElementById('bee-score')!;
+const beeScoreFill = document.getElementById('bee-score-fill')!;
+const beeMessageDisplay = document.getElementById('bee-message')!;
+const beeCurrentWordDisplay = document.getElementById('bee-current-word')!;
+const beeCellCenter = document.getElementById('bee-cell-center')!;
+const beeOuterCells = [
+    document.getElementById('bee-cell-0')!,
+    document.getElementById('bee-cell-1')!,
+    document.getElementById('bee-cell-2')!,
+    document.getElementById('bee-cell-3')!,
+    document.getElementById('bee-cell-4')!,
+    document.getElementById('bee-cell-5')!,
+];
+const beeDeleteBtn = document.getElementById('bee-delete')!;
+const beeShuffleBtn = document.getElementById('bee-shuffle')!;
+const beeEnterBtn = document.getElementById('bee-enter')!;
+const beeFoundModal = document.getElementById('bee-found-words-modal')!;
+const beeCloseFoundBtn = document.getElementById('bee-close-found')!;
+const beeFoundCount = document.getElementById('bee-found-count')!;
+const beeFoundList = document.getElementById('bee-found-list')!;
+const beeCoinsValues = document.getElementById('bee-coins-value')!;
+
+// Connections UI
+const connContainer = document.getElementById('connections-container')!;
+const connBackButton = document.getElementById('conn-back-button')!;
+const connHelpButton = document.getElementById('conn-help-button')!;
+const connSolvedArea = document.getElementById('conn-found-area')!;
+const connGrid = document.getElementById('conn-grid')!;
+const mistakeMarkers = document.getElementById('mistake-markers')!;
+const connShuffleBtn = document.getElementById('conn-shuffle')!;
+const connDeselectBtn = document.getElementById('conn-deselect')!;
+const connSubmitBtn = document.getElementById('conn-submit')! as HTMLButtonElement;
+const connCoinsValues = document.getElementById('conn-coins-value')!;
+
+// Strands UI
+const strandsContainer = document.getElementById('strands-container')!;
+const strandsBackButton = document.getElementById('strands-back-button')!;
+const strandsThemeText = document.getElementById('strands-theme-text')!;
+const strandsGrid = document.getElementById('strands-grid')!;
+const strandsCurrentGuess = document.getElementById('strands-current-guess')!;
+const strandsFoundList = document.getElementById('strands-found-list')!;
+const strandsHintButton = document.getElementById('strands-hint-button')!;
+const strandsCoinsValues = document.getElementById('strands-coins-value')!;
+
+// Letter Boxed UI
+const boxedContainer = document.getElementById('letter-boxed-container')!;
+const boxedBackButton = document.getElementById('boxed-back-button')!;
+const boxedFoundList = document.getElementById('boxed-found-list')!;
+const boxedCurrentWord = document.getElementById('boxed-current-word')!;
+const boxedMessage = document.getElementById('boxed-message')!;
+const boxedDeleteBtn = document.getElementById('boxed-delete')!;
+const boxedEnterBtn = document.getElementById('boxed-enter')!;
+const boxedHelpButton = document.getElementById('boxed-help-button')!;
+const boxedCoinsValues = document.getElementById('boxed-coins-value')!;
+const boxedSides = [
+    document.getElementById('boxed-side-0')!,
+    document.getElementById('boxed-side-1')!,
+    document.getElementById('boxed-side-2')!,
+    document.getElementById('boxed-side-3')!,
+];
+
+// Sudoku UI
+const sudokuContainer = document.getElementById('sudoku-container')!;
+const sudokuBackButton = document.getElementById('sudoku-back-button')!;
+const sudokuMistakesDisplay = document.getElementById('sudoku-mistakes')!;
+const sudokuDifficultyDisplay = document.getElementById('sudoku-difficulty')!;
+const sudokuGrid = document.getElementById('sudoku-grid')!;
+const sudokuNumpad = document.getElementById('sudoku-numpad')!;
+const sudokuSettingsButton = document.getElementById('sudoku-settings-button')!;
+const sudokuCoinsValues = document.getElementById('sudoku-coins-value')!;
+
+// Tiles UI
+const tilesContainer = document.getElementById('tiles-container')!;
+const tilesBackButton = document.getElementById('tiles-back-button')!;
+const tilesScoreDisplay = document.getElementById('tiles-score')!;
+const tilesComboDisplay = document.getElementById('tiles-combo')!;
+const tilesGrid = document.getElementById('tiles-grid')!;
+const tilesCoinsValues = document.getElementById('tiles-coins-value')!;
+
+// Pips UI
+const pipsContainer = document.getElementById('pips-container')!;
+const pipsBackButton = document.getElementById('pips-back-button')!;
+const pipsMovesDisplay = document.getElementById('pips-moves')!;
+const pipsGrid = document.getElementById('pips-grid')!;
+const pipsCoinsValues = document.getElementById('pips-coins-value')!;
+
 // World Generation UI Removed
 
 // Game UI
@@ -193,6 +302,32 @@ const gameCoinsValue = document.getElementById('game-coins-value')! as HTMLSpanE
 const gameShopButton = document.getElementById('game-shop-button')!;
 const confettiContainer = document.getElementById('confetti-container')!;
 
+// Wordle Game Instance
+let wordleGameInstance: WordleGame | null = null;
+
+// Spelling Bee Game Instance
+let beeGameInstance: SpellingBeeGame | null = null;
+let beeTypedWord: string = "";
+
+// Connections Game Instance
+let connGameInstance: ConnectionsGame | null = null;
+
+// Strands Game Instance
+let strandsGameInstance: StrandsGame | null = null;
+let strandsActiveGuess: { r: number, c: number }[] = [];
+let isStrandsDragging: boolean = false;
+
+// Letter Boxed Game Instance
+let boxedGameInstance: LetterBoxedGame | null = null;
+
+// Sudoku Game Instance
+let sudokuGameInstance: SudokuGame | null = null;
+
+// Tiles Game Instance
+let tilesGameInstance: TilesGame | null = null;
+
+// Pips Game Instance
+let pipsGameInstance: PipsGame | null = null;
 
 // Shared UI (Modals, Popups)
 const feedbackPopup = document.getElementById('feedback-popup')!;
@@ -337,7 +472,858 @@ function showGameScreen() {
 }
 
 
-// --- Roadmap Logic ---
+// --- Wordle Game Functions ---
+
+function showWordleScreen() {
+    mainMenuScreen.classList.add('hidden');
+    levelSelectionScreen.classList.add('hidden');
+    gameContainer.classList.add('hidden');
+    wordleContainer.classList.remove('hidden');
+
+    if (!wordleGameInstance) {
+        const validWords = dictionaryManager.getAllWords();
+        wordleGameInstance = new WordleGame(validWords);
+    }
+
+    renderWordleGrid();
+    updateGlobalUIElements();
+}
+
+function renderWordleGrid() {
+    if (!wordleGameInstance) return;
+
+    wordleGrid.innerHTML = '';
+    const state = wordleGameInstance.getState();
+
+    for (let row = 0; row < 6; row++) {
+        const rowDiv = document.createElement('div');
+        rowDiv.classList.add('wordle-row');
+        rowDiv.dataset.row = row.toString();
+
+        for (let col = 0; col < 5; col++) {
+            const tileDiv = document.createElement('div');
+            tileDiv.classList.add('wordle-tile');
+            tileDiv.dataset.col = col.toString();
+
+            if (row < state.guesses.length) {
+                const guess = state.guesses[row];
+                tileDiv.textContent = guess[col];
+                tileDiv.classList.add('filled');
+            } else if (row === state.currentRow && col < state.currentGuess.length) {
+                tileDiv.textContent = state.currentGuess[col];
+                tileDiv.classList.add('filled');
+            }
+
+            rowDiv.appendChild(tileDiv);
+        }
+        wordleGrid.appendChild(rowDiv);
+    }
+
+    currentAttemptSpan.textContent = (state.currentRow + 1).toString();
+    applyWordleColors();
+}
+
+function applyWordleColors() {
+    if (!wordleGameInstance) return;
+
+    const state = wordleGameInstance.getState();
+    const keyStates = new Map<string, 'correct' | 'present' | 'absent'>();
+
+    state.guesses.forEach((guess, rowIndex) => {
+        const result = evaluateWordleGuess(guess, state.targetWord);
+        const rowDiv = wordleGrid.querySelector(`[data-row="${rowIndex}"]`);
+        if (!rowDiv) return;
+
+        result.forEach((letterResult, colIndex) => {
+            const tile = rowDiv.querySelector(`[data-col="${colIndex}"]`) as HTMLElement;
+            if (tile) {
+                tile.classList.add(letterResult.state);
+                const existing = keyStates.get(letterResult.letter);
+                if (!existing || letterResult.state === 'correct' || (letterResult.state === 'present' && existing !== 'correct')) {
+                    keyStates.set(letterResult.letter, letterResult.state);
+                }
+            }
+        });
+    });
+
+    updateWordleKeyboard(keyStates);
+}
+
+function evaluateWordleGuess(guess: string, target: string): LetterResult[] {
+    const result: LetterResult[] = [];
+    const targetLetters = target.split('');
+    const guessLetters = guess.split('');
+    const used: boolean[] = new Array(5).fill(false);
+
+    for (let i = 0; i < 5; i++) {
+        if (guessLetters[i] === targetLetters[i]) {
+            result[i] = { letter: guessLetters[i], state: 'correct' };
+            used[i] = true;
+        }
+    }
+
+    for (let i = 0; i < 5; i++) {
+        if (result[i]) continue;
+        const foundIndex = targetLetters.findIndex((letter, idx) => letter === guessLetters[i] && !used[idx]);
+        if (foundIndex !== -1) {
+            result[i] = { letter: guessLetters[i], state: 'present' };
+            used[foundIndex] = true;
+        } else {
+            result[i] = { letter: guessLetters[i], state: 'absent' };
+        }
+    }
+
+    return result;
+}
+
+function updateWordleKeyboard(keyStates: Map<string, 'correct' | 'present' | 'absent'>) {
+    const keys = wordleKeyboard.querySelectorAll('.key-button:not(.key-special)');
+    keys.forEach(key => {
+        const letter = key.getAttribute('data-key');
+        if (letter && keyStates.has(letter)) {
+            const state = keyStates.get(letter)!;
+            key.classList.remove('correct', 'present', 'absent');
+            key.classList.add(state);
+        }
+    });
+}
+
+function handleWordleKeyPress(key: string) {
+    if (!wordleGameInstance) return;
+
+    const state = wordleGameInstance.getState();
+    if (state.gameOver) return;
+
+    if (key === 'ENTER') {
+        const result = wordleGameInstance.submitGuess();
+        if (result.success) {
+            renderWordleGrid();
+            if (result.message) {
+                wordleMessage.textContent = result.message;
+                if (state.won) {
+                    coins += 50;
+                    updateGlobalUIElements();
+                    setTimeout(() => showFeedback('You won! +50 coins', true, false, 3000), 1000);
+                } else if (state.gameOver) {
+                    setTimeout(() => showFeedback(result.message!, false, false, 3000), 1000);
+                }
+            }
+        } else {
+            wordleMessage.textContent = result.message || '';
+            setTimeout(() => { wordleMessage.textContent = ''; }, 2000);
+        }
+    } else if (key === 'BACKSPACE') {
+        wordleGameInstance.deleteLetter();
+        renderWordleGrid();
+        wordleMessage.textContent = '';
+    } else {
+        wordleGameInstance.addLetter(key);
+        renderWordleGrid();
+        wordleMessage.textContent = '';
+    }
+}
+
+function resetWordle() {
+    if (wordleGameInstance) {
+        wordleGameInstance.reset();
+        renderWordleGrid();
+        wordleMessage.textContent = '';
+        const keys = wordleKeyboard.querySelectorAll('.key-button');
+        keys.forEach(key => key.classList.remove('correct', 'present', 'absent'));
+    }
+}
+
+// --- Spelling Bee Game Functions ---
+
+function showSpellingBeeScreen() {
+    mainMenuScreen.classList.add('hidden');
+    levelSelectionScreen.classList.add('hidden');
+    gameContainer.classList.add('hidden');
+    wordleContainer.classList.add('hidden');
+    beeContainer.classList.remove('hidden');
+
+    if (!beeGameInstance) {
+        beeGameInstance = new SpellingBeeGame(dictionaryManager.getAllWords());
+    }
+
+    renderHoneyComb();
+    updateBeeUI();
+}
+
+function renderHoneyComb() {
+    if (!beeGameInstance) return;
+    const state = beeGameInstance.getState();
+
+    // Set center letter
+    beeCellCenter.querySelector('.cell-content')!.textContent = state.centerLetter;
+
+    // Set outer letters
+    state.outerLetters.forEach((letter, i) => {
+        if (beeOuterCells[i]) {
+            beeOuterCells[i].querySelector('.cell-content')!.textContent = letter;
+        }
+    });
+}
+
+function updateBeeUI() {
+    if (!beeGameInstance) return;
+    const state = beeGameInstance.getState();
+
+    beeRankDisplay.textContent = state.rank;
+    beeScoreDisplay.textContent = state.currentScore.toString();
+
+    const progress = (state.currentScore / state.maxScore) * 100;
+    beeScoreFill.style.width = `${Math.min(100, progress)}%`;
+
+    beeCurrentWordDisplay.textContent = beeTypedWord;
+
+    updateGlobalUIElements();
+}
+
+function handleBeeLetterClick(letter: string) {
+    beeTypedWord += letter.toUpperCase();
+    updateBeeUI();
+}
+
+function handleBeeDelete() {
+    beeTypedWord = beeTypedWord.slice(0, -1);
+    updateBeeUI();
+}
+
+function handleBeeShuffle() {
+    if (!beeGameInstance) return;
+    beeGameInstance.shuffleOuterLetters();
+    renderHoneyComb();
+}
+
+function handleBeeEnter() {
+    if (!beeGameInstance || beeTypedWord.length === 0) return;
+
+    const result = beeGameInstance.submitWord(beeTypedWord);
+
+    if (result.success) {
+        beeMessageDisplay.textContent = result.message;
+        beeTypedWord = "";
+
+        // Award coins
+        if (result.score) {
+            coins += result.score;
+        }
+
+        updateBeeUI();
+
+        // Feedback animation/temporary message
+        setTimeout(() => {
+            beeMessageDisplay.textContent = "";
+        }, 2000);
+    } else {
+        beeMessageDisplay.textContent = result.message;
+        // Shake animation for input display?
+        beeCurrentWordDisplay.parentElement?.classList.add('shake');
+        setTimeout(() => {
+            beeMessageDisplay.textContent = "";
+            beeCurrentWordDisplay.parentElement?.classList.remove('shake');
+        }, 2000);
+    }
+}
+
+function openBeeFoundWords() {
+    if (!beeGameInstance) return;
+    const state = beeGameInstance.getState();
+
+    beeFoundCount.textContent = state.foundWords.length.toString();
+    beeFoundList.innerHTML = "";
+
+    state.foundWords.forEach(word => {
+        const wordEl = document.createElement('div');
+        wordEl.classList.add('found-word');
+        wordEl.textContent = word;
+        beeFoundList.appendChild(wordEl);
+    });
+
+    beeFoundModal.classList.remove('hidden');
+}
+
+function closeBeeFoundWords() {
+    beeFoundModal.classList.add('hidden');
+}
+
+
+// --- Connections Game Functions ---
+
+function showConnectionsScreen() {
+    mainMenuScreen.classList.add('hidden');
+    levelSelectionScreen.classList.add('hidden');
+    gameContainer.classList.add('hidden');
+    wordleContainer.classList.add('hidden');
+    beeContainer.classList.add('hidden');
+    connContainer.classList.remove('hidden');
+
+    if (!connGameInstance) {
+        connGameInstance = new ConnectionsGame();
+    }
+
+    renderConnGrid();
+    updateConnUI();
+}
+
+function renderConnGrid() {
+    if (!connGameInstance) return;
+    const state = connGameInstance.getState();
+
+    // Clear and render solved categories
+    connSolvedArea.innerHTML = '';
+    state.foundCategories.forEach(cat => {
+        const row = document.createElement('div');
+        row.className = `conn-category-row level-${cat.level}`;
+        row.innerHTML = `
+            <div class="conn-category-title">${cat.description}</div>
+            <div class="conn-category-words">${cat.words.join(', ')}</div>
+        `;
+        connSolvedArea.appendChild(row);
+    });
+
+    // Clear and render active grid
+    connGrid.innerHTML = '';
+    state.grid.forEach(word => {
+        const item = document.createElement('div');
+        item.className = 'conn-item';
+        if (state.selectedWords.includes(word)) {
+            item.classList.add('selected');
+        }
+        item.textContent = word;
+        item.onclick = () => handleConnWordClick(word);
+        connGrid.appendChild(item);
+    });
+}
+
+function updateConnUI() {
+    if (!connGameInstance) return;
+    const state = connGameInstance.getState();
+
+    // Update mistake markers
+    const dots = mistakeMarkers.querySelectorAll('.dot');
+    dots.forEach((dot, i) => {
+        if (i < state.mistakesRemaining) {
+            dot.classList.add('filled');
+        } else {
+            dot.classList.remove('filled');
+        }
+    });
+
+    // Disable submit if not 4 selected
+    connSubmitBtn.disabled = state.selectedWords.length !== 4;
+}
+
+function handleConnWordClick(word: string) {
+    if (!connGameInstance) return;
+    connGameInstance.toggleWord(word);
+    renderConnGrid();
+    updateConnUI();
+}
+
+function handleConnShuffle() {
+    if (!connGameInstance) return;
+    // Simple UI-only shuffle for the remaining grid
+    const state = connGameInstance.getState();
+    state.grid.sort(() => Math.random() - 0.5);
+    renderConnGrid();
+}
+
+function handleConnDeselect() {
+    if (!connGameInstance) return;
+    const state = connGameInstance.getState();
+    state.selectedWords = [];
+    renderConnGrid();
+    updateConnUI();
+}
+
+function handleConnSubmit() {
+    if (!connGameInstance) return;
+    const result = connGameInstance.submitSelection();
+
+    if (result.success) {
+        showFeedback(result.message, true);
+        coins += 25; // Award for each category
+        renderConnGrid();
+        updateConnUI();
+
+        const state = connGameInstance.getState();
+        if (state.gameOver && state.won) {
+            setTimeout(() => {
+                showFeedback("Game Complete! 🎉", true);
+                coins += 100; // Big bonus
+                showMainMenu();
+            }, 1000);
+        }
+    } else {
+        showFeedback(result.message, false);
+        updateConnUI();
+
+        const state = connGameInstance.getState();
+        if (state.gameOver) {
+            setTimeout(() => {
+                const solution = connGameInstance!.getSolution();
+                showFeedback(`Game Over!`, false);
+                // Maybe reveal solution here or just return to menu
+                showMainMenu();
+            }, 2000);
+        }
+    }
+}
+
+
+// --- Strands Game Functions ---
+
+function showStrandsScreen() {
+    mainMenuScreen.classList.add('hidden');
+    levelSelectionScreen.classList.add('hidden');
+    gameContainer.classList.add('hidden');
+    wordleContainer.classList.add('hidden');
+    beeContainer.classList.add('hidden');
+    connContainer.classList.add('hidden');
+    strandsContainer.classList.remove('hidden');
+
+    if (!strandsGameInstance) {
+        strandsGameInstance = new StrandsGame();
+    }
+
+    renderStrandsGrid();
+    updateStrandsUI();
+}
+
+function renderStrandsGrid() {
+    if (!strandsGameInstance) return;
+    const state = strandsGameInstance.getState();
+
+    strandsGrid.innerHTML = '';
+    state.grid.forEach((row, r) => {
+        row.forEach((cell, c) => {
+            const cellEl = document.createElement('div');
+            cellEl.className = 'strands-cell';
+            cellEl.textContent = cell.letter;
+            cellEl.dataset.row = r.toString();
+            cellEl.dataset.col = c.toString();
+
+            if (cell.found) {
+                cellEl.classList.add(cell.isSpangram ? 'found-spangram' : 'found-theme');
+            }
+
+            // Mouse Events
+            cellEl.onmousedown = () => handleStrandsStart(r, c);
+            cellEl.onmouseenter = () => handleStrandsMove(r, c);
+
+            // Touch Events
+            cellEl.ontouchstart = (e) => {
+                e.preventDefault();
+                handleStrandsStart(r, c);
+            };
+
+            strandsGrid.appendChild(cellEl);
+        });
+    });
+
+    strandsThemeText.textContent = state.theme;
+}
+
+function updateStrandsUI() {
+    if (!strandsGameInstance) return;
+    const state = strandsGameInstance.getState();
+
+    strandsFoundList.innerHTML = '';
+    state.foundWords.forEach(word => {
+        const chip = document.createElement('div');
+        chip.className = 'strands-word-chip';
+        // Check if this word was the spangram (simplification)
+        if (word.length > 8) chip.classList.add('spangram'); // Rough check
+        chip.textContent = word;
+        strandsFoundList.appendChild(chip);
+    });
+
+    updateGlobalUIElements();
+}
+
+function handleStrandsStart(r: number, c: number) {
+    if (!strandsGameInstance) return;
+    isStrandsDragging = true;
+    strandsActiveGuess = [{ r, c }];
+    updateActiveStrandsView();
+}
+
+function handleStrandsMove(r: number, c: number) {
+    if (!isStrandsDragging || !strandsGameInstance) return;
+
+    // Check if cell is adjacent to last cell
+    const last = strandsActiveGuess[strandsActiveGuess.length - 1];
+    if (Math.abs(last.r - r) <= 1 && Math.abs(last.c - c) <= 1) {
+        // Don't add if already in guess
+        if (!strandsActiveGuess.some(pos => pos.r === r && pos.c === c)) {
+            strandsActiveGuess.push({ r, c });
+            updateActiveStrandsView();
+        }
+    }
+}
+
+function handleStrandsEnd() {
+    if (!isStrandsDragging || !strandsGameInstance) return;
+    isStrandsDragging = false;
+
+    const result = strandsGameInstance.checkWord(strandsActiveGuess.map(p => [p.r, p.c]));
+
+    if (result.success) {
+        showFeedback(result.isSpangram ? "SPANGRAM! ✨" : "Found!", true);
+        coins += result.isSpangram ? 100 : 25;
+        renderStrandsGrid();
+        updateStrandsUI();
+
+        const state = strandsGameInstance.getState();
+        if (state.gameOver) {
+            setTimeout(() => {
+                showFeedback("Strands Complete! 🧶", true);
+                showMainMenu();
+            }, 1000);
+        }
+    }
+
+    strandsActiveGuess = [];
+    updateActiveStrandsView();
+}
+
+function updateActiveStrandsView() {
+    // Highlight cells in current guess
+    const cells = strandsGrid.querySelectorAll('.strands-cell');
+    cells.forEach(cell => cell.classList.remove('selected'));
+
+    strandsActiveGuess.forEach(pos => {
+        const cell = strandsGrid.querySelector(`[data-row="${pos.r}"][data-col="${pos.c}"]`);
+        cell?.classList.add('selected');
+    });
+
+    if (strandsActiveGuess.length > 0) {
+        strandsCurrentGuess.textContent = strandsActiveGuess.map(pos => {
+            const state = strandsGameInstance!.getState();
+            return state.grid[pos.r][pos.c].letter;
+        }).join('');
+    } else {
+        strandsCurrentGuess.textContent = '';
+    }
+}
+
+// Global mouseup to catch end of drag anywhere
+document.addEventListener('mouseup', handleStrandsEnd);
+document.addEventListener('touchend', handleStrandsEnd);
+// Touch move needs coordinate-based lookups
+document.addEventListener('touchmove', (e) => {
+    if (!isStrandsDragging) return;
+    const touch = e.touches[0];
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (element?.classList.contains('strands-cell')) {
+        const r = parseInt((element as HTMLElement).dataset.row!);
+        const c = parseInt((element as HTMLElement).dataset.col!);
+        handleStrandsMove(r, c);
+    }
+}, { passive: false });
+// --- Letter Boxed Game Functions ---
+
+function showLetterBoxedScreen() {
+    mainMenuScreen.classList.add('hidden');
+    levelSelectionScreen.classList.add('hidden');
+    gameContainer.classList.add('hidden');
+    wordleContainer.classList.add('hidden');
+    beeContainer.classList.add('hidden');
+    connContainer.classList.add('hidden');
+    strandsContainer.classList.add('hidden');
+    boxedContainer.classList.remove('hidden');
+
+    if (!boxedGameInstance) {
+        boxedGameInstance = new LetterBoxedGame(dictionaryManager.getAllWords());
+    }
+
+    renderBoxedUI();
+}
+
+function renderBoxedUI() {
+    if (!boxedGameInstance) return;
+    const state = boxedGameInstance.getState();
+
+    // Render sides
+    state.sides.forEach((side, i) => {
+        const sideEl = boxedSides[i];
+        const texts = sideEl.querySelectorAll('.boxed-letter');
+        const dots = sideEl.querySelectorAll('.boxed-dot');
+
+        side.forEach((letter, j) => {
+            texts[j].textContent = letter;
+            const dot = dots[j] as SVGCircleElement;
+
+            if (state.usedLetters.has(letter)) {
+                dot.classList.add('used');
+            } else {
+                dot.classList.remove('used');
+            }
+
+            dot.onclick = () => {
+                const result = boxedGameInstance!.addLetter(letter);
+                if (result.success) {
+                    renderBoxedUI();
+                } else {
+                    showFeedback(result.message!, false);
+                }
+            };
+        });
+    });
+
+    boxedCurrentWord.textContent = state.currentWord;
+
+    // Render found list
+    boxedFoundList.innerHTML = '';
+    state.foundWords.forEach(word => {
+        const chip = document.createElement('div');
+        chip.className = 'strands-word-chip'; // Reuse style
+        chip.textContent = word;
+        boxedFoundList.appendChild(chip);
+    });
+
+    updateGlobalUIElements();
+}
+
+function handleBoxedEnter() {
+    if (!boxedGameInstance) return;
+    const result = boxedGameInstance.submitWord();
+
+    if (result.success) {
+        showFeedback(result.message, true);
+        coins += 50;
+        renderBoxedUI();
+
+        const state = boxedGameInstance.getState();
+        if (state.gameOver) {
+            setTimeout(() => {
+                showFeedback("Box Completed! 📦", true);
+                showMainMenu();
+            }, 1000);
+        }
+    } else {
+        showFeedback(result.message, false);
+    }
+}
+
+function handleBoxedDelete() {
+    if (boxedGameInstance) {
+        boxedGameInstance.deleteLetter();
+        renderBoxedUI();
+    }
+}
+// --- Sudoku Game Functions ---
+
+function showSudokuScreen() {
+    mainMenuScreen.classList.add('hidden');
+    levelSelectionScreen.classList.add('hidden');
+    gameContainer.classList.add('hidden');
+    wordleContainer.classList.add('hidden');
+    beeContainer.classList.add('hidden');
+    connContainer.classList.add('hidden');
+    strandsContainer.classList.add('hidden');
+    boxedContainer.classList.add('hidden');
+    sudokuContainer.classList.remove('hidden');
+
+    if (!sudokuGameInstance) {
+        sudokuGameInstance = new SudokuGame('easy');
+    }
+
+    renderSudokuGrid();
+    updateSudokuUI();
+}
+
+function renderSudokuGrid() {
+    if (!sudokuGameInstance) return;
+    const state = sudokuGameInstance.getState();
+
+    sudokuGrid.innerHTML = '';
+    state.grid.forEach((row, r) => {
+        row.forEach((val, c) => {
+            const cellEl = document.createElement('div');
+            cellEl.className = 'sudoku-cell';
+            if (state.initialGrid[r][c]) cellEl.classList.add('initial');
+            if (state.selectedCell?.r === r && state.selectedCell?.c === c) cellEl.classList.add('selected');
+
+            cellEl.textContent = val !== 0 ? val.toString() : '';
+
+            cellEl.onclick = () => {
+                sudokuGameInstance!.selectCell(r, c);
+                renderSudokuGrid();
+            };
+
+            sudokuGrid.appendChild(cellEl);
+        });
+    });
+}
+
+function updateSudokuUI() {
+    if (!sudokuGameInstance) return;
+    const state = sudokuGameInstance.getState();
+    sudokuMistakesDisplay.textContent = `Mistakes: ${state.mistakes}/3`;
+    updateGlobalUIElements();
+}
+
+function handleSudokuInput(num: number) {
+    if (!sudokuGameInstance) return;
+    const result = sudokuGameInstance.setCellValue(num);
+
+    if (result.success) {
+        renderSudokuGrid();
+        if (result.won) {
+            showFeedback("Sudoku Solved! 🧩", true);
+            coins += 200;
+            setTimeout(showMainMenu, 2000);
+        }
+    } else if (result.mistake) {
+        showFeedback("Mistake!", false);
+        updateSudokuUI();
+        if (result.gameOver) {
+            showFeedback("Game Over! Too many mistakes.", false);
+            setTimeout(showMainMenu, 2000);
+        }
+    }
+}
+// --- Tiles Game Functions ---
+
+function showTilesScreen() {
+    mainMenuScreen.classList.add('hidden');
+    levelSelectionScreen.classList.add('hidden');
+    gameContainer.classList.add('hidden');
+    wordleContainer.classList.add('hidden');
+    beeContainer.classList.add('hidden');
+    connContainer.classList.add('hidden');
+    strandsContainer.classList.add('hidden');
+    boxedContainer.classList.add('hidden');
+    sudokuContainer.classList.add('hidden');
+    tilesContainer.classList.remove('hidden');
+
+    if (!tilesGameInstance) {
+        tilesGameInstance = new TilesGame();
+    }
+
+    renderTilesGrid();
+    updateTilesUI();
+}
+
+function renderTilesGrid() {
+    if (!tilesGameInstance) return;
+    const state = tilesGameInstance.getState();
+
+    tilesGrid.innerHTML = '';
+    state.grid.forEach((row, r) => {
+        row.forEach((tile, c) => {
+            const cellEl = document.createElement('div');
+            cellEl.className = 'tile-cell';
+            if (state.selectedTile?.r === r && state.selectedTile?.c === c) cellEl.classList.add('selected');
+
+            if (tile) {
+                const icon = document.createElement('div');
+                icon.className = `tile-icon ${tile.shape} ${tile.color}`;
+                cellEl.appendChild(icon);
+            }
+
+            cellEl.onclick = () => {
+                const result = tilesGameInstance!.selectTile(r, c);
+                if (result.match) {
+                    showFeedback("Match! ✨", true);
+                    coins += 5;
+                }
+                renderTilesGrid();
+                updateTilesUI();
+            };
+
+            tilesGrid.appendChild(cellEl);
+        });
+    });
+}
+
+function updateTilesUI() {
+    if (!tilesGameInstance) return;
+    const state = tilesGameInstance.getState();
+    tilesScoreDisplay.textContent = state.score.toString();
+    tilesComboDisplay.textContent = `Combo: ${state.combo}x`;
+    updateGlobalUIElements();
+}
+
+// --- Pips Game Functions ---
+
+function showPipsScreen() {
+    mainMenuScreen.classList.add('hidden');
+    levelSelectionScreen.classList.add('hidden');
+    gameContainer.classList.add('hidden');
+    wordleContainer.classList.add('hidden');
+    beeContainer.classList.add('hidden');
+    connContainer.classList.add('hidden');
+    strandsContainer.classList.add('hidden');
+    boxedContainer.classList.add('hidden');
+    sudokuContainer.classList.add('hidden');
+    tilesContainer.classList.add('hidden');
+    pipsContainer.classList.remove('hidden');
+
+    if (!pipsGameInstance) {
+        pipsGameInstance = new PipsGame();
+    }
+
+    renderPipsGrid();
+    updatePipsUI();
+}
+
+function renderPipsGrid() {
+    if (!pipsGameInstance) return;
+    const state = pipsGameInstance.getState();
+
+    pipsGrid.innerHTML = '';
+    state.grid.forEach((row, r) => {
+        row.forEach((die, c) => {
+            const cellEl = document.createElement('div');
+            cellEl.className = 'die-cell';
+            if (die?.removed) cellEl.classList.add('removed');
+            if (state.selectedDie?.r === r && state.selectedDie?.c === c) cellEl.classList.add('selected');
+
+            if (die && !die.removed) {
+                cellEl.classList.add(`val-${die.val}`);
+                const face = document.createElement('div');
+                face.className = 'die-face';
+                // Add 9 pips, CSS logic will show/hide them
+                for (let i = 0; i < 9; i++) {
+                    const pip = document.createElement('div');
+                    pip.className = 'die-pip';
+                    face.appendChild(pip);
+                }
+                cellEl.appendChild(face);
+            }
+
+            cellEl.onclick = () => {
+                const result = pipsGameInstance!.selectDie(r, c);
+                if (result.match) {
+                    showFeedback("7! 🎲", true);
+                    coins += 10;
+                    if (result.won) {
+                        showFeedback("All Cleared! 🏆", true);
+                        coins += 100;
+                        setTimeout(showMainMenu, 2000);
+                    }
+                }
+                renderPipsGrid();
+                updatePipsUI();
+            };
+
+            pipsGrid.appendChild(cellEl);
+        });
+    });
+}
+
+function updatePipsUI() {
+    if (!pipsGameInstance) return;
+    const state = pipsGameInstance.getState();
+    pipsMovesDisplay.textContent = `Moves: ${state.moves}`;
+    updateGlobalUIElements();
+}
+
+
 
 function createLevelGemElement(level: LevelDefinition, worldName: string): HTMLButtonElement {
     const levelGem = document.createElement('button');
@@ -1820,6 +2806,34 @@ function handleResetProgress() {
 
 // --- Event Listeners ---
 function attachEventListeners() {
+    // Main Menu Game Cards
+    gameModeCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const gameMode = card.getAttribute('data-game');
+            if (gameMode === 'wordslide') {
+                showRoadmapScreen();
+            } else if (gameMode === 'wordle') {
+                showWordleScreen();
+            } else if (gameMode === 'spelling-bee') {
+                showSpellingBeeScreen();
+            } else if (gameMode === 'connections') {
+                showConnectionsScreen();
+            } else if (gameMode === 'strands') {
+                showStrandsScreen();
+            } else if (gameMode === 'letter-boxed') {
+                showLetterBoxedScreen();
+            } else if (gameMode === 'sudoku') {
+                showSudokuScreen();
+            } else if (gameMode === 'tiles') {
+                showTilesScreen();
+            } else if (gameMode === 'pips') {
+                showPipsScreen();
+            } else {
+                showFeedback(`${card.querySelector('.game-title')?.textContent} - Coming Soon!`, false, false, 2000);
+            }
+        });
+    });
+
     // Game Screen Buttons
     shuffleButton.addEventListener('click', handleShuffleLetters);
     hintButton.addEventListener('click', handleHint);
@@ -1829,6 +2843,94 @@ function attachEventListeners() {
     gameSettingsButton.addEventListener('click', openSettingsModal);
     gameAchievementsButton.addEventListener('click', openBonusModal);
     gameShopButton.addEventListener('click', openShopModal);
+
+    // Wordle Screen Buttons
+    wordleBackButton.addEventListener('click', showMainMenu);
+    wordleSettingsButton.addEventListener('click', openSettingsModal);
+
+    // Spelling Bee Screen Buttons
+    beeBackButton.addEventListener('click', showMainMenu);
+    beeFoundToggle.addEventListener('click', openBeeFoundWords);
+    beeCloseFoundBtn.addEventListener('click', closeBeeFoundWords);
+    beeDeleteBtn.addEventListener('click', handleBeeDelete);
+    beeShuffleBtn.addEventListener('click', handleBeeShuffle);
+    beeEnterBtn.addEventListener('click', handleBeeEnter);
+
+    // Connections Screen Buttons
+    connBackButton.addEventListener('click', showMainMenu);
+    connShuffleBtn.addEventListener('click', handleConnShuffle);
+    connDeselectBtn.addEventListener('click', handleConnDeselect);
+    connSubmitBtn.addEventListener('click', handleConnSubmit);
+    connHelpButton.addEventListener('click', () => showFeedback("Select 4 related words and press Submit!", true));
+
+    // Strands Screen Buttons
+    strandsBackButton.addEventListener('click', showMainMenu);
+    strandsHintButton.addEventListener('click', () => {
+        if (coins >= 50) {
+            coins -= 50;
+            updateGlobalUIElements();
+            showFeedback("Hint: Focus on the theme!", true);
+        } else {
+            showFeedback("Not enough coins! (50 required)", false);
+        }
+    });
+
+    // Letter Boxed Screen Buttons
+    boxedBackButton.addEventListener('click', showMainMenu);
+    boxedDeleteBtn.addEventListener('click', handleBoxedDelete);
+    boxedEnterBtn.addEventListener('click', handleBoxedEnter);
+    boxedHelpButton.addEventListener('click', () => showFeedback("Connect letters on different sides to make words! Use all letters to win.", true));
+
+    // Sudoku Screen Buttons
+    sudokuBackButton.addEventListener('click', showMainMenu);
+    sudokuSettingsButton.addEventListener('click', openSettingsModal);
+
+    // Tiles Screen Buttons
+    tilesBackButton.addEventListener('click', showMainMenu);
+
+    // Pips Screen Buttons
+    pipsBackButton.addEventListener('click', showMainMenu);
+
+    // Sudoku Numpad
+    const numButtons = sudokuNumpad.querySelectorAll('.numpad-btn');
+    numButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const val = parseInt(btn.getAttribute('data-val')!);
+            handleSudokuInput(val);
+        });
+    });
+
+    // Bee Cell Clicks
+    beeCellCenter.addEventListener('click', () => handleBeeLetterClick(beeCellCenter.querySelector('.cell-content')!.textContent!));
+    beeOuterCells.forEach(cell => {
+        cell.addEventListener('click', () => handleBeeLetterClick(cell.querySelector('.cell-content')!.textContent!));
+    });
+
+    // Wordle Keyboard
+    const wordleKeys = wordleKeyboard.querySelectorAll('.key-button');
+    wordleKeys.forEach(key => {
+        key.addEventListener('click', () => {
+            const keyValue = key.getAttribute('data-key');
+            if (keyValue) {
+                handleWordleKeyPress(keyValue);
+            }
+        });
+    });
+
+    // Physical Keyboard for Wordle & Spelling Bee
+    document.addEventListener('keydown', (e) => {
+        if (!wordleContainer.classList.contains('hidden')) {
+            if (e.key === 'Enter') handleWordleKeyPress('ENTER');
+            else if (e.key === 'Backspace') handleWordleKeyPress('BACKSPACE');
+            else if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) handleWordleKeyPress(e.key.toUpperCase());
+        }
+        else if (!beeContainer.classList.contains('hidden')) {
+            if (e.key === 'Enter') handleBeeEnter();
+            else if (e.key === 'Backspace') handleBeeDelete();
+            else if (e.key === ' ') handleBeeShuffle();
+            else if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) handleBeeLetterClick(e.key);
+        }
+    });
 
     // Roadmap Screen Buttons
     roadmapBackButton.addEventListener('click', () => {/* Could implement multi-level back if needed */ showFeedback("Welcome to the Roadmap!", true, false, 1500) });

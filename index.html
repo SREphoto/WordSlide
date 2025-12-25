@@ -44,7 +44,7 @@
                         <div class="game-icon">🎯</div>
                         <h3 class="game-title">Wordle</h3>
                         <p class="game-description">Guess the 5-letter word</p>
-                        <span class="game-badge">Coming Soon</span>
+
                     </button>
 
                     <!-- Spelling Bee Card -->
@@ -52,7 +52,7 @@
                         <div class="game-icon">🐝</div>
                         <h3 class="game-title">Spelling Bee</h3>
                         <p class="game-description">Make words with given letters</p>
-                        <span class="game-badge">Coming Soon</span>
+
                     </button>
 
                     <!-- Connections Card -->
@@ -60,7 +60,7 @@
                         <div class="game-icon">🔗</div>
                         <h3 class="game-title">Connections</h3>
                         <p class="game-description">Group words by category</p>
-                        <span class="game-badge">Coming Soon</span>
+
                     </button>
 
                     <!-- Strands Card -->
@@ -68,7 +68,7 @@
                         <div class="game-icon">🧵</div>
                         <h3 class="game-title">Strands</h3>
                         <p class="game-description">Find themed words</p>
-                        <span class="game-badge">Coming Soon</span>
+
                     </button>
 
                     <!-- Letter Boxed Card -->
@@ -76,7 +76,7 @@
                         <div class="game-icon">📦</div>
                         <h3 class="game-title">Letter Boxed</h3>
                         <p class="game-description">Connect letters to form words</p>
-                        <span class="game-badge">Coming Soon</span>
+
                     </button>
 
                     <!-- Tiles Card -->
@@ -84,7 +84,7 @@
                         <div class="game-icon">🎴</div>
                         <h3 class="game-title">Tiles</h3>
                         <p class="game-description">Match tiles to clear the board</p>
-                        <span class="game-badge">Coming Soon</span>
+
                     </button>
 
                     <!-- Pips Card -->
@@ -92,7 +92,7 @@
                         <div class="game-icon">🎲</div>
                         <h3 class="game-title">Pips</h3>
                         <p class="game-description">Dice and domino puzzle challenge</p>
-                        <span class="game-badge">Coming Soon</span>
+
                     </button>
 
                     <!-- Sudoku Card -->
@@ -100,7 +100,7 @@
                         <div class="game-icon">🔢</div>
                         <h3 class="game-title">Sudoku</h3>
                         <p class="game-description">Fill the 9x9 grid</p>
-                        <span class="game-badge">Coming Soon</span>
+
                     </button>
                 </div>
             </div>
@@ -191,6 +191,408 @@
                 <button id="game-shop-button" class="footer-button footer-item">
                     <span class="material-symbols-outlined">shopping_cart</span>
                 </button>
+            </footer>
+        </div>
+
+        <!-- Wordle Game Screen -->
+        <div id="wordle-container" class="app-screen hidden">
+            <header class="header">
+                <button id="wordle-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+                <div class="header-title">Wordle</div>
+                <button id="wordle-settings-button" class="header-button material-symbols-outlined">settings</button>
+            </header>
+
+            <main class="wordle-game-area">
+                <!-- Game Info -->
+                <div id="wordle-info">
+                    <div id="wordle-attempts">Attempt <span id="current-attempt">1</span>/6</div>
+                    <div id="wordle-message"></div>
+                </div>
+
+                <!-- 5x6 Word Grid -->
+                <div id="wordle-grid">
+                    <!-- Rows will be dynamically created -->
+                </div>
+
+                <!-- On-Screen Keyboard -->
+                <div id="wordle-keyboard">
+                    <div class="keyboard-row">
+                        <button class="key-button" data-key="Q">Q</button>
+                        <button class="key-button" data-key="W">W</button>
+                        <button class="key-button" data-key="E">E</button>
+                        <button class="key-button" data-key="R">R</button>
+                        <button class="key-button" data-key="T">T</button>
+                        <button class="key-button" data-key="Y">Y</button>
+                        <button class="key-button" data-key="U">U</button>
+                        <button class="key-button" data-key="I">I</button>
+                        <button class="key-button" data-key="O">O</button>
+                        <button class="key-button" data-key="P">P</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <div class="spacer-half"></div>
+                        <button class="key-button" data-key="A">A</button>
+                        <button class="key-button" data-key="S">S</button>
+                        <button class="key-button" data-key="D">D</button>
+                        <button class="key-button" data-key="F">F</button>
+                        <button class="key-button" data-key="G">G</button>
+                        <button class="key-button" data-key="H">H</button>
+                        <button class="key-button" data-key="J">J</button>
+                        <button class="key-button" data-key="K">K</button>
+                        <button class="key-button" data-key="L">L</button>
+                        <div class="spacer-half"></div>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key-button key-special" data-key="ENTER">ENTER</button>
+                        <button class="key-button" data-key="Z">Z</button>
+                        <button class="key-button" data-key="X">X</button>
+                        <button class="key-button" data-key="C">C</button>
+                        <button class="key-button" data-key="V">V</button>
+                        <button class="key-button" data-key="B">B</button>
+                        <button class="key-button" data-key="N">N</button>
+                        <button class="key-button" data-key="M">M</button>
+                        <button class="key-button key-special" data-key="BACKSPACE">⌫</button>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="wordle-coins-value" class="coins-value-display">100</span>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Spelling Bee Game Screen -->
+        <div id="spelling-bee-container" class="app-screen hidden">
+            <header class="header">
+                <button id="bee-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+                <div class="header-title">Spelling Bee</div>
+                <button id="bee-found-toggle" class="header-button material-symbols-outlined">list_alt</button>
+            </header>
+
+            <main class="bee-game-area">
+                <div class="bee-status">
+                    <div class="bee-rank-container">
+                        <span id="bee-rank">Beginner</span>
+                        <div class="bee-score-progress">
+                            <div id="bee-score-fill" style="width: 0%"></div>
+                        </div>
+                        <span id="bee-score">0</span>
+                    </div>
+                </div>
+
+                <div id="bee-message" class="bee-message"></div>
+
+                <div class="bee-input-display">
+                    <span id="bee-current-word"></span>
+                    <span class="bee-cursor">|</span>
+                </div>
+
+                <div class="honeycomb">
+                    <div class="hive-cell center" id="bee-cell-center">
+                        <div class="cell-content"></div>
+                    </div>
+                    <div class="hive-cell outer" id="bee-cell-0">
+                        <div class="cell-content"></div>
+                    </div>
+                    <div class="hive-cell outer" id="bee-cell-1">
+                        <div class="cell-content"></div>
+                    </div>
+                    <div class="hive-cell outer" id="bee-cell-2">
+                        <div class="cell-content"></div>
+                    </div>
+                    <div class="hive-cell outer" id="bee-cell-3">
+                        <div class="cell-content"></div>
+                    </div>
+                    <div class="hive-cell outer" id="bee-cell-4">
+                        <div class="cell-content"></div>
+                    </div>
+                    <div class="hive-cell outer" id="bee-cell-5">
+                        <div class="cell-content"></div>
+                    </div>
+                </div>
+
+                <div class="bee-controls">
+                    <button id="bee-delete" class="bee-btn">Delete</button>
+                    <button id="bee-shuffle" class="bee-btn material-symbols-outlined">refresh</button>
+                    <button id="bee-enter" class="bee-btn">Enter</button>
+                </div>
+
+                <!-- Found Words Overlay -->
+                <div id="bee-found-words-modal" class="modal-overlay hidden">
+                    <div class="modal-dialog">
+                        <div class="modal-header">
+                            <h2 class="modal-title">Words Found (<span id="bee-found-count">0</span>)</h2>
+                            <button id="bee-close-found" class="modal-close-button">&times;</button>
+                        </div>
+                        <div id="bee-found-list" class="bee-words-grid">
+                            <!-- Found words go here -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="bee-coins-value" class="coins-value-display">100</span>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Connections Game Screen -->
+        <div id="connections-container" class="app-screen hidden">
+            <header class="header">
+                <button id="conn-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+                <div class="header-title">Connections</div>
+                <button id="conn-help-button" class="header-button material-symbols-outlined">help_outline</button>
+            </header>
+
+            <main class="conn-game-area">
+                <div class="conn-instructions">Create four groups of four!</div>
+
+                <div id="conn-found-area" class="conn-solved-list">
+                    <!-- Solved categories will appear here -->
+                </div>
+
+                <div id="conn-grid" class="conn-grid">
+                    <!-- 16 or fewer words appear here -->
+                </div>
+
+                <div class="conn-status">
+                    Mistakes remaining:
+                    <div id="mistake-markers" class="mistake-circles">
+                        <span class="dot filled"></span>
+                        <span class="dot filled"></span>
+                        <span class="dot filled"></span>
+                        <span class="dot filled"></span>
+                    </div>
+                </div>
+
+                <div class="conn-controls">
+                    <button id="conn-shuffle" class="conn-btn-alt">Shuffle</button>
+                    <button id="conn-deselect" class="conn-btn-alt">Deselect All</button>
+                    <button id="conn-submit" class="conn-btn-main">Submit</button>
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="conn-coins-value" class="coins-value-display">100</span>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Strands Game Screen -->
+        <div id="strands-container" class="app-screen hidden">
+            <header class="header">
+                <button id="strands-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+                <div class="header-title">Strands</div>
+                <div id="strands-hint-container">
+                    <button id="strands-hint-button" class="header-button material-symbols-outlined">lightbulb</button>
+                </div>
+            </header>
+
+            <main class="strands-game-area">
+                <div class="strands-theme">
+                    Theme: <span id="strands-theme-text">???</span>
+                </div>
+
+                <div id="strands-grid" class="strands-grid">
+                    <!-- 6x8 grid of letters -->
+                </div>
+
+                <div class="strands-status">
+                    <div id="strands-current-guess" class="strands-current-guess"></div>
+                </div>
+
+                <div id="strands-found-list" class="strands-found-list">
+                    <!-- Found words chips -->
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="strands-coins-value" class="coins-value-display">100</span>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Letter Boxed Game Screen -->
+        <div id="letter-boxed-container" class="app-screen hidden">
+            <header class="header">
+                <button id="boxed-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+                <div class="header-title">Letter Boxed</div>
+                <button id="boxed-help-button" class="header-button material-symbols-outlined">help_outline</button>
+            </header>
+
+            <main class="boxed-game-area">
+                <div class="boxed-found-words" id="boxed-found-list">
+                    <!-- Found words appear here -->
+                </div>
+
+                <div class="boxed-main-ui">
+                    <svg class="boxed-svg" viewBox="0 0 300 300">
+                        <!-- Square -->
+                        <rect x="50" y="50" width="200" height="200" fill="none" stroke="rgba(255,255,255,0.2)"
+                            stroke-width="2" />
+
+                        <!-- Side 0 (Top) -->
+                        <g class="boxed-side" id="boxed-side-0">
+                            <circle class="boxed-dot" cx="80" cy="50" r="15" />
+                            <text class="boxed-letter" x="80" y="55">A</text>
+                            <circle class="boxed-dot" cx="150" cy="50" r="15" />
+                            <text class="boxed-letter" x="150" y="55">B</text>
+                            <circle class="boxed-dot" cx="220" cy="50" r="15" />
+                            <text class="boxed-letter" x="220" y="55">C</text>
+                        </g>
+
+                        <!-- Side 1 (Right) -->
+                        <g class="boxed-side" id="boxed-side-1">
+                            <circle class="boxed-dot" cx="250" cy="80" r="15" />
+                            <text class="boxed-letter" x="250" y="85">D</text>
+                            <circle class="boxed-dot" cx="250" cy="150" r="15" />
+                            <text class="boxed-letter" x="250" y="155">E</text>
+                            <circle class="boxed-dot" cx="250" cy="220" r="15" />
+                            <text class="boxed-letter" x="250" y="225">F</text>
+                        </g>
+
+                        <!-- Side 2 (Bottom) -->
+                        <g class="boxed-side" id="boxed-side-2">
+                            <circle class="boxed-dot" cx="80" cy="250" r="15" />
+                            <text class="boxed-letter" x="80" y="255">G</text>
+                            <circle class="boxed-dot" cx="150" cy="250" r="15" />
+                            <text class="boxed-letter" x="150" y="255">H</text>
+                            <circle class="boxed-dot" cx="220" cy="250" r="15" />
+                            <text class="boxed-letter" x="220" y="255">I</text>
+                        </g>
+
+                        <!-- Side 3 (Left) -->
+                        <g class="boxed-side" id="boxed-side-3">
+                            <circle class="boxed-dot" cx="50" cy="80" r="15" />
+                            <text class="boxed-letter" x="50" y="85">J</text>
+                            <circle class="boxed-dot" cx="50" cy="150" r="15" />
+                            <text class="boxed-letter" x="50" y="155">K</text>
+                            <circle class="boxed-dot" cx="50" cy="220" r="15" />
+                            <text class="boxed-letter" x="50" y="225">L</text>
+                        </g>
+                    </svg>
+                </div>
+
+                <div id="boxed-current-word" class="boxed-input-display"></div>
+                <div id="boxed-message" class="boxed-message"></div>
+
+                <div class="boxed-controls">
+                    <button id="boxed-delete" class="bee-btn">Delete</button>
+                    <button id="boxed-enter" class="bee-btn">Enter</button>
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="boxed-coins-value" class="coins-value-display">100</span>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Sudoku Game Screen -->
+        <div id="sudoku-container" class="app-screen hidden">
+            <header class="header">
+                <button id="sudoku-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+                <div class="header-title">Sudoku</div>
+                <button id="sudoku-settings-button" class="header-button material-symbols-outlined">settings</button>
+            </header>
+
+            <main class="sudoku-game-area">
+                <div class="sudoku-stats">
+                    <div id="sudoku-mistakes">Mistakes: 0/3</div>
+                    <div id="sudoku-difficulty">Easy</div>
+                </div>
+
+                <div id="sudoku-grid" class="sudoku-grid">
+                    <!-- 81 cells -->
+                </div>
+
+                <div class="sudoku-numpad" id="sudoku-numpad">
+                    <button class="numpad-btn" data-val="1">1</button>
+                    <button class="numpad-btn" data-val="2">2</button>
+                    <button class="numpad-btn" data-val="3">3</button>
+                    <button class="numpad-btn" data-val="4">4</button>
+                    <button class="numpad-btn" data-val="5">5</button>
+                    <button class="numpad-btn" data-val="6">6</button>
+                    <button class="numpad-btn" data-val="7">7</button>
+                    <button class="numpad-btn" data-val="8">8</button>
+                    <button class="numpad-btn" data-val="9">9</button>
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="sudoku-coins-value" class="coins-value-display">100</span>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Tiles Game Screen -->
+        <div id="tiles-container" class="app-screen hidden">
+            <header class="header">
+                <button id="tiles-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+                <div class="header-title">Tiles</div>
+                <div class="header-status">
+                    <span id="tiles-score">0</span>
+                </div>
+            </header>
+
+            <main class="tiles-game-area">
+                <div class="tiles-combo" id="tiles-combo">Combo: 0x</div>
+
+                <div id="tiles-grid" class="tiles-grid">
+                    <!-- 4x4 grid -->
+                </div>
+
+                <div class="tiles-instructions">
+                    Match tiles that share a shape or color!
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="tiles-coins-value" class="coins-value-display">100</span>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Pips Game Screen -->
+        <div id="pips-container" class="app-screen hidden">
+            <header class="header">
+                <button id="pips-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+                <div class="header-title">Pips</div>
+                <div class="header-status">
+                    <span id="pips-moves">Moves: 0</span>
+                </div>
+            </header>
+
+            <main class="pips-game-area">
+                <div id="pips-grid" class="pips-grid">
+                    <!-- 4x4 grid of dice -->
+                </div>
+
+                <div class="pips-instructions">
+                    Match two dice that add up to 7!
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="pips-coins-value" class="coins-value-display">100</span>
+                </div>
             </footer>
         </div>
     </div>

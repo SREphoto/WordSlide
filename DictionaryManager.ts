@@ -43,4 +43,8 @@ export class DictionaryManager {
     public get isReady(): boolean {
         return this.isLoaded;
     }
+
+    public getAllWords(): string[] {
+        return Array.from(this.words);
+    }
 }

@@ -154,8 +154,14 @@ const DEFAULT_GENERATED_WORLD_THEME_VAR = "--world-generated-bg";
 
 // --- DOM Elements ---
 const appContainer = document.getElementById('app-container')!;
+const mainMenuScreen = document.getElementById('main-menu-screen')!;
 const levelSelectionScreen = document.getElementById('level-selection-screen')!;
 const gameContainer = document.getElementById('game-container')!;
+
+// Main Menu UI
+const mainSettingsButton = document.getElementById('main-settings-button')!;
+const gameModeCards = document.querySelectorAll('.game-mode-card');
+const mainMenuCoins = document.getElementById('main-menu-coins')!;
 
 // Roadmap UI
 const roadmapMainContent = document.getElementById('roadmap-main-content')!;
@@ -305,15 +311,24 @@ function triggerHapticFeedback(pattern: 'light' | 'success' | 'error') {
 
 
 // --- Screen Navigation ---
+function showMainMenu() {
+    mainMenuScreen.classList.remove('hidden');
+    levelSelectionScreen.classList.add('hidden');
+    gameContainer.classList.add('hidden');
+    updateGlobalUIElements();
+}
+
 function showRoadmapScreen() {
     console.log('showRoadmapScreen called. gameRoadmap length:', gameRoadmap.length);
     renderRoadmap();
+    mainMenuScreen.classList.add('hidden');
     levelSelectionScreen.classList.remove('hidden');
     gameContainer.classList.add('hidden');
     updateGlobalUIElements();
 }
 
 function showGameScreen() {
+    mainMenuScreen.classList.add('hidden');
     levelSelectionScreen.classList.add('hidden');
     gameContainer.classList.remove('hidden');
     resizeCanvas();
@@ -1890,7 +1905,7 @@ function main() {
         attachEventListeners();
 
         console.log('Showing roadmap screen...');
-        showRoadmapScreen();
+        showMainMenu(); // Start at main menu instead of roadmap
 
         if (localStorage.getItem('bonusTipShown') === 'true') {
             bonusWordsTip.classList.add('hidden');

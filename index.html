@@ -21,8 +21,100 @@
 
 <body>
     <div id="app-container">
+        <!-- Main Menu / Game Selector Screen -->
+        <div id="main-menu-screen" class="app-screen">
+            <header class="header">
+                <div class="header-title">Puzzle Hub</div>
+                <button id="main-settings-button" class="header-button material-symbols-outlined">settings</button>
+            </header>
+
+            <div id="game-selector-wrapper">
+                <h2 class="game-selector-title">Choose Your Game</h2>
+                <div id="game-mode-grid">
+                    <!-- WordSlide Card -->
+                    <button class="game-mode-card" data-game="wordslide">
+                        <div class="game-icon">🔤</div>
+                        <h3 class="game-title">WordSlide</h3>
+                        <p class="game-description">Swipe letters to form words</p>
+                        <span class="game-levels">340+ Levels</span>
+                    </button>
+
+                    <!-- Wordle Card -->
+                    <button class="game-mode-card" data-game="wordle">
+                        <div class="game-icon">🎯</div>
+                        <h3 class="game-title">Wordle</h3>
+                        <p class="game-description">Guess the 5-letter word</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+
+                    <!-- Spelling Bee Card -->
+                    <button class="game-mode-card" data-game="spelling-bee">
+                        <div class="game-icon">🐝</div>
+                        <h3 class="game-title">Spelling Bee</h3>
+                        <p class="game-description">Make words with given letters</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+
+                    <!-- Connections Card -->
+                    <button class="game-mode-card" data-game="connections">
+                        <div class="game-icon">🔗</div>
+                        <h3 class="game-title">Connections</h3>
+                        <p class="game-description">Group words by category</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+
+                    <!-- Strands Card -->
+                    <button class="game-mode-card" data-game="strands">
+                        <div class="game-icon">🧵</div>
+                        <h3 class="game-title">Strands</h3>
+                        <p class="game-description">Find themed words</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+
+                    <!-- Letter Boxed Card -->
+                    <button class="game-mode-card" data-game="letter-boxed">
+                        <div class="game-icon">📦</div>
+                        <h3 class="game-title">Letter Boxed</h3>
+                        <p class="game-description">Connect letters to form words</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+
+                    <!-- Tiles Card -->
+                    <button class="game-mode-card" data-game="tiles">
+                        <div class="game-icon">🎴</div>
+                        <h3 class="game-title">Tiles</h3>
+                        <p class="game-description">Match tiles to clear the board</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+
+                    <!-- Pips Card -->
+                    <button class="game-mode-card" data-game="pips">
+                        <div class="game-icon">🎲</div>
+                        <h3 class="game-title">Pips</h3>
+                        <p class="game-description">Dice and domino puzzle challenge</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+
+                    <!-- Sudoku Card -->
+                    <button class="game-mode-card" data-game="sudoku">
+                        <div class="game-icon">🔢</div>
+                        <h3 class="game-title">Sudoku</h3>
+                        <p class="game-description">Fill the 9x9 grid</p>
+                        <span class="game-badge">Coming Soon</span>
+                    </button>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <div class="footer-item">
+                    <span class="material-symbols-outlined coin-icon">monetization_on</span>
+                    <span id="main-menu-coins" class="coins-value-display">100</span>
+                </div>
+            </footer>
+        </div>
+
         <!-- Level Selection / Roadmap Screen -->
-        <div id="level-selection-screen" class="app-screen">
+        <div id="level-selection-screen" class="app-screen hidden">
             <header class="header">
                 <button id="roadmap-back-button" class="header-button material-symbols-outlined">arrow_back</button>
                 <div class="header-title">Roadmap</div>

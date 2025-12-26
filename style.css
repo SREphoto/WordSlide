@@ -2271,3 +2271,40 @@ input:checked+.toggle-slider:before {
 .game-message {
     font-weight: 700;
 }
+/* Highlight kept dice */
+.die-keep .cube-die,
+.die-locked .cube-die {
+    outline: 3px solid var(--accent-color, #ffcc00);
+    outline-offset: -2px;
+}
+
+/* Yahtzee scorecard */
+.score-card {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 0.5rem;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+.score-card button {
+    font-family: var(--font-primary, 'Inter', sans-serif);
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.3rem;
+    background: rgba(0,0,0,0.2);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.score-card button:hover {
+    background: rgba(0,0,0,0.4);
+}
+.score-card button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+

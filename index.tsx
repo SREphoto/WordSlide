@@ -292,7 +292,7 @@ const lrcPotDisplay = document.getElementById('lrc-pot')!;
 const lrcPlayersGrid = document.getElementById('lrc-players')!;
 const lrcDiceArea = document.getElementById('lrc-dice-area')!;
 const lrcLogArea = document.getElementById('lrc-log')!;
-const lrcRollButton = document.getElementById('lrc-roll-button')!;
+const lrcRollButton = document.getElementById('lrc-roll-button')! as HTMLButtonElement;
 
 const farkleContainer = document.getElementById('farkle-container')!;
 const farkleBackButton = document.getElementById('farkle-back-button')!;
@@ -300,15 +300,23 @@ const farkleTotalDisplay = document.getElementById('farkle-total')!;
 const farkleTurnDisplay = document.getElementById('farkle-turn')!;
 const farkleMessage = document.getElementById('farkle-message')!;
 const farkleDiceGrid = document.getElementById('farkle-dice-grid')!;
-const farkleRollButton = document.getElementById('farkle-roll-button')!;
-const farkleStopButton = document.getElementById('farkle-stop-button')!;
+const farkleRollButton = document.getElementById('farkle-roll-button')! as HTMLButtonElement;
+const farkleStopButton = document.getElementById('farkle-stop-button')! as HTMLButtonElement;
+
+// Sevens Elements
+const sevensContainer = document.getElementById('sevens-container')!;
+const sevensBackButton = document.getElementById('sevens-back-button')!;
+const sevensMessage = document.getElementById('sevens-message')!;
+const sevensDiceGrid = document.getElementById('sevens-dice-grid')!;
+const sevensRollButton = document.getElementById('sevens-roll-button')! as HTMLButtonElement;
+const sevensConfirmButton = document.getElementById('sevens-confirm-button')! as HTMLButtonElement;
 
 const threesContainer = document.getElementById('threes-container')!;
 const threesBackButton = document.getElementById('threes-back-button')!;
 const threesTotalDisplay = document.getElementById('threes-total')!;
 const threesKeptGrid = document.getElementById('threes-kept')!;
 const threesRollGrid = document.getElementById('threes-roll')!;
-const threesRollButton = document.getElementById('threes-roll-button')!;
+const threesRollButton = document.getElementById('threes-roll-button')! as HTMLButtonElement;
 
 const soliContainer = document.getElementById('solitaire-container')!;
 const soliBackButton = document.getElementById('soli-back-button')!;
@@ -373,8 +381,10 @@ let pipsGameInstance: PipsGame | null = null;
 // New Dice/Card Game Instances
 let lrcGameInstance: LRCGame | null = null;
 let farkleGameInstance: FarkleGame | null = null;
+let sevensGameInstance: SevensGame | null = null;
 let threesGameInstance: ThreesGame | null = null;
 let solitaireGameInstance: SolitaireGame | null = null;
+
 
 // Shared UI (Modals, Popups)
 const feedbackPopup = document.getElementById('feedback-popup')!;
@@ -1337,46 +1347,190 @@ function showLRCScreen() {
     hideAllScreens();
     lrcContainer.classList.remove('hidden');
     if (!lrcGameInstance) lrcGameInstance = new LRCGame();
-    renderLRC();
+    // Maybe dont auto roll lrc? Usually waits for user.
+    renderLRC(true); // Animate initial roll
 }
 
-function renderLRC() {
+function renderLRC(animate: boolean = false) {
     if (!lrcGameInstance) return;
     const state = lrcGameInstance.getState();
     lrcPotDisplay.textContent = `Pot: ${state.pot}`;
+
     lrcPlayersGrid.innerHTML = '';
     state.players.forEach((p, i) => {
         const card = document.createElement('div');
         card.className = `lrc-player-card ${state.currentPlayerIndex === i ? 'active' : ''}`;
-        card.innerHTML = `<div>${p.name}</div><div style="font-size: 1.5rem; font-weight: 700;">${p.chips}</div>`;
+        if (p.isEliminated && p.chips === 0) card.classList.add('eliminated');
+
+        card.innerHTML = `
+            <div class="player-name">${p.name}</div>
+            <div class="player-chips">
+                <span class="material-symbols-outlined">circle</span>
+                <span>${p.chips}</span>
+            </div>
+            ${state.winner?.id === p.id ? '<div class="winner-badge">WINNER</div>' : ''}
+        `;
         lrcPlayersGrid.appendChild(card);
     });
-    lrcLogArea.innerHTML = state.log.map(l => `<div>${l}</div>`).join('');
+
+    // Render Dice Result area
+    if (!lrcDiceArea.classList.contains('dice-container-3d')) {
+        lrcDiceArea.className = 'dice-container-3d';
+        lrcDiceArea.style.display = 'flex';
+    }
+    lrcDiceArea.innerHTML = '';
+
+    if (state.lastRoll.length > 0) {
+        state.lastRoll.forEach(side => {
+            const dieEl = create3DDieElement(side, false, () => { }, 'lrc');
+            if (animate) {
+                const cube = dieEl.querySelector('.cube-die') as HTMLElement;
+                if (cube) {
+                    cube.classList.add('rolling');
+                    soundManager.playDiceRoll();
+
+                    setTimeout(() => {
+                        cube.classList.remove('rolling');
+                    }, 500 + Math.random() * 300);
+                }
+            }
+            lrcDiceArea.appendChild(dieEl);
+        });
+    }
+
+    lrcLogArea.innerHTML = state.log.map(l => `<div class="log-entry">${l}</div>`).join('');
+
+    // Disable roll button if game over or not user turn
+    // For single device, user plays all turns
+    lrcRollButton.disabled = state.gameOver;
+    lrcRollButton.textContent = state.gameOver ? "Game Over" : "Roll Dice";
+    lrcRollButton.onclick = () => {
+        if (lrcGameInstance) {
+            lrcGameInstance.roll();
+            renderLRC(true); // Animate roll
+        }
+    };
+
+    // IMPORTANT: If we are animating, button might need debounce? 
+    // Handled by user "wait for animation" naturally, or disable button during anim.
 }
 
 // --- Farkle Game Functions ---
 
+// Global selection state for Farkle
+let farkleSelectedIndices: number[] = [];
+
 function showFarkleScreen() {
     hideAllScreens();
     farkleContainer.classList.remove('hidden');
-    if (!farkleGameInstance) farkleGameInstance = new FarkleGame();
-    renderFarkle();
+    // Always start fresh for now to avoid state confusion
+    farkleGameInstance = new FarkleGame();
+    farkleSelectedIndices = [];
+    farkleGameInstance.roll(); // Auto-roll on start
+    renderFarkle(true); // Animate initial roll
 }
 
-function renderFarkle() {
+function renderFarkle(animate: boolean = false) {
     if (!farkleGameInstance) return;
     const state = farkleGameInstance.getState();
     farkleTotalDisplay.textContent = state.totalScore.toString();
     farkleTurnDisplay.textContent = state.turnScore.toString();
-    farkleMessage.textContent = state.farkled ? "FARKLE! 💥" : "";
+
+    // Calculate potential score of currently selected dice
+    let potentialLabel = "";
+    if (farkleSelectedIndices.length > 0) {
+        const potential = farkleGameInstance.calculatePotentialScore(
+            farkleSelectedIndices.map(i => state.lastRoll[i])
+        );
+        if (potential.score > 0) {
+            potentialLabel = ` (+${potential.score})`;
+        }
+    }
+
+    farkleMessage.textContent = state.farkled
+        ? "FARKLE! 💥"
+        : (state.turnScore > 0 || farkleSelectedIndices.length > 0
+            ? `Turn: ${state.turnScore}${potentialLabel}`
+            : "Select scoring dice!");
+
+    if (state.farkled) {
+        farkleMessage.classList.add('farkle-alert');
+    } else {
+        farkleMessage.classList.remove('farkle-alert');
+    }
+
+    // Update grid container
+    if (!farkleDiceGrid.classList.contains('dice-container-3d')) {
+        farkleDiceGrid.className = 'dice-container-3d';
+        farkleDiceGrid.style.display = 'flex';
+    }
     farkleDiceGrid.innerHTML = '';
+
     state.lastRoll.forEach((val, i) => {
-        const die = document.createElement('div');
-        die.className = 'farkle-die';
-        die.textContent = val.toString();
-        // Add "hold" logic logic here in the click handler
-        farkleDiceGrid.appendChild(die);
+        const dieEl = create3DDieElement(val, farkleSelectedIndices.includes(i), () => handleFarkleDieClick(i));
+
+        if (animate) {
+            const cube = dieEl.querySelector('.cube-die') as HTMLElement;
+            if (cube) {
+                cube.classList.add('rolling');
+                soundManager.playDiceRoll();
+                setTimeout(() => cube.classList.remove('rolling'), 500 + Math.random() * 300);
+            }
+        }
+
+        farkleDiceGrid.appendChild(dieEl);
     });
+
+    // Button states
+    farkleRollButton.disabled = state.gameOver || state.farkled;
+    farkleStopButton.disabled = state.gameOver || state.farkled || (state.turnScore === 0 && farkleSelectedIndices.length === 0);
+
+    // Update button text to guide user
+    if (farkleSelectedIndices.length > 0) {
+        farkleRollButton.textContent = "Bank & Roll";
+        farkleStopButton.textContent = "Bank & Stop";
+    } else {
+        farkleRollButton.textContent = "Roll";
+        farkleStopButton.textContent = "Stop & Score";
+    }
+}
+
+// Helper for UI selection state
+function handleFarkleDieClick(index: number) {
+    if (!farkleGameInstance) return;
+    const instance = farkleGameInstance as any;
+    if (!instance.selectedIndices) instance.selectedIndices = [];
+
+    if (instance.selectedIndices.includes(index)) {
+        instance.selectedIndices = instance.selectedIndices.filter((i: number) => i !== index);
+    } else {
+        instance.selectedIndices.push(index);
+    }
+
+    // Attempt to hold immediately? Or wait for a specific 'Bank' button?
+    // The current UI has "Stop & Score" which banks EVERYTHING held. 
+    // Wait, typical Farkle: Roll -> Select Scoring Dice -> (Roll Remaining OR Stop).
+    // The `holdDice` method in simple version usually moves them to score.
+    // Let's assume clicking a die tries to "Bank" it into the turn score immediately to allow re-rolling others.
+
+    const result = farkleGameInstance.holdDice([index]);
+    if (result.valid) {
+        // Die was validly held, update UI
+        instance.selectedIndices = []; // Clear selection as it's now banked
+        renderFarkle();
+    } else {
+        // Invalid selection (not a scoring die), maybe shake it?
+        // For now just toggle selection visual and let user try to select multiple?
+        // The game logic `holdDice` takes an array, suggesting we can hold multiple.
+        // Let's try to hold ALL currently selected dice.
+        const multiResult = farkleGameInstance.holdDice(instance.selectedIndices);
+        if (multiResult.valid) {
+            instance.selectedIndices = [];
+            renderFarkle();
+        } else {
+            renderFarkle(); // Just update visual selection
+        }
+    }
 }
 
 // --- Threes Game Functions ---
@@ -1384,22 +1538,259 @@ function renderFarkle() {
 function showThreesScreen() {
     hideAllScreens();
     threesContainer.classList.remove('hidden');
-    if (!threesGameInstance) threesGameInstance = new ThreesGame();
-    renderThrees();
+    if (!threesGameInstance) {
+        threesGameInstance = new ThreesGame();
+    }
+    // Don't auto-reset if continuing? Threes is short. Let's auto-reset if game over.
+    if (threesGameInstance.getState().gameOver) {
+        threesGameInstance.reset();
+    }
+    // If it's a fresh game (empty current roll), roll first
+    if (threesGameInstance.getState().currentRoll.length === 0) {
+        threesGameInstance.roll();
+    }
+    renderThrees(true); // Animate initial roll
 }
 
-function renderThrees() {
+function renderThrees(animate: boolean = false) {
     if (!threesGameInstance) return;
     const state = threesGameInstance.getState();
     threesTotalDisplay.textContent = state.totalScore.toString();
-    threesKeptGrid.innerHTML = state.keptDice.map(d => `<div class="farkle-die">${d}</div>`).join('');
-    threesRollGrid.innerHTML = state.currentRoll.map((d, i) => `<div class="farkle-die" onclick="keepThreeDie(${i})">${d}</div>`).join('');
+
+    // Kept Dice
+    threesKeptGrid.innerHTML = '';
+    // Use simple 2D for kept dice or small 3D? Standard cubes okay.
+    // If we want consistency, use the new helper but non-selectable.
+    // threesKeptGrid might need styling adjustment to hold 3D dice.
+    // For now, let's stick to simple or use create3DDieElement but smaller scale?
+    // Let's just use create3DDieElement.
+    if (!threesKeptGrid.classList.contains('dice-container-3d')) {
+        threesKeptGrid.className = 'dice-container-3d';
+        threesKeptGrid.style.display = 'flex';
+        threesKeptGrid.style.transform = 'scale(0.8)'; // Make kept dice slightly smaller
+    }
+
+    state.keptDice.forEach(d => {
+        // No click handler for kept dice
+        const dieEl = create3DDieElement(d, false, () => { });
+        // Highlight 3s? 
+        if (d === 3) dieEl.querySelector('.cube-die')?.classList.add('is-three'); // Add specific style if needed
+        threesKeptGrid.appendChild(dieEl);
+    });
+
+    // Current Roll
+    if (!threesRollGrid.classList.contains('dice-container-3d')) {
+        threesRollGrid.className = 'dice-container-3d';
+        threesRollGrid.style.display = 'flex';
+    }
+    threesRollGrid.innerHTML = '';
+    state.currentRoll.forEach((d, i) => {
+        const dieEl = create3DDieElement(d, false, () => {
+            threesGameInstance!.keepDie(i);
+            renderThrees(false);
+        });
+
+        if (animate) {
+            const cube = dieEl.querySelector('.cube-die') as HTMLElement;
+            if (cube) {
+                cube.classList.add('rolling');
+                soundManager.playDiceRoll();
+                setTimeout(() => cube.classList.remove('rolling'), 500 + Math.random() * 300);
+            }
+        }
+
+        threesRollGrid.appendChild(dieEl);
+    });
+
+    threesRollButton.disabled = false; // Always enabled unless game over logic below changes it
+
+    if (state.gameOver) {
+        threesRollButton.textContent = "Play Again";
+    } else {
+        threesRollButton.textContent = "Roll Dice";
+    }
 }
 
 function keepThreeDie(index: number) {
     if (threesGameInstance) {
         threesGameInstance.keepDie(index);
         renderThrees();
+    }
+}
+
+// --- 3D Dice Helper ---
+function create3DDieElement(value: number | string, selected: boolean, onClick: () => void, type: 'standard' | 'lrc' = 'standard'): HTMLElement {
+    const scene = document.createElement('div');
+    scene.className = `die-scene ${selected ? 'selected' : ''}`;
+    scene.onclick = onClick;
+
+    const cube = document.createElement('div');
+    cube.className = 'cube-die';
+
+    // Determine which face should be visible based on the value
+    // For standard dice, value directly maps to the visible face.
+    // For LRC dice, map 'L', 'R', 'C', 'DOT' to specific faces for rotation.
+    let visibleFaceNumber: number; // This will be 1-6, corresponding to the standard face layout
+    let faceContentMap: { [key: number]: string | null } = {}; // For LRC, what content goes on which face
+
+    if (type === 'lrc') {
+        // LRC dice have L, R, C, and 3 DOT faces.
+        // Let's map:
+        // 'L' -> Left face (4)
+        // 'R' -> Right face (3)
+        // 'C' -> Front face (1)
+        // 'DOT' -> Back face (6) - this will be the default for other DOT faces too
+        if (value === 'L') visibleFaceNumber = 4; // Left
+        else if (value === 'R') visibleFaceNumber = 3; // Right
+        else if (value === 'C') visibleFaceNumber = 1; // Front
+        else visibleFaceNumber = 6; // DOT (Back)
+
+        // Define content for all 6 faces for an LRC die
+        faceContentMap = {
+            1: 'C', // Front
+            2: null, // Top (will be a dot)
+            3: 'R', // Right
+            4: 'L', // Left
+            5: null, // Bottom (will be a dot)
+            6: null  // Back (will be a dot)
+        };
+    } else { // Standard die
+        visibleFaceNumber = typeof value === 'number' ? value : 1; // Default to 1 if string for standard
+    }
+
+    // Set rotation to show the correct face
+    // Layout: Front=1, Back=6, Right=3, Left=4, Top=2, Bottom=5
+    let transform = '';
+    switch (visibleFaceNumber) {
+        case 1: transform = 'rotateX(0deg) rotateY(0deg)'; break; // Front
+        case 6: transform = 'rotateX(0deg) rotateY(180deg)'; break; // Back
+        case 3: transform = 'rotateX(0deg) rotateY(-90deg)'; break; // Right
+        case 4: transform = 'rotateX(0deg) rotateY(90deg)'; break; // Left
+        case 2: transform = 'rotateX(-90deg) rotateY(0deg)'; break; // Top
+        case 5: transform = 'rotateX(90deg) rotateY(0deg)'; break; // Bottom
+        default: transform = 'rotateX(0deg) rotateY(0deg)'; // Fallback (face 1)
+    }
+    cube.style.transform = transform;
+
+    // Create faces
+    const faces = [
+        { cls: 'front face-1', val: 1 },
+        { cls: 'back face-6', val: 6 },
+        { cls: 'right face-3', val: 3 },
+        { cls: 'left face-4', val: 4 },
+        { cls: 'top face-2', val: 2 },
+        { cls: 'bottom face-5', val: 5 }
+    ];
+
+    faces.forEach(f => {
+        const face = document.createElement('div');
+        face.className = `cube-face ${f.cls}`;
+
+        if (type === 'lrc') {
+            const content = faceContentMap[f.val];
+            if (content) {
+                face.textContent = content;
+                face.style.color = '#000'; // Ensure visible text
+                face.style.fontSize = '32px';
+                face.style.fontWeight = 'bold';
+                face.style.display = 'flex';
+                face.style.alignItems = 'center';
+                face.style.justifyContent = 'center';
+            } else {
+                // Render a single dot for other faces
+                const pip = document.createElement('span');
+                pip.className = 'pip';
+                pip.style.cssText = 'top: 50%; left: 50%; transform: translate(-50%, -50%); width: 12px; height: 12px;';
+                face.appendChild(pip);
+            }
+        } else {
+            // Standard Pips
+            for (let i = 0; i < f.val; i++) {
+                const pip = document.createElement('span');
+                pip.className = 'pip';
+                face.appendChild(pip);
+            }
+        }
+        cube.appendChild(face);
+    });
+
+    scene.appendChild(cube);
+    return scene;
+}
+
+// --- Sevens Game Functions ---
+
+let sevensSelectedIndices: number[] = [];
+
+function showSevensScreen() {
+    hideAllScreens();
+    sevensContainer.classList.remove('hidden');
+    sevensGameInstance = new SevensGame();
+    sevensSelectedIndices = [];
+    sevensGameInstance.roll();
+    // For initial show, maybe don't animate or simple render
+    renderSevens(true); // Animate initial roll
+}
+
+function renderSevens(animate: boolean = false) {
+    if (!sevensGameInstance) return;
+    const state = sevensGameInstance.getState();
+    sevensMessage.textContent = state.message;
+
+    // Update container class for flex layout
+    if (!sevensDiceGrid.classList.contains('dice-container-3d')) {
+        sevensDiceGrid.className = 'dice-container-3d';
+        sevensDiceGrid.style.display = 'flex'; // Override grid
+    }
+
+    sevensDiceGrid.innerHTML = '';
+
+    state.dice.forEach((val, i) => {
+        const dieEl = create3DDieElement(val, sevensSelectedIndices.includes(i), () => {
+            if (sevensSelectedIndices.includes(i)) {
+                sevensSelectedIndices = sevensSelectedIndices.filter(idx => idx !== i);
+            } else {
+                sevensSelectedIndices.push(i);
+            }
+            renderSevens(false);
+        });
+
+        if (animate) {
+            const cube = dieEl.querySelector('.cube-die') as HTMLElement;
+            if (cube) {
+                cube.classList.add('rolling');
+                // Sound
+                soundManager.playDiceRoll();
+
+                setTimeout(() => {
+                    cube.classList.remove('rolling');
+                    // Ensure final transform is set (it is set in create, but animation overrides it)
+                    // When class removed, style.transform takes over
+                }, 500 + Math.random() * 300);
+            }
+        }
+
+        sevensDiceGrid.appendChild(dieEl);
+    });
+
+    // Update sum of selection
+    if (sevensSelectedIndices.length > 0) {
+        const sum = sevensSelectedIndices.reduce((acc, idx) => acc + state.dice[idx], 0);
+        sevensConfirmButton.textContent = `Remove ${sum} (Target: 7)`;
+        sevensConfirmButton.disabled = sum !== 7;
+    } else {
+        sevensConfirmButton.textContent = "Remove Selected";
+        sevensConfirmButton.disabled = true;
+    }
+
+    if (state.gameOver) {
+        sevensRollButton.textContent = "Play Again";
+        sevensRollButton.onclick = () => showSevensScreen();
+        sevensConfirmButton.disabled = true;
+    } else {
+        sevensRollButton.textContent = "Roll Dice";
+        // Update listener elsewhere? No, modifying listener is dangerous if repeated.
+        // Listeners are static in init. logic is inside listener.
     }
 }
 
@@ -2959,20 +3350,32 @@ function attachEventListeners() {
                 showSudokuScreen();
             } else if (gameMode === 'tiles') {
                 showTilesScreen();
-            } else if (gameMode === 'pips') {
-                showPipsScreen();
-            } else if (gameMode === 'lrc') {
-                showLRCScreen();
-            } else if (gameMode === 'farkle') {
-                showFarkleScreen();
-            } else if (gameMode === 'threes') {
-                showThreesScreen();
-            } else if (gameMode === 'solitaire') {
-                showSolitaireScreen();
-            } else if (gameMode === 'cribbage') {
-                showCribbageScreen();
             } else {
-                showFeedback(`${card.querySelector('.game-title')?.textContent} - Coming Soon!`, false, false, 2000);
+                switch (gameMode) {
+                    case 'pips':
+                        showPipsScreen();
+                        break;
+                    case 'lrc':
+                        showLRCScreen();
+                        break;
+                    case 'farkle':
+                        showFarkleScreen();
+                        break;
+                    case 'sevens':
+                        showSevensScreen();
+                        break;
+                    case 'threes':
+                        showThreesScreen();
+                        break;
+                    case 'solitaire':
+                        showSolitaireScreen();
+                        break;
+                    case 'cribbage':
+                        showCribbageScreen();
+                        break;
+                    default:
+                        showFeedback(`${card.querySelector('.game-title')?.textContent} - Coming Soon!`, false, false, 2000);
+                }
             }
         });
     });
@@ -3039,7 +3442,7 @@ function attachEventListeners() {
     lrcRollButton.addEventListener('click', () => {
         if (lrcGameInstance) {
             lrcGameInstance.roll();
-            renderLRC();
+            renderLRC(true);
         }
     });
 
@@ -3047,16 +3450,116 @@ function attachEventListeners() {
     farkleBackButton.addEventListener('click', showMainMenu);
     farkleRollButton.addEventListener('click', () => {
         if (farkleGameInstance) {
-            const result = farkleGameInstance.roll();
-            if (result.farkle) showFeedback("FARKLE! Turn lost.", false);
-            renderFarkle();
+            const state = farkleGameInstance.getState();
+            if (state.farkled) {
+                // If farkled, this button essentially resets turn/game or just disabled?
+                // Usually "Pass" or "New Game" if game over.
+                // For now, let's assume it starts a new turn if farkled?
+                // Implementation: reset turn.
+                // But our class doesn't have 'nextTurn' exposed nicely.
+                // Let's simple check:
+                // If farkled, we basically auto-lost. User should probably go back or we start new turn.
+                // Re-instantiate for new game/turn effectively?
+                showFarkleScreen(); // Reset
+                return;
+            }
+
+            if (farkleSelectedIndices.length > 0) {
+                // Buffer to hold
+                const result = farkleGameInstance.holdDice(farkleSelectedIndices);
+                if (result.valid) {
+                    farkleSelectedIndices = [];
+                    const rollResult = farkleGameInstance.roll(); // Bank & Roll
+                    if (rollResult.farkle) {
+                        renderFarkle(); // Show farkle state
+                        showFeedback("FARKLE! 💥", false, false, 2000);
+                    } else {
+                        renderFarkle();
+                    }
+                } else {
+                    showFeedback("Selection doesn't score!", false);
+                    renderFarkle();
+                }
+            } else {
+                // No selection. 
+                // If we have turn score > 0, we might be allowed to roll remaining dice? 
+                // (Already banked previously).
+                // Wait, holdDice REMOVES dice from count.
+                // So if we have turnScore > 0, we can roll remaining.
+                if (state.turnScore > 0) {
+                    const rollResult = farkleGameInstance.roll();
+                    if (rollResult.farkle) {
+                        showFeedback("FARKLE! 💥", false, false, 2000);
+                    }
+                    renderFarkle();
+                } else {
+                    showFeedback("Select dice to score first.", false);
+                }
+            }
         }
     });
+
     farkleStopButton.addEventListener('click', () => {
         if (farkleGameInstance) {
-            const scored = farkleGameInstance.stop();
-            showFeedback(`Collected ${scored} points!`, true);
-            renderFarkle();
+            if (farkleSelectedIndices.length > 0) {
+                // Try to bank and then stop
+                const result = farkleGameInstance.holdDice(farkleSelectedIndices);
+                if (result.valid) {
+                    farkleSelectedIndices = [];
+                    const scored = farkleGameInstance.stop();
+                    showFeedback(`Banked ${scored} points!`, true);
+                    // Start new turn/roll immediately
+                    const rollResult = farkleGameInstance.roll();
+                    if (rollResult.farkle) {
+                        showFeedback("FARKLE! (On new turn)", false, false, 2000);
+                    }
+                    renderFarkle();
+                } else {
+                    showFeedback("Selection doesn't score!", false);
+                }
+            } else {
+                // Just stop (if we have points)
+                const state = farkleGameInstance.getState();
+                if (state.turnScore > 0) {
+                    const scored = farkleGameInstance.stop();
+                    showFeedback(`Banked ${scored} points!`, true);
+                    // Start new turn
+                    const rollResult = farkleGameInstance.roll();
+                    renderFarkle();
+                } else {
+                    showFeedback("No points to bank!", false);
+                }
+            }
+        }
+    });
+
+    // Sevens Screen
+    sevensBackButton.addEventListener('click', showMainMenu);
+    sevensRollButton.addEventListener('click', () => {
+        if (sevensGameInstance) {
+            sevensGameInstance.roll();
+            renderSevens();
+        }
+    });
+    sevensConfirmButton.addEventListener('click', () => {
+        if (sevensGameInstance) {
+            if (sevensSelectedIndices.length === 0) {
+                showFeedback("Select dice summing to 7 first!", false);
+                return;
+            }
+            const result = sevensGameInstance.removeDice(sevensSelectedIndices);
+            if (result.success) {
+                sevensSelectedIndices = [];
+                // If dice remain, user must usually roll again? 
+                // Wait, logic says: "Remove valid sets". Game doesn't auto-roll.
+                // User can remove MORE sets if they exist? 
+                // Or user must roll? 
+                // My logic in SevensGame: `removeDice` removes them. 
+                // Check if more moves possible? 
+                renderSevens();
+            } else {
+                showFeedback(result.message || "Invalid move", false);
+            }
         }
     });
 
@@ -3064,8 +3567,18 @@ function attachEventListeners() {
     threesBackButton.addEventListener('click', showMainMenu);
     threesRollButton.addEventListener('click', () => {
         if (threesGameInstance) {
-            threesGameInstance.roll();
-            renderThrees();
+            const state = threesGameInstance.getState();
+            if (state.gameOver) {
+                threesGameInstance.reset();
+                threesGameInstance.roll();
+                renderThrees();
+            } else {
+                const result = threesGameInstance.roll();
+                if (!result.success && result.message) {
+                    showFeedback(result.message, false);
+                }
+                renderThrees();
+            }
         }
     });
 

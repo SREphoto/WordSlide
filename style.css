@@ -2030,6 +2030,244 @@ input:checked+.toggle-slider:before {
     margin: -1px;
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
+}
+
+/* --- 3D Dice Styles (MotionX Inspired) --- */
+
+.dice-container-3d {
+    perspective: 1000px;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.die-scene {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    cursor: pointer;
+}
+
+.cube-die {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform-style: preserve-3d;
+    transform: rotateX(-30deg) rotateY(45deg);
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cube-die.rolling {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotateX(0) rotateY(0) rotateZ(0);
+    }
+
+    100% {
+        transform: rotateX(720deg) rotateY(360deg) rotateZ(360deg);
+    }
+}
+
+.cube-face {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #fff, #f0f0f0);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    /* Rounded corners for that realistic feel */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+    backface-visibility: hidden;
+    /* Or visible if we want transparency */
+}
+
+/* Construct the cube */
+.cube-face.front {
+    transform: rotateY(0deg) translateZ(30px);
+}
+
+.cube-face.back {
+    transform: rotateY(180deg) translateZ(30px);
+}
+
+.cube-face.right {
+    transform: rotateY(90deg) translateZ(30px);
+}
+
+.cube-face.left {
+    transform: rotateY(-90deg) translateZ(30px);
+}
+
+.cube-face.top {
+    transform: rotateX(90deg) translateZ(30px);
+}
+
+.cube-face.bottom {
+    transform: rotateX(-90deg) translateZ(30px);
+}
+
+/* Pips for 3D Faces */
+.cube-face .pip {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #000;
+    position: absolute;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Face Layouts (Standard Dice) */
+.face-1 .pip:nth-child(1) {
+    top: 25px;
+    left: 25px;
+}
+
+.face-2 .pip:nth-child(1) {
+    top: 10px;
+    left: 10px;
+}
+
+.face-2 .pip:nth-child(2) {
+    bottom: 10px;
+    right: 10px;
+}
+
+.face-3 .pip:nth-child(1) {
+    top: 10px;
+    left: 10px;
+}
+
+.face-3 .pip:nth-child(2) {
+    top: 25px;
+    left: 25px;
+}
+
+.face-3 .pip:nth-child(3) {
+    bottom: 10px;
+    right: 10px;
+}
+
+.face-4 .pip:nth-child(1) {
+    top: 10px;
+    left: 10px;
+}
+
+.face-4 .pip:nth-child(2) {
+    top: 10px;
+    right: 10px;
+}
+
+.face-4 .pip:nth-child(3) {
+    bottom: 10px;
+    left: 10px;
+}
+
+.face-4 .pip:nth-child(4) {
+    bottom: 10px;
+    right: 10px;
+}
+
+.face-5 .pip:nth-child(1) {
+    top: 10px;
+    left: 10px;
+}
+
+.face-5 .pip:nth-child(2) {
+    top: 10px;
+    right: 10px;
+}
+
+.face-5 .pip:nth-child(3) {
+    top: 25px;
+    left: 25px;
+}
+
+/* Center */
+.face-5 .pip:nth-child(4) {
+    bottom: 10px;
+    left: 10px;
+}
+
+.face-5 .pip:nth-child(5) {
+    bottom: 10px;
+    right: 10px;
+}
+
+.face-6 .pip:nth-child(1) {
+    top: 10px;
+    left: 10px;
+}
+
+.face-6 .pip:nth-child(2) {
+    top: 10px;
+    right: 10px;
+}
+
+.face-6 .pip:nth-child(3) {
+    top: 25px;
+    left: 10px;
+}
+
+.face-6 .pip:nth-child(4) {
+    top: 25px;
+    right: 10px;
+}
+
+.face-6 .pip:nth-child(5) {
+    bottom: 10px;
+    left: 10px;
+}
+
+.face-6 .pip:nth-child(6) {
+    bottom: 10px;
+    right: 10px;
+}
+
+/* Selection State for 3D Dice */
+.die-scene.selected .cube-die {
+    /* Instead of full replace, maybe add a glow or lift it up */
+    transform: translateY(-10px) rotateX(-20deg) rotateY(20deg);
+    /* We need to be careful not to override the specific face rotation logic if we apply rot here */
+}
+
+.die-scene.selected .cube-face {
+    background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+    border-color: var(--primary);
+    box-shadow: 0 0 15px var(--primary-glow);
+}
+
+/* Sevens Game Specifics */
+.sevens-game-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.sevens-status {
+    font-size: 1.25rem;
+    color: var(--text-main);
+    padding: 1rem;
+    background: var(--glass-bg);
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+}
+
+.game-message {
+    font-weight: 700;
 }

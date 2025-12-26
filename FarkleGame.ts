@@ -71,7 +71,7 @@ export class FarkleGame {
         return finalTurnScore;
     }
 
-    private calculatePotentialScore(dice: number[]): { score: number, usedAll: boolean } {
+    public calculatePotentialScore(dice: number[]): { score: number, usedAll: boolean } {
         const counts: Record<number, number> = {};
         dice.forEach(d => counts[d] = (counts[d] || 0) + 1);
 

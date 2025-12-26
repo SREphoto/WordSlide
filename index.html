@@ -115,6 +115,34 @@
                         <p class="game-description">Roll for 10,000 points</p>
                     </button>
 
+                    <!-- Yahtzee Card -->
+                    <button class="game-mode-card" data-game="yahtzee">
+                        <div class="game-icon">🎲</div>
+                        <h3 class="game-title">Yahtzee</h3>
+                        <p class="game-description">Roll 5 dice, score combos</p>
+                    </button>
+
+                    <!-- Liar's Dice Card -->
+                    <button class="game-mode-card" data-game="liar-dice">
+                        <div class="game-icon">🤥</div>
+                        <h3 class="game-title">Liar's Dice</h3>
+                        <p class="game-description">Bid or call liar</p>
+                    </button>
+
+                    <!-- Zanzibar Card -->
+                    <button class="game-mode-card" data-game="zanzibar">
+                        <div class="game-icon">🏝️</div>
+                        <h3 class="game-title">Zanzibar</h3>
+                        <p class="game-description">Keep dice, score sum</p>
+                    </button>
+
+                    <!-- Lock‑In Card -->
+                    <button class="game-mode-card" data-game="lockin">
+                        <div class="game-icon">🔒</div>
+                        <h3 class="game-title">Lock‑In</h3>
+                        <p class="game-description">Lock dice, roll again</p>
+                    </button>
+
                     <!-- Threes Card -->
                     <button class="game-mode-card" data-game="threes">
                         <div class="game-icon">3️⃣</div>
@@ -666,6 +694,98 @@
             <div class="farkle-controls">
                 <button id="farkle-roll-button" class="action-button primary">Roll</button>
                 <button id="farkle-stop-button" class="action-button secondary">Stop & Score</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Sevens Game Screen -->
+    <div id="sevens-container" class="app-screen hidden">
+        <header class="header">
+            <button id="sevens-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+            <div class="header-title">Sevens</div>
+        </header>
+        <main class="sevens-game-area">
+            <div class="sevens-status">
+                <div id="sevens-message" class="game-message">Roll to start</div>
+            </div>
+            <div id="sevens-dice-grid" class="dice-grid"></div>
+            <div class="sevens-controls">
+                <button id="sevens-roll-button" class="action-button primary">Roll Dice</button>
+                <button id="sevens-confirm-button" class="action-button secondary">Remove Selected (Sum 7)</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Yahtzee Game Screen -->
+    <div id="yahtzee-container" class="app-screen hidden">
+        <header class="header">
+            <button id="yahtzee-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+            <div class="header-title">Yahtzee</div>
+        </header>
+        <main class="yahtzee-game-area">
+            <div class="yahtzee-status">
+                <div id="yahtzee-rolls-left" class="status-item">Rolls left: <span>3</span></div>
+                <div id="yahtzee-message" class="game-message"></div>
+            </div>
+            <div id="yahtzee-dice-grid" class="dice-container-3d"></div>
+            <div class="yahtzee-controls">
+                <button id="yahtzee-roll-button" class="action-button primary">Roll</button>
+                <button id="yahtzee-score-button" class="action-button secondary">Score</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Liar's Dice Game Screen -->
+    <div id="liar-dice-container" class="app-screen hidden">
+        <header class="header">
+            <button id="liar-dice-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+            <div class="header-title">Liar's Dice</div>
+        </header>
+        <main class="liar-dice-game-area">
+            <div id="liar-dice-message" class="game-message"></div>
+            <div id="liar-dice-player-dice" class="dice-container-3d"></div>
+            <div id="liar-dice-computer-dice" class="dice-container-3d" style="opacity:0.5;"></div>
+            <div class="liar-dice-controls">
+                <button id="liar-dice-bid-button" class="action-button primary">Bid</button>
+                <button id="liar-dice-call-button" class="action-button secondary">Call Liar</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Zanzibar Game Screen -->
+    <div id="zanzibar-container" class="app-screen hidden">
+        <header class="header">
+            <button id="zanzibar-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+            <div class="header-title">Zanzibar</div>
+        </header>
+        <main class="zanzibar-game-area">
+            <div class="zanzibar-status">
+                <div id="zanzibar-rolls-left" class="status-item">Rolls left: <span>3</span></div>
+                <div id="zanzibar-message" class="game-message"></div>
+            </div>
+            <div id="zanzibar-dice-grid" class="dice-container-3d"></div>
+            <div class="zanzibar-controls">
+                <button id="zanzibar-roll-button" class="action-button primary">Roll</button>
+                <button id="zanzibar-keep-button" class="action-button secondary">Toggle Keep</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Lock‑In Game Screen -->
+    <div id="lockin-container" class="app-screen hidden">
+        <header class="header">
+            <button id="lockin-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+            <div class="header-title">Lock‑In</div>
+        </header>
+        <main class="lockin-game-area">
+            <div class="lockin-status">
+                <div id="lockin-rolls-left" class="status-item">Rolls left: <span>3</span></div>
+                <div id="lockin-message" class="game-message"></div>
+            </div>
+            <div id="lockin-dice-grid" class="dice-container-3d"></div>
+            <div class="lockin-controls">
+                <button id="lockin-roll-button" class="action-button primary">Roll</button>
+                <button id="lockin-lock-button" class="action-button secondary">Toggle Lock</button>
             </div>
         </main>
     </div>

@@ -20,7 +20,7 @@ export class SoundManager {
 
     private playTone(frequency: number, type: OscillatorType, duration: number, startTime: number = 0, volume: number = 0.1) {
         if (!this.enabled || !this.audioContext) return;
-        
+
         // Resume context if suspended (browser policy)
         if (this.audioContext.state === 'suspended') {
             this.audioContext.resume().catch(e => console.error("Audio resume failed", e));
@@ -31,7 +31,7 @@ export class SoundManager {
 
         osc.type = type;
         osc.frequency.setValueAtTime(frequency, this.audioContext.currentTime + startTime);
-        
+
         gain.gain.setValueAtTime(volume, this.audioContext.currentTime + startTime);
         gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + startTime + duration);
 
@@ -51,7 +51,7 @@ export class SoundManager {
     }
 
     playConnect() {
-         this.playTone(800, 'sine', 0.08, 0, 0.05);
+        this.playTone(800, 'sine', 0.08, 0, 0.05);
     }
 
     playSuccess() {
@@ -62,8 +62,8 @@ export class SoundManager {
 
     playBonus() {
         if (!this.enabled || !this.audioContext) return;
-        this.playTone(880, 'sine', 0.1, 0, 0.1); 
-        this.playTone(1100, 'sine', 0.2, 0.1, 0.1); 
+        this.playTone(880, 'sine', 0.1, 0, 0.1);
+        this.playTone(1100, 'sine', 0.2, 0.1, 0.1);
     }
 
     playError() {
@@ -78,5 +78,18 @@ export class SoundManager {
         this.playTone(659.25, 'sine', 0.2, 0.15, 0.1); // E5
         this.playTone(783.99, 'sine', 0.2, 0.30, 0.1); // G5
         this.playTone(1046.50, 'sine', 0.6, 0.45, 0.1); // C6
+    }
+
+    playDiceRoll() {
+        if (!this.enabled || !this.audioContext) return;
+        // Simulate tumbling with varying low tones
+        const count = 5;
+        for (let i = 0; i < count; i++) {
+            const time = i * 0.06;
+            const freq = 100 + Math.random() * 200;
+            this.playTone(freq, 'square', 0.05, time, 0.05);
+        }
+        // Final thud
+        this.playTone(80, 'square', 0.2, count * 0.06, 0.1);
     }
 }

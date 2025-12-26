@@ -1871,15 +1871,7 @@ lockInLockBtn.addEventListener('click', () => {
 });
 lockInBackBtn.addEventListener('click', showMainMenu);
 
-// --- Yahtzee Game Functions ---
-let yahtzeeGameInstance: YahtzeeGame | null = null;
-const yahtzeeContainer = document.getElementById('yahtzee-container') as HTMLElement;
-const yahtzeeDiceGrid = document.getElementById('yahtzee-dice-grid') as HTMLElement;
-const yahtzeeMessage = document.getElementById('yahtzee-message') as HTMLElement;
-const yahtzeeRollsLeft = document.getElementById('yahtzee-rolls-left')?.querySelector('span') as HTMLElement;
-const yahtzeeRollBtn = document.getElementById('yahtzee-roll-button') as HTMLButtonElement;
-const yahtzeeScoreBtn = document.getElementById('yahtzee-score-button') as HTMLButtonElement;
-const yahtzeeBackBtn = document.getElementById('yahtzee-back-button') as HTMLButtonElement;
+
 
 function showYahtzeeScreen() {
     hideAllScreens();

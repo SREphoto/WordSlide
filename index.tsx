@@ -14,6 +14,14 @@ import { LRCGame } from "./LRCGame";
 import { FarkleGame } from "./FarkleGame";
 import { ThreesGame } from "./ThreesGame";
 import { SolitaireGame } from "./SolitaireGame";
+import { YahtzeeGame } from './YahtzeeGame';
+import { LiarDiceGame } from './LiarDiceGame';
+import { ZanzibarGame } from './ZanzibarGame';
+import { LockInGame } from './LockInGame';
+import { YahtzeeGame } from './YahtzeeGame';
+import { LiarDiceGame } from './LiarDiceGame';
+import { ZanzibarGame } from './ZanzibarGame';
+import { LockInGame } from './LockInGame';
 
 // --- Interfaces ---
 interface LevelDefinition {
@@ -1617,6 +1625,496 @@ function keepThreeDie(index: number) {
         renderThrees();
     }
 }
+
+// --- Yahtzee Game Functions ---
+let yahtzeeGameInstance: YahtzeeGame | null = null;
+const yahtzeeContainer = document.getElementById('yahtzee-container') as HTMLElement;
+const yahtzeeDiceGrid = document.getElementById('yahtzee-dice-grid') as HTMLElement;
+const yahtzeeMessage = document.getElementById('yahtzee-message') as HTMLElement;
+const yahtzeeRollsLeft = document.getElementById('yahtzee-rolls-left')?.querySelector('span') as HTMLElement;
+const yahtzeeRollBtn = document.getElementById('yahtzee-roll-button') as HTMLButtonElement;
+const yahtzeeScoreBtn = document.getElementById('yahtzee-score-button') as HTMLButtonElement;
+const yahtzeeBackBtn = document.getElementById('yahtzee-back-button') as HTMLButtonElement;
+
+function showYahtzeeScreen() {
+    hideAllScreens();
+    yahtzeeContainer.classList.remove('hidden');
+    if (!yahtzeeGameInstance) yahtzeeGameInstance = new YahtzeeGame();
+    renderYahtzee(false);
+}
+
+function renderYahtzee(animate: boolean = false) {
+    if (!yahtzeeGameInstance) return;
+    const state = yahtzeeGameInstance.getState();
+
+    yahtzeeMessage.textContent = state.turnOver ? 'Turn over – choose a category' : 'Roll the dice';
+    yahtzeeRollsLeft.textContent = state.rollsLeft.toString();
+
+    yahtzeeDiceGrid.innerHTML = '';
+    state.dice.forEach((val, i) => {
+        const dieEl = create3DDieElement(val, state.held[i], () => {
+            yahtzeeGameInstance!.toggleHold(i);
+            renderYahtzee(false);
+        });
+        if (state.held[i]) dieEl.classList.add('die-keep'); // Add visual class for compiled CSS
+
+        if (animate) {
+            const cube = dieEl.querySelector('.cube-die') as HTMLElement;
+            if (cube) {
+                cube.classList.add('rolling');
+                soundManager.playDiceRoll();
+                setTimeout(() => cube.classList.remove('rolling'), 500 + Math.random() * 300);
+            }
+        }
+        yahtzeeDiceGrid.appendChild(dieEl);
+    });
+}
+
+yahtzeeRollBtn.addEventListener('click', () => {
+    if (!yahtzeeGameInstance) return;
+    yahtzeeGameInstance.roll();
+    renderYahtzee(true);
+});
+yahtzeeScoreBtn.addEventListener('click', () => {
+    if (!yahtzeeGameInstance) return;
+    // For demo purposes we just score “chance”. Replace with UI to pick a category.
+    const pts = yahtzeeGameInstance.score('chance');
+    if (pts !== null) alert(`Scored ${pts} points in Chance!`);
+    yahtzeeGameInstance.reset();
+    renderYahtzee(false);
+});
+yahtzeeBackBtn.addEventListener('click', showMainMenu);
+
+
+// --- Liar's Dice Game Functions ---
+let liarDiceGameInstance: LiarDiceGame | null = null;
+const liarDiceContainer = document.getElementById('liar-dice-container') as HTMLElement;
+const liarDicePlayerDice = document.getElementById('liar-dice-player-dice') as HTMLElement;
+const liarDiceComputerDice = document.getElementById('liar-dice-computer-dice') as HTMLElement;
+const liarDiceMessage = document.getElementById('liar-dice-message') as HTMLElement;
+const liarDiceBidBtn = document.getElementById('liar-dice-bid-button') as HTMLButtonElement;
+const liarDiceCallBtn = document.getElementById('liar-dice-call-button') as HTMLButtonElement;
+const liarDiceBackBtn = document.getElementById('liar-dice-back-button') as HTMLButtonElement;
+
+function showLiarDiceScreen() {
+    hideAllScreens();
+    liarDiceContainer.classList.remove('hidden');
+    if (!liarDiceGameInstance) liarDiceGameInstance = new LiarDiceGame();
+    renderLiarDice(false);
+}
+
+function renderLiarDice(animate: boolean = false) {
+    if (!liarDiceGameInstance) return;
+    const state = liarDiceGameInstance.getState();
+
+    liarDiceMessage.textContent = state.message;
+    // Player dice
+    liarDicePlayerDice.innerHTML = '';
+    state.playerDice.forEach(v => {
+        const dieEl = create3DDieElement(v, false, () => { });
+        liarDicePlayerDice.appendChild(dieEl);
+    });
+    // Computer dice (hidden/dimmed)
+    liarDiceComputerDice.innerHTML = '';
+    state.computerDice.forEach(v => {
+        const dieEl = create3DDieElement(v, false, () => { });
+        liarDiceComputerDice.appendChild(dieEl);
+    });
+
+    if (animate) {
+        // small visual cue on the player dice grid
+        const grid = liarDicePlayerDice;
+        grid.classList.add('rolling');
+        soundManager.playDiceRoll();
+        setTimeout(() => grid.classList.remove('rolling'), 600);
+    }
+}
+
+liarDiceBidBtn.addEventListener('click', () => {
+    if (!liarDiceGameInstance) return;
+    const countStr = prompt('Bid count?', '1');
+    if (!countStr) return;
+    const faceStr = prompt('Bid face (1‑6)?', '1');
+    if (!faceStr) return;
+
+    const count = parseInt(countStr);
+    const face = parseInt(faceStr) as any;
+
+    if (liarDiceGameInstance.playerBid({ count, face })) {
+        renderLiarDice(true);
+        setTimeout(() => liarDiceGameInstance!.computerTurn(), 1000); // Wait a bit for AI
+    } else {
+        alert("Invalid bid!");
+    }
+});
+liarDiceCallBtn.addEventListener('click', () => {
+    if (!liarDiceGameInstance) return;
+    const result = liarDiceGameInstance.playerCallLiar();
+    if (result) alert(result.result);
+    liarDiceGameInstance.reset();
+    renderLiarDice(false);
+});
+liarDiceBackBtn.addEventListener('click', showMainMenu);
+
+
+// --- Zanzibar Game Functions ---
+let zanzibarGameInstance: ZanzibarGame | null = null;
+const zanzibarContainer = document.getElementById('zanzibar-container') as HTMLElement;
+const zanzibarDiceGrid = document.getElementById('zanzibar-dice-grid') as HTMLElement;
+const zanzibarMessage = document.getElementById('zanzibar-message') as HTMLElement;
+const zanzibarRollsLeft = document.getElementById('zanzibar-rolls-left')?.querySelector('span') as HTMLElement;
+const zanzibarRollBtn = document.getElementById('zanzibar-roll-button') as HTMLButtonElement;
+const zanzibarKeepBtn = document.getElementById('zanzibar-keep-button') as HTMLButtonElement;
+const zanzibarBackBtn = document.getElementById('zanzibar-back-button') as HTMLButtonElement;
+
+function showZanzibarScreen() {
+    hideAllScreens();
+    zanzibarContainer.classList.remove('hidden');
+    if (!zanzibarGameInstance) zanzibarGameInstance = new ZanzibarGame();
+    renderZanzibar(false);
+}
+
+function renderZanzibar(animate: boolean = false) {
+    if (!zanzibarGameInstance) return;
+    const state = zanzibarGameInstance.getState();
+
+    zanzibarMessage.textContent = state.message;
+    zanzibarRollsLeft.textContent = state.rollsLeft.toString();
+
+    zanzibarDiceGrid.innerHTML = '';
+    state.dice.forEach((val, i) => {
+        const dieEl = create3DDieElement(val, state.kept[i], () => {
+            zanzibarGameInstance!.toggleKeep(i);
+            renderZanzibar(false);
+        });
+        if (state.kept[i]) dieEl.classList.add('die-keep');
+
+        if (animate) {
+            const cube = dieEl.querySelector('.cube-die') as HTMLElement;
+            if (cube) {
+                cube.classList.add('rolling');
+                soundManager.playDiceRoll();
+                setTimeout(() => cube.classList.remove('rolling'), 500 + Math.random() * 300);
+            }
+        }
+        zanzibarDiceGrid.appendChild(dieEl);
+    });
+}
+
+zanzibarRollBtn.addEventListener('click', () => {
+    if (!zanzibarGameInstance) return;
+    zanzibarGameInstance.roll();
+    renderZanzibar(true);
+});
+zanzibarKeepBtn.addEventListener('click', () => {
+    // toggle keep on the first unkept die for demo
+    const idx = zanzibarGameInstance!.getState().kept.findIndex(k => !k);
+    if (idx !== -1) zanzibarGameInstance!.toggleKeep(idx);
+    renderZanzibar(false);
+});
+zanzibarBackBtn.addEventListener('click', showMainMenu);
+
+
+// --- Lock-In Game Functions ---
+let lockInGameInstance: LockInGame | null = null;
+const lockInContainer = document.getElementById('lockin-container') as HTMLElement;
+const lockInDiceGrid = document.getElementById('lockin-dice-grid') as HTMLElement;
+const lockInMessage = document.getElementById('lockin-message') as HTMLElement;
+const lockInRollsLeft = document.getElementById('lockin-rolls-left')?.querySelector('span') as HTMLElement;
+const lockInRollBtn = document.getElementById('lockin-roll-button') as HTMLButtonElement;
+const lockInLockBtn = document.getElementById('lockin-lock-button') as HTMLButtonElement;
+const lockInBackBtn = document.getElementById('lockin-back-button') as HTMLButtonElement;
+
+function showLockInScreen() {
+    hideAllScreens();
+    lockInContainer.classList.remove('hidden');
+    if (!lockInGameInstance) lockInGameInstance = new LockInGame();
+    renderLockIn(false);
+}
+
+function renderLockIn(animate: boolean = false) {
+    if (!lockInGameInstance) return;
+    const state = lockInGameInstance.getState();
+
+    lockInMessage.textContent = state.message;
+    lockInRollsLeft.textContent = state.rollsLeft.toString();
+
+    lockInDiceGrid.innerHTML = '';
+    state.dice.forEach((val, i) => {
+        const dieEl = create3DDieElement(val, state.locked[i], () => {
+            lockInGameInstance!.toggleLock(i);
+            renderLockIn(false);
+        });
+        if (state.locked[i]) dieEl.classList.add('die-locked');
+
+        if (animate) {
+            const cube = dieEl.querySelector('.cube-die') as HTMLElement;
+            if (cube) {
+                cube.classList.add('rolling');
+                soundManager.playDiceRoll();
+                setTimeout(() => cube.classList.remove('rolling'), 500 + Math.random() * 300);
+            }
+        }
+        lockInDiceGrid.appendChild(dieEl);
+    });
+}
+
+lockInRollBtn.addEventListener('click', () => {
+    if (!lockInGameInstance) return;
+    lockInGameInstance.roll();
+    renderLockIn(true);
+});
+lockInLockBtn.addEventListener('click', () => {
+    const idx = lockInGameInstance!.getState().locked.findIndex(k => !k);
+    if (idx !== -1) lockInGameInstance!.toggleLock(idx);
+    renderLockIn(false);
+});
+lockInBackBtn.addEventListener('click', showMainMenu);
+
+// --- Yahtzee Game Functions ---
+let yahtzeeGameInstance: YahtzeeGame | null = null;
+const yahtzeeContainer = document.getElementById('yahtzee-container') as HTMLElement;
+const yahtzeeDiceGrid = document.getElementById('yahtzee-dice-grid') as HTMLElement;
+const yahtzeeMessage = document.getElementById('yahtzee-message') as HTMLElement;
+const yahtzeeRollsLeft = document.getElementById('yahtzee-rolls-left')?.querySelector('span') as HTMLElement;
+const yahtzeeRollBtn = document.getElementById('yahtzee-roll-button') as HTMLButtonElement;
+const yahtzeeScoreBtn = document.getElementById('yahtzee-score-button') as HTMLButtonElement;
+const yahtzeeBackBtn = document.getElementById('yahtzee-back-button') as HTMLButtonElement;
+
+function showYahtzeeScreen() {
+    hideAllScreens();
+    yahtzeeContainer.classList.remove('hidden');
+    if (!yahtzeeGameInstance) yahtzeeGameInstance = new YahtzeeGame();
+    renderYahtzee(false);
+}
+
+function renderYahtzee(animate: boolean = false) {
+    if (!yahtzeeGameInstance) return;
+    const state = yahtzeeGameInstance.getState();
+
+    yahtzeeMessage.textContent = state.turnOver ? 'Turn over – choose a category' : 'Roll the dice';
+    yahtzeeRollsLeft.textContent = state.rollsLeft.toString();
+
+    yahtzeeDiceGrid.innerHTML = '';
+    state.dice.forEach((val, i) => {
+        const dieEl = create3DDieElement(val, state.held[i], () => {
+            yahtzeeGameInstance!.toggleHold(i);
+            renderYahtzee(false);
+        });
+        if (state.held[i]) dieEl.classList.add('die-keep'); // Add visual class for compiled CSS
+
+        if (animate) {
+            const cube = dieEl.querySelector('.cube-die') as HTMLElement;
+            if (cube) {
+                cube.classList.add('rolling');
+                soundManager.playDiceRoll();
+                setTimeout(() => cube.classList.remove('rolling'), 500 + Math.random() * 300);
+            }
+        }
+        yahtzeeDiceGrid.appendChild(dieEl);
+    });
+}
+
+yahtzeeRollBtn.addEventListener('click', () => {
+    if (!yahtzeeGameInstance) return;
+    yahtzeeGameInstance.roll();
+    renderYahtzee(true);
+});
+yahtzeeScoreBtn.addEventListener('click', () => {
+    if (!yahtzeeGameInstance) return;
+    // For demo purposes we just score “chance”. Replace with UI to pick a category.
+    const pts = yahtzeeGameInstance.score('chance');
+    if (pts !== null) alert(`Scored ${pts} points in Chance!`);
+    yahtzeeGameInstance.reset();
+    renderYahtzee(false);
+});
+yahtzeeBackBtn.addEventListener('click', showMainMenu);
+
+
+// --- Liar's Dice Game Functions ---
+let liarDiceGameInstance: LiarDiceGame | null = null;
+const liarDiceContainer = document.getElementById('liar-dice-container') as HTMLElement;
+const liarDicePlayerDice = document.getElementById('liar-dice-player-dice') as HTMLElement;
+const liarDiceComputerDice = document.getElementById('liar-dice-computer-dice') as HTMLElement;
+const liarDiceMessage = document.getElementById('liar-dice-message') as HTMLElement;
+const liarDiceBidBtn = document.getElementById('liar-dice-bid-button') as HTMLButtonElement;
+const liarDiceCallBtn = document.getElementById('liar-dice-call-button') as HTMLButtonElement;
+const liarDiceBackBtn = document.getElementById('liar-dice-back-button') as HTMLButtonElement;
+
+function showLiarDiceScreen() {
+    hideAllScreens();
+    liarDiceContainer.classList.remove('hidden');
+    if (!liarDiceGameInstance) liarDiceGameInstance = new LiarDiceGame();
+    renderLiarDice(false);
+}
+
+function renderLiarDice(animate: boolean = false) {
+    if (!liarDiceGameInstance) return;
+    const state = liarDiceGameInstance.getState();
+
+    liarDiceMessage.textContent = state.message;
+    // Player dice
+    liarDicePlayerDice.innerHTML = '';
+    state.playerDice.forEach(v => {
+        const dieEl = create3DDieElement(v, false, () => { });
+        liarDicePlayerDice.appendChild(dieEl);
+    });
+    // Computer dice (hidden/dimmed)
+    liarDiceComputerDice.innerHTML = '';
+    state.computerDice.forEach(v => {
+        const dieEl = create3DDieElement(v, false, () => { });
+        liarDiceComputerDice.appendChild(dieEl);
+    });
+
+    if (animate) {
+        // small visual cue on the player dice grid
+        const grid = liarDicePlayerDice;
+        grid.classList.add('rolling');
+        soundManager.playDiceRoll();
+        setTimeout(() => grid.classList.remove('rolling'), 600);
+    }
+}
+
+liarDiceBidBtn.addEventListener('click', () => {
+    if (!liarDiceGameInstance) return;
+    const countStr = prompt('Bid count?', '1');
+    if (!countStr) return;
+    const faceStr = prompt('Bid face (1‑6)?', '1');
+    if (!faceStr) return;
+
+    const count = parseInt(countStr);
+    const face = parseInt(faceStr) as any;
+
+    if (liarDiceGameInstance.playerBid({ count, face })) {
+        renderLiarDice(true);
+        setTimeout(() => liarDiceGameInstance!.computerTurn(), 1000); // Wait a bit for AI
+    } else {
+        alert("Invalid bid!");
+    }
+});
+liarDiceCallBtn.addEventListener('click', () => {
+    if (!liarDiceGameInstance) return;
+    const result = liarDiceGameInstance.playerCallLiar();
+    if (result) alert(result.result);
+    liarDiceGameInstance.reset();
+    renderLiarDice(false);
+});
+liarDiceBackBtn.addEventListener('click', showMainMenu);
+
+
+// --- Zanzibar Game Functions ---
+let zanzibarGameInstance: ZanzibarGame | null = null;
+const zanzibarContainer = document.getElementById('zanzibar-container') as HTMLElement;
+const zanzibarDiceGrid = document.getElementById('zanzibar-dice-grid') as HTMLElement;
+const zanzibarMessage = document.getElementById('zanzibar-message') as HTMLElement;
+const zanzibarRollsLeft = document.getElementById('zanzibar-rolls-left')?.querySelector('span') as HTMLElement;
+const zanzibarRollBtn = document.getElementById('zanzibar-roll-button') as HTMLButtonElement;
+const zanzibarKeepBtn = document.getElementById('zanzibar-keep-button') as HTMLButtonElement;
+const zanzibarBackBtn = document.getElementById('zanzibar-back-button') as HTMLButtonElement;
+
+function showZanzibarScreen() {
+    hideAllScreens();
+    zanzibarContainer.classList.remove('hidden');
+    if (!zanzibarGameInstance) zanzibarGameInstance = new ZanzibarGame();
+    renderZanzibar(false);
+}
+
+function renderZanzibar(animate: boolean = false) {
+    if (!zanzibarGameInstance) return;
+    const state = zanzibarGameInstance.getState();
+
+    zanzibarMessage.textContent = state.message;
+    zanzibarRollsLeft.textContent = state.rollsLeft.toString();
+
+    zanzibarDiceGrid.innerHTML = '';
+    state.dice.forEach((val, i) => {
+        const dieEl = create3DDieElement(val, state.kept[i], () => {
+            zanzibarGameInstance!.toggleKeep(i);
+            renderZanzibar(false);
+        });
+        if (state.kept[i]) dieEl.classList.add('die-keep');
+
+        if (animate) {
+            const cube = dieEl.querySelector('.cube-die') as HTMLElement;
+            if (cube) {
+                cube.classList.add('rolling');
+                soundManager.playDiceRoll();
+                setTimeout(() => cube.classList.remove('rolling'), 500 + Math.random() * 300);
+            }
+        }
+        zanzibarDiceGrid.appendChild(dieEl);
+    });
+}
+
+zanzibarRollBtn.addEventListener('click', () => {
+    if (!zanzibarGameInstance) return;
+    zanzibarGameInstance.roll();
+    renderZanzibar(true);
+});
+zanzibarKeepBtn.addEventListener('click', () => {
+    // toggle keep on the first unkept die for demo
+    const idx = zanzibarGameInstance!.getState().kept.findIndex(k => !k);
+    if (idx !== -1) zanzibarGameInstance!.toggleKeep(idx);
+    renderZanzibar(false);
+});
+zanzibarBackBtn.addEventListener('click', showMainMenu);
+
+
+// --- Lock-In Game Functions ---
+let lockInGameInstance: LockInGame | null = null;
+const lockInContainer = document.getElementById('lockin-container') as HTMLElement;
+const lockInDiceGrid = document.getElementById('lockin-dice-grid') as HTMLElement;
+const lockInMessage = document.getElementById('lockin-message') as HTMLElement;
+const lockInRollsLeft = document.getElementById('lockin-rolls-left')?.querySelector('span') as HTMLElement;
+const lockInRollBtn = document.getElementById('lockin-roll-button') as HTMLButtonElement;
+const lockInLockBtn = document.getElementById('lockin-lock-button') as HTMLButtonElement;
+const lockInBackBtn = document.getElementById('lockin-back-button') as HTMLButtonElement;
+
+function showLockInScreen() {
+    hideAllScreens();
+    lockInContainer.classList.remove('hidden');
+    if (!lockInGameInstance) lockInGameInstance = new LockInGame();
+    renderLockIn(false);
+}
+
+function renderLockIn(animate: boolean = false) {
+    if (!lockInGameInstance) return;
+    const state = lockInGameInstance.getState();
+
+    lockInMessage.textContent = state.message;
+    lockInRollsLeft.textContent = state.rollsLeft.toString();
+
+    lockInDiceGrid.innerHTML = '';
+    state.dice.forEach((val, i) => {
+        const dieEl = create3DDieElement(val, state.locked[i], () => {
+            lockInGameInstance!.toggleLock(i);
+            renderLockIn(false);
+        });
+        if (state.locked[i]) dieEl.classList.add('die-locked');
+
+        if (animate) {
+            const cube = dieEl.querySelector('.cube-die') as HTMLElement;
+            if (cube) {
+                cube.classList.add('rolling');
+                soundManager.playDiceRoll();
+                setTimeout(() => cube.classList.remove('rolling'), 500 + Math.random() * 300);
+            }
+        }
+        lockInDiceGrid.appendChild(dieEl);
+    });
+}
+
+lockInRollBtn.addEventListener('click', () => {
+    if (!lockInGameInstance) return;
+    lockInGameInstance.roll();
+    renderLockIn(true);
+});
+lockInLockBtn.addEventListener('click', () => {
+    const idx = lockInGameInstance!.getState().locked.findIndex(k => !k);
+    if (idx !== -1) lockInGameInstance!.toggleLock(idx);
+    renderLockIn(false);
+});
+lockInBackBtn.addEventListener('click', showMainMenu);
 
 // --- 3D Dice Helper ---
 function create3DDieElement(value: number | string, selected: boolean, onClick: () => void, type: 'standard' | 'lrc' = 'standard'): HTMLElement {

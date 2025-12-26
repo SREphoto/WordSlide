@@ -17,7 +17,7 @@
       }
     }
     </script>
-  <script type="module" crossorigin src="/WordSlide/assets/index-KvzpZ6VZ.js"></script>
+  <script type="module" crossorigin src="/WordSlide/assets/index-f_LYgiqq.js"></script>
   <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-PoV6coWd.css">
 </head>
 
@@ -115,6 +115,13 @@
                         <div class="game-icon">🔥</div>
                         <h3 class="game-title">Farkle</h3>
                         <p class="game-description">Roll for 10,000 points</p>
+                    </button>
+
+                    <!-- Sevens Card -->
+                    <button class="game-mode-card" data-game="sevens">
+                        <div class="game-icon">7️⃣</div>
+                        <h3 class="game-title">Sevens</h3>
+                        <p class="game-description">Clear 7s to win</p>
                     </button>
 
                     <!-- Threes Card -->
@@ -668,6 +675,24 @@
             <div class="farkle-controls">
                 <button id="farkle-roll-button" class="action-button primary">Roll</button>
                 <button id="farkle-stop-button" class="action-button secondary">Stop & Score</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Sevens Game Screen -->
+    <div id="sevens-container" class="app-screen hidden">
+        <header class="header">
+            <button id="sevens-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+            <div class="header-title">Sevens</div>
+        </header>
+        <main class="sevens-game-area">
+            <div class="sevens-status">
+                <div id="sevens-message" class="game-message">Roll to start</div>
+            </div>
+            <div id="sevens-dice-grid" class="dice-grid"></div>
+            <div class="sevens-controls">
+                <button id="sevens-roll-button" class="action-button primary">Roll Dice</button>
+                <button id="sevens-confirm-button" class="action-button secondary">Remove Selected (Sum 7)</button>
             </div>
         </main>
     </div>

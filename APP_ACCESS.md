@@ -1,4 +1,4 @@
-<!-- AGENT_INSTRUCTIONS_START
+<!-- AGENT_INSTRUCTIONS_START 2
 ### 🤖 Agent Protocol: Port Management & Registry Sync
 
 **Objective**: Maintain a conflict-free registry of ports for all applications in the user's workspace.

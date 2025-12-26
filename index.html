@@ -17,8 +17,8 @@
       }
     }
     </script>
-  <script type="module" crossorigin src="/WordSlide/assets/index-pbIQAEdy.js"></script>
-  <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-BEXb4QIk.css">
+  <script type="module" crossorigin src="/WordSlide/assets/index-KvzpZ6VZ.js"></script>
+  <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-PoV6coWd.css">
 </head>
 
 <body>
@@ -94,7 +94,6 @@
                         <div class="game-icon">🎲</div>
                         <h3 class="game-title">Pips</h3>
                         <p class="game-description">Dice and domino puzzle challenge</p>
-
                     </button>
 
                     <!-- Sudoku Card -->
@@ -102,7 +101,41 @@
                         <div class="game-icon">🔢</div>
                         <h3 class="game-title">Sudoku</h3>
                         <p class="game-description">Fill the 9x9 grid</p>
+                    </button>
 
+                    <!-- LRC Card -->
+                    <button class="game-mode-card" data-game="lrc">
+                        <div class="game-icon">🔁</div>
+                        <h3 class="game-title">LRC</h3>
+                        <p class="game-description">Left Right Center dice game</p>
+                    </button>
+
+                    <!-- Farkle Card -->
+                    <button class="game-mode-card" data-game="farkle">
+                        <div class="game-icon">🔥</div>
+                        <h3 class="game-title">Farkle</h3>
+                        <p class="game-description">Roll for 10,000 points</p>
+                    </button>
+
+                    <!-- Threes Card -->
+                    <button class="game-mode-card" data-game="threes">
+                        <div class="game-icon">3️⃣</div>
+                        <h3 class="game-title">3's Green</h3>
+                        <p class="game-description">Lowest score wins</p>
+                    </button>
+
+                    <!-- Solitaire Card -->
+                    <button class="game-mode-card" data-game="solitaire">
+                        <div class="game-icon">🃏</div>
+                        <h3 class="game-title">Solitaire</h3>
+                        <p class="game-description">Classic Klondike cards</p>
+                    </button>
+
+                    <!-- Cribbage Card -->
+                    <button class="game-mode-card" data-game="cribbage">
+                        <div class="game-icon">📌</div>
+                        <h3 class="game-title">Cribbage</h3>
+                        <p class="game-description">Peg your way to 121</p>
                     </button>
                 </div>
             </div>
@@ -278,7 +311,7 @@
                     <div class="bee-rank-container">
                         <span id="bee-rank">Beginner</span>
                         <div class="bee-score-progress">
-                            <div id="bee-score-fill" style="width: 0%"></div>
+                            <div id="bee-score-fill"></div>
                         </div>
                         <span id="bee-score">0</span>
                     </div>
@@ -597,6 +630,97 @@
                 </div>
             </footer>
         </div>
+    </div>
+
+    <!-- LRC Game Screen -->
+    <div id="lrc-container" class="app-screen hidden">
+        <header class="header">
+            <button id="lrc-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+            <div class="header-title">Left Right Center</div>
+            <div class="header-coins">
+                <span class="material-symbols-outlined">payments</span>
+                <span id="lrc-pot">Pot: 0</span>
+            </div>
+        </header>
+        <main class="lrc-game-area">
+            <div id="lrc-players" class="lrc-players-grid"></div>
+            <div id="lrc-dice-area" class="lrc-dice-display"></div>
+            <div id="lrc-log" class="lrc-log"></div>
+            <button id="lrc-roll-button" class="action-button primary">Roll Dice</button>
+        </main>
+    </div>
+
+    <!-- Farkle Game Screen -->
+    <div id="farkle-container" class="app-screen hidden">
+        <header class="header">
+            <button id="farkle-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+            <div class="header-title">Farkle</div>
+            <div class="farkle-header-score">
+                <span id="farkle-total">0</span>
+            </div>
+        </header>
+        <main class="farkle-game-area">
+            <div class="farkle-status">
+                <div class="farkle-turn-score">Turn: <span id="farkle-turn">0</span></div>
+                <div id="farkle-message" class="farkle-message"></div>
+            </div>
+            <div id="farkle-dice-grid" class="farkle-grid"></div>
+            <div class="farkle-controls">
+                <button id="farkle-roll-button" class="action-button primary">Roll</button>
+                <button id="farkle-stop-button" class="action-button secondary">Stop & Score</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- 3's are Green Screen -->
+    <div id="threes-container" class="app-screen hidden">
+        <header class="header">
+            <button id="threes-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+            <div class="header-title">3's Green</div>
+            <div class="threes-header-score">
+                <span id="threes-total">0</span>
+            </div>
+        </header>
+        <main class="threes-game-area">
+            <div class="threes-section">
+                <h3>Kept</h3>
+                <div id="threes-kept" class="threes-grid"></div>
+            </div>
+            <div class="threes-section">
+                <h3>Current Roll</h3>
+                <div id="threes-roll" class="threes-grid"></div>
+            </div>
+            <button id="threes-roll-button" class="action-button primary">Roll Dice</button>
+        </main>
+    </div>
+
+    <!-- Solitaire Screen -->
+    <div id="solitaire-container" class="app-screen hidden">
+        <header class="header">
+            <button id="soli-back-button" class="header-button material-symbols-outlined">arrow_back</button>
+            <div class="header-title">Solitaire</div>
+            <button id="soli-restart" class="header-button material-symbols-outlined">restart_alt</button>
+        </header>
+        <main class="solitaire-area">
+            <div class="solitaire-top">
+                <div id="soli-stock" class="card-slot stock"></div>
+                <div id="soli-waste" class="card-slot waste"></div>
+                <div class="spacer"></div>
+                <div id="soli-f0" class="card-slot foundation"></div>
+                <div id="soli-f1" class="card-slot foundation"></div>
+                <div id="soli-f2" class="card-slot foundation"></div>
+                <div id="soli-f3" class="card-slot foundation"></div>
+            </div>
+            <div id="soli-tableau" class="solitaire-tableau">
+                <div class="tableau-col" id="tab-0"></div>
+                <div class="tableau-col" id="tab-1"></div>
+                <div class="tableau-col" id="tab-2"></div>
+                <div class="tableau-col" id="tab-3"></div>
+                <div class="tableau-col" id="tab-4"></div>
+                <div class="tableau-col" id="tab-5"></div>
+                <div class="tableau-col" id="tab-6"></div>
+            </div>
+        </main>
     </div>
 
     <!-- UI Overlay elements -->

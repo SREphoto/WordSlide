@@ -390,6 +390,7 @@ let farkleGameInstance: FarkleGame | null = null;
 let sevensGameInstance: SevensGame | null = null;
 let threesGameInstance: ThreesGame | null = null;
 let solitaireGameInstance: SolitaireGame | null = null;
+let sevensSelectedIndices: number[] = [];
 
 
 // Shared UI (Modals, Popups)
@@ -421,6 +422,56 @@ const soundToggle = document.getElementById('sound-toggle') as HTMLInputElement;
 const musicToggle = document.getElementById('music-toggle') as HTMLInputElement;
 const resetProgressButton = document.getElementById('reset-progress-button')!;
 
+
+// --- 3D Dice Helper ---
+function create3DDieElement(value: number | string, selected: boolean, onClick: () => void, type: 'standard' | 'lrc' = 'standard'): HTMLElement {
+    const scene = document.createElement('div');
+    scene.className = `die-scene ${selected ? 'selected' : ''}`;
+    scene.onclick = onClick;
+
+    const cube = document.createElement('div');
+    cube.className = 'cube-die';
+
+    // Faces: 1-6
+    for (let i = 1; i <= 6; i++) {
+        const face = document.createElement('div');
+        face.className = `die-face face-${i}`;
+
+        if (type === 'lrc') {
+            if (i === 1) face.textContent = 'L';
+            else if (i === 2) face.textContent = 'R';
+            else if (i === 3) face.textContent = 'C';
+            else face.innerHTML = '<div class="dot"></div>';
+        } else {
+            // Standard dots
+            for (let d = 0; d < i; d++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                face.appendChild(dot);
+            }
+        }
+        cube.appendChild(face);
+    }
+
+    // Set value (rotation)
+    let rotX = 0, rotY = 0;
+    if (typeof value === 'number') {
+        switch (value) {
+            case 1: rotX = 0; rotY = 0; break;
+            case 2: rotX = 0; rotY = -90; break;
+            case 3: rotX = 0; rotY = -180; break;
+            case 4: rotX = 0; rotY = 90; break;
+            case 5: rotX = -90; rotY = 0; break;
+            case 6: rotX = 90; rotY = 0; break;
+        }
+    } else if (value === 'L') { rotX = 0; rotY = 0; }
+    else if (value === 'R') { rotX = 0; rotY = -90; }
+    else if (value === 'C') { rotX = 0; rotY = -180; }
+
+    cube.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    scene.appendChild(cube);
+    return scene;
+}
 
 interface SwipedLetterInfo {
     letter: string;
@@ -516,8 +567,9 @@ function hideAllScreens() {
         mainMenuScreen, levelSelectionScreen, gameContainer, wordleContainer,
         beeContainer, connContainer, strandsContainer, boxedContainer,
         sudokuContainer, tilesContainer, pipsContainer,
-        lrcContainer, farkleContainer, threesContainer, soliContainer
-    ].forEach(el => el.classList.add('hidden'));
+        lrcContainer, farkleContainer, threesContainer, soliContainer,
+        sevensContainer, yahtzeeContainer, liarDiceContainer, zanzibarContainer, lockInContainer
+    ].forEach(el => el?.classList.add('hidden'));
 }
 
 function showMainMenu() {
@@ -1871,9 +1923,10 @@ lockInBackBtn.addEventListener('click', showMainMenu);
 
 
 
-function showYahtzeeScreen() {
+function showSevensScreen() {
     hideAllScreens();
-    yahtzeeContainer.classList.remove('hidden');
+    sevensContainer.classList.remove('hidden');
+    if (!sevensGameInstance) sevensGameInstance = new SevensGame();
     renderSevens(true); // Animate initial roll
 }
 
@@ -3497,6 +3550,18 @@ function attachEventListeners() {
                 showTilesScreen();
             } else {
                 switch (gameMode) {
+                    case 'yahtzee':
+                        showYahtzeeScreen();
+                        break;
+                    case 'liar-dice':
+                        showLiarDiceScreen();
+                        break;
+                    case 'zanzibar':
+                        showZanzibarScreen();
+                        break;
+                    case 'lockin':
+                        showLockInScreen();
+                        break;
                     case 'pips':
                         showPipsScreen();
                         break;
@@ -3879,4 +3944,4 @@ function main() {
 }
 
 document.addEventListener('DOMContentLoaded', main);
-import { SevensGame } from './SevensGame';
+

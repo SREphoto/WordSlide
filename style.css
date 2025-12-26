@@ -129,11 +129,45 @@ body::before {
     z-index: 10;
 }
 
+.hidden {
+    display: none !important;
+}
+
 .app-screen.hidden {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
     transform: scale(1.05);
+}
+
+#bonus-words-tip {
+    position: fixed;
+    bottom: 6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    backdrop-filter: var(--glass-blur);
+    padding: 1rem 2rem;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    z-index: 2000;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: 90%;
+}
+
+#bonus-tip-ok-button {
+    padding: 0.5rem 1.5rem;
+    border-radius: 15px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
 }
 
 /* Typography Enhancements */
@@ -756,31 +790,33 @@ h3 {
 
 /* Outer cells positions around center (150, 150) in 300x300 box */
 #bee-cell-0 {
-    top: 70px;
+    left: 150px;
+    top: 62px;
 }
 
 #bee-cell-1 {
-    left: 220px;
-    top: 110px;
+    left: 226px;
+    top: 106px;
 }
 
 #bee-cell-2 {
-    left: 220px;
-    top: 190px;
+    left: 226px;
+    top: 194px;
 }
 
 #bee-cell-3 {
-    top: 230px;
+    left: 150px;
+    top: 238px;
 }
 
 #bee-cell-4 {
-    left: 80px;
-    top: 190px;
+    left: 74px;
+    top: 194px;
 }
 
 #bee-cell-5 {
-    left: 80px;
-    top: 110px;
+    left: 74px;
+    top: 106px;
 }
 
 .bee-controls {

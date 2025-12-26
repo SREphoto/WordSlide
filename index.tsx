@@ -10,6 +10,10 @@ import { LetterBoxedGame } from "./LetterBoxedGame";
 import { SudokuGame } from "./SudokuGame";
 import { TilesGame } from "./TilesGame";
 import { PipsGame } from "./PipsGame";
+import { LRCGame } from "./LRCGame";
+import { FarkleGame } from "./FarkleGame";
+import { ThreesGame } from "./ThreesGame";
+import { SolitaireGame } from "./SolitaireGame";
 
 // --- Interfaces ---
 interface LevelDefinition {
@@ -281,6 +285,43 @@ const pipsMovesDisplay = document.getElementById('pips-moves')!;
 const pipsGrid = document.getElementById('pips-grid')!;
 const pipsCoinsValues = document.getElementById('pips-coins-value')!;
 
+// New Dice/Card UI
+const lrcContainer = document.getElementById('lrc-container')!;
+const lrcBackButton = document.getElementById('lrc-back-button')!;
+const lrcPotDisplay = document.getElementById('lrc-pot')!;
+const lrcPlayersGrid = document.getElementById('lrc-players')!;
+const lrcDiceArea = document.getElementById('lrc-dice-area')!;
+const lrcLogArea = document.getElementById('lrc-log')!;
+const lrcRollButton = document.getElementById('lrc-roll-button')!;
+
+const farkleContainer = document.getElementById('farkle-container')!;
+const farkleBackButton = document.getElementById('farkle-back-button')!;
+const farkleTotalDisplay = document.getElementById('farkle-total')!;
+const farkleTurnDisplay = document.getElementById('farkle-turn')!;
+const farkleMessage = document.getElementById('farkle-message')!;
+const farkleDiceGrid = document.getElementById('farkle-dice-grid')!;
+const farkleRollButton = document.getElementById('farkle-roll-button')!;
+const farkleStopButton = document.getElementById('farkle-stop-button')!;
+
+const threesContainer = document.getElementById('threes-container')!;
+const threesBackButton = document.getElementById('threes-back-button')!;
+const threesTotalDisplay = document.getElementById('threes-total')!;
+const threesKeptGrid = document.getElementById('threes-kept')!;
+const threesRollGrid = document.getElementById('threes-roll')!;
+const threesRollButton = document.getElementById('threes-roll-button')!;
+
+const soliContainer = document.getElementById('solitaire-container')!;
+const soliBackButton = document.getElementById('soli-back-button')!;
+const soliStock = document.getElementById('soli-stock')!;
+const soliWaste = document.getElementById('soli-waste')!;
+const soliTableau = document.getElementById('soli-tableau')!;
+const soliFoundations = [
+    document.getElementById('soli-f0')!,
+    document.getElementById('soli-f1')!,
+    document.getElementById('soli-f2')!,
+    document.getElementById('soli-f3')!,
+];
+
 // World Generation UI Removed
 
 // Game UI
@@ -328,6 +369,12 @@ let tilesGameInstance: TilesGame | null = null;
 
 // Pips Game Instance
 let pipsGameInstance: PipsGame | null = null;
+
+// New Dice/Card Game Instances
+let lrcGameInstance: LRCGame | null = null;
+let farkleGameInstance: FarkleGame | null = null;
+let threesGameInstance: ThreesGame | null = null;
+let solitaireGameInstance: SolitaireGame | null = null;
 
 // Shared UI (Modals, Popups)
 const feedbackPopup = document.getElementById('feedback-popup')!;
@@ -446,25 +493,33 @@ function triggerHapticFeedback(pattern: 'light' | 'success' | 'error') {
 
 
 // --- Screen Navigation ---
+// --- Navigation & Core UI ---
+
+function hideAllScreens() {
+    [
+        mainMenuScreen, levelSelectionScreen, gameContainer, wordleContainer,
+        beeContainer, connContainer, strandsContainer, boxedContainer,
+        sudokuContainer, tilesContainer, pipsContainer,
+        lrcContainer, farkleContainer, threesContainer, soliContainer
+    ].forEach(el => el.classList.add('hidden'));
+}
+
 function showMainMenu() {
+    hideAllScreens();
     mainMenuScreen.classList.remove('hidden');
-    levelSelectionScreen.classList.add('hidden');
-    gameContainer.classList.add('hidden');
     updateGlobalUIElements();
 }
 
 function showRoadmapScreen() {
-    console.log('showRoadmapScreen called. gameRoadmap length:', gameRoadmap.length);
+    console.log('showRoadmapScreen called');
     renderRoadmap();
-    mainMenuScreen.classList.add('hidden');
+    hideAllScreens();
     levelSelectionScreen.classList.remove('hidden');
-    gameContainer.classList.add('hidden');
     updateGlobalUIElements();
 }
 
 function showGameScreen() {
-    mainMenuScreen.classList.add('hidden');
-    levelSelectionScreen.classList.add('hidden');
+    hideAllScreens();
     gameContainer.classList.remove('hidden');
     resizeCanvas();
     renderLetters();
@@ -475,9 +530,7 @@ function showGameScreen() {
 // --- Wordle Game Functions ---
 
 function showWordleScreen() {
-    mainMenuScreen.classList.add('hidden');
-    levelSelectionScreen.classList.add('hidden');
-    gameContainer.classList.add('hidden');
+    hideAllScreens();
     wordleContainer.classList.remove('hidden');
 
     if (!wordleGameInstance) {
@@ -636,10 +689,7 @@ function resetWordle() {
 // --- Spelling Bee Game Functions ---
 
 function showSpellingBeeScreen() {
-    mainMenuScreen.classList.add('hidden');
-    levelSelectionScreen.classList.add('hidden');
-    gameContainer.classList.add('hidden');
-    wordleContainer.classList.add('hidden');
+    hideAllScreens();
     beeContainer.classList.remove('hidden');
 
     if (!beeGameInstance) {
@@ -752,11 +802,7 @@ function closeBeeFoundWords() {
 // --- Connections Game Functions ---
 
 function showConnectionsScreen() {
-    mainMenuScreen.classList.add('hidden');
-    levelSelectionScreen.classList.add('hidden');
-    gameContainer.classList.add('hidden');
-    wordleContainer.classList.add('hidden');
-    beeContainer.classList.add('hidden');
+    hideAllScreens();
     connContainer.classList.remove('hidden');
 
     if (!connGameInstance) {
@@ -876,12 +922,7 @@ function handleConnSubmit() {
 // --- Strands Game Functions ---
 
 function showStrandsScreen() {
-    mainMenuScreen.classList.add('hidden');
-    levelSelectionScreen.classList.add('hidden');
-    gameContainer.classList.add('hidden');
-    wordleContainer.classList.add('hidden');
-    beeContainer.classList.add('hidden');
-    connContainer.classList.add('hidden');
+    hideAllScreens();
     strandsContainer.classList.remove('hidden');
 
     if (!strandsGameInstance) {
@@ -1026,13 +1067,7 @@ document.addEventListener('touchmove', (e) => {
 // --- Letter Boxed Game Functions ---
 
 function showLetterBoxedScreen() {
-    mainMenuScreen.classList.add('hidden');
-    levelSelectionScreen.classList.add('hidden');
-    gameContainer.classList.add('hidden');
-    wordleContainer.classList.add('hidden');
-    beeContainer.classList.add('hidden');
-    connContainer.classList.add('hidden');
-    strandsContainer.classList.add('hidden');
+    hideAllScreens();
     boxedContainer.classList.remove('hidden');
 
     if (!boxedGameInstance) {
@@ -1117,14 +1152,7 @@ function handleBoxedDelete() {
 // --- Sudoku Game Functions ---
 
 function showSudokuScreen() {
-    mainMenuScreen.classList.add('hidden');
-    levelSelectionScreen.classList.add('hidden');
-    gameContainer.classList.add('hidden');
-    wordleContainer.classList.add('hidden');
-    beeContainer.classList.add('hidden');
-    connContainer.classList.add('hidden');
-    strandsContainer.classList.add('hidden');
-    boxedContainer.classList.add('hidden');
+    hideAllScreens();
     sudokuContainer.classList.remove('hidden');
 
     if (!sudokuGameInstance) {
@@ -1189,15 +1217,7 @@ function handleSudokuInput(num: number) {
 // --- Tiles Game Functions ---
 
 function showTilesScreen() {
-    mainMenuScreen.classList.add('hidden');
-    levelSelectionScreen.classList.add('hidden');
-    gameContainer.classList.add('hidden');
-    wordleContainer.classList.add('hidden');
-    beeContainer.classList.add('hidden');
-    connContainer.classList.add('hidden');
-    strandsContainer.classList.add('hidden');
-    boxedContainer.classList.add('hidden');
-    sudokuContainer.classList.add('hidden');
+    hideAllScreens();
     tilesContainer.classList.remove('hidden');
 
     if (!tilesGameInstance) {
@@ -1251,16 +1271,7 @@ function updateTilesUI() {
 // --- Pips Game Functions ---
 
 function showPipsScreen() {
-    mainMenuScreen.classList.add('hidden');
-    levelSelectionScreen.classList.add('hidden');
-    gameContainer.classList.add('hidden');
-    wordleContainer.classList.add('hidden');
-    beeContainer.classList.add('hidden');
-    connContainer.classList.add('hidden');
-    strandsContainer.classList.add('hidden');
-    boxedContainer.classList.add('hidden');
-    sudokuContainer.classList.add('hidden');
-    tilesContainer.classList.add('hidden');
+    hideAllScreens();
     pipsContainer.classList.remove('hidden');
 
     if (!pipsGameInstance) {
@@ -1322,8 +1333,94 @@ function updatePipsUI() {
     pipsMovesDisplay.textContent = `Moves: ${state.moves}`;
     updateGlobalUIElements();
 }
+function showLRCScreen() {
+    hideAllScreens();
+    lrcContainer.classList.remove('hidden');
+    if (!lrcGameInstance) lrcGameInstance = new LRCGame();
+    renderLRC();
+}
 
+function renderLRC() {
+    if (!lrcGameInstance) return;
+    const state = lrcGameInstance.getState();
+    lrcPotDisplay.textContent = `Pot: ${state.pot}`;
+    lrcPlayersGrid.innerHTML = '';
+    state.players.forEach((p, i) => {
+        const card = document.createElement('div');
+        card.className = `lrc-player-card ${state.currentPlayerIndex === i ? 'active' : ''}`;
+        card.innerHTML = `<div>${p.name}</div><div style="font-size: 1.5rem; font-weight: 700;">${p.chips}</div>`;
+        lrcPlayersGrid.appendChild(card);
+    });
+    lrcLogArea.innerHTML = state.log.map(l => `<div>${l}</div>`).join('');
+}
 
+// --- Farkle Game Functions ---
+
+function showFarkleScreen() {
+    hideAllScreens();
+    farkleContainer.classList.remove('hidden');
+    if (!farkleGameInstance) farkleGameInstance = new FarkleGame();
+    renderFarkle();
+}
+
+function renderFarkle() {
+    if (!farkleGameInstance) return;
+    const state = farkleGameInstance.getState();
+    farkleTotalDisplay.textContent = state.totalScore.toString();
+    farkleTurnDisplay.textContent = state.turnScore.toString();
+    farkleMessage.textContent = state.farkled ? "FARKLE! 💥" : "";
+    farkleDiceGrid.innerHTML = '';
+    state.lastRoll.forEach((val, i) => {
+        const die = document.createElement('div');
+        die.className = 'farkle-die';
+        die.textContent = val.toString();
+        // Add "hold" logic logic here in the click handler
+        farkleDiceGrid.appendChild(die);
+    });
+}
+
+// --- Threes Game Functions ---
+
+function showThreesScreen() {
+    hideAllScreens();
+    threesContainer.classList.remove('hidden');
+    if (!threesGameInstance) threesGameInstance = new ThreesGame();
+    renderThrees();
+}
+
+function renderThrees() {
+    if (!threesGameInstance) return;
+    const state = threesGameInstance.getState();
+    threesTotalDisplay.textContent = state.totalScore.toString();
+    threesKeptGrid.innerHTML = state.keptDice.map(d => `<div class="farkle-die">${d}</div>`).join('');
+    threesRollGrid.innerHTML = state.currentRoll.map((d, i) => `<div class="farkle-die" onclick="keepThreeDie(${i})">${d}</div>`).join('');
+}
+
+function keepThreeDie(index: number) {
+    if (threesGameInstance) {
+        threesGameInstance.keepDie(index);
+        renderThrees();
+    }
+}
+
+// --- Solitaire Functions ---
+
+function showSolitaireScreen() {
+    hideAllScreens();
+    soliContainer.classList.remove('hidden');
+    if (!solitaireGameInstance) solitaireGameInstance = new SolitaireGame();
+    renderSolitaire();
+}
+
+function renderSolitaire() {
+    // Basic table render - cards as divs with emoji
+    if (!solitaireGameInstance) return;
+    // (Implementation of card rendering logic)
+}
+
+function showCribbageScreen() {
+    showFeedback("Cribbage is still in development! 📌", false);
+}
 
 function createLevelGemElement(level: LevelDefinition, worldName: string): HTMLButtonElement {
     const levelGem = document.createElement('button');
@@ -2152,10 +2249,46 @@ function getInitialDefaultRoadmap(): WorldDefinition[] {
                 { letters: ['B', 'I', 'K', 'E'], targetWords: ["BIKE"] },
                 { letters: ['T', 'A', 'X', 'I'], targetWords: ["TAXI"] },
                 { letters: ['R', 'O', 'A', 'D'], targetWords: ["ROAD"] },
-                { letters: ['P', 'A', 'R', 'K'], targetWords: ["PARK", "RAPA"] },
+                { letters: ['P', 'A', 'R', 'K'], targetWords: ["PARK"] },
                 { letters: ['W', 'A', 'L', 'K'], targetWords: ["WALK"] },
                 { letters: ['S', 'T', 'O', 'P'], targetWords: ["STOP", "TOP", "POT"] },
                 { letters: ['M', 'E', 'T', 'R', 'O'], targetWords: ["METRO", "MORE", "ROME"] }
+            ]
+        },
+        {
+            id: "underground", name: "Deep Earth", levels: [
+                { letters: ['C', 'A', 'V', 'E'], targetWords: ["CAVE"] },
+                { letters: ['D', 'A', 'R', 'K'], targetWords: ["DARK"] },
+                { letters: ['C', 'O', 'A', 'L'], targetWords: ["COAL"] },
+                { letters: ['G', 'O', 'L', 'D'], targetWords: ["GOLD"] },
+                { letters: ['R', 'O', 'C', 'K'], targetWords: ["ROCK"] },
+                { letters: ['I', 'R', 'O', 'N'], targetWords: ["IRON"] },
+                { letters: ['D', 'I', 'R', 'T'], targetWords: ["DIRT"] },
+                { letters: ['M', 'O', 'L', 'E'], targetWords: ["MOLE"] }
+            ]
+        },
+        {
+            id: "garden", name: "Floral Fantasy", levels: [
+                { letters: ['R', 'O', 'S', 'E'], targetWords: ["ROSE"] },
+                { letters: ['S', 'E', 'E', 'D'], targetWords: ["SEED"] },
+                { letters: ['G', 'R', 'O', 'W'], targetWords: ["GROW"] },
+                { letters: ['L', 'E', 'A', 'F'], targetWords: ["LEAF"] },
+                { letters: ['B', 'E', 'R', 'R', 'Y'], targetWords: ["BERRY"] },
+                { letters: ['D', 'I', 'R', 'T'], targetWords: ["DIRT"] },
+                { letters: ['P', 'O', 'T', 'S'], targetWords: ["POTS"] },
+                { letters: ['W', 'A', 'T', 'E', 'R'], targetWords: ["WATER"] }
+            ]
+        },
+        {
+            id: "library", name: "Scholar's Sanctum", levels: [
+                { letters: ['B', 'O', 'O', 'K'], targetWords: ["BOOK"] },
+                { letters: ['R', 'E', 'A', 'D'], targetWords: ["READ"] },
+                { letters: ['P', 'A', 'G', 'E'], targetWords: ["PAGE"] },
+                { letters: ['T', 'A', 'L', 'E'], targetWords: ["TALE"] },
+                { letters: ['I', 'N', 'K', 'S'], targetWords: ["INKS"] },
+                { letters: ['P', 'O', 'E', 'M'], targetWords: ["POEM"] },
+                { letters: ['W', 'O', 'R', 'D'], targetWords: ["WORD"] },
+                { letters: ['H', 'I', 'S', 'T', 'O', 'R', 'Y'], targetWords: ["HISTORY", "STORY", "TOYS"] }
             ]
         },
         {
@@ -2828,6 +2961,16 @@ function attachEventListeners() {
                 showTilesScreen();
             } else if (gameMode === 'pips') {
                 showPipsScreen();
+            } else if (gameMode === 'lrc') {
+                showLRCScreen();
+            } else if (gameMode === 'farkle') {
+                showFarkleScreen();
+            } else if (gameMode === 'threes') {
+                showThreesScreen();
+            } else if (gameMode === 'solitaire') {
+                showSolitaireScreen();
+            } else if (gameMode === 'cribbage') {
+                showCribbageScreen();
             } else {
                 showFeedback(`${card.querySelector('.game-title')?.textContent} - Coming Soon!`, false, false, 2000);
             }
@@ -2890,6 +3033,44 @@ function attachEventListeners() {
 
     // Pips Screen Buttons
     pipsBackButton.addEventListener('click', showMainMenu);
+
+    // LRC Screen
+    lrcBackButton.addEventListener('click', showMainMenu);
+    lrcRollButton.addEventListener('click', () => {
+        if (lrcGameInstance) {
+            lrcGameInstance.roll();
+            renderLRC();
+        }
+    });
+
+    // Farkle Screen
+    farkleBackButton.addEventListener('click', showMainMenu);
+    farkleRollButton.addEventListener('click', () => {
+        if (farkleGameInstance) {
+            const result = farkleGameInstance.roll();
+            if (result.farkle) showFeedback("FARKLE! Turn lost.", false);
+            renderFarkle();
+        }
+    });
+    farkleStopButton.addEventListener('click', () => {
+        if (farkleGameInstance) {
+            const scored = farkleGameInstance.stop();
+            showFeedback(`Collected ${scored} points!`, true);
+            renderFarkle();
+        }
+    });
+
+    // Threes Screen
+    threesBackButton.addEventListener('click', showMainMenu);
+    threesRollButton.addEventListener('click', () => {
+        if (threesGameInstance) {
+            threesGameInstance.roll();
+            renderThrees();
+        }
+    });
+
+    // Solitaire Screen
+    soliBackButton.addEventListener('click', showMainMenu);
 
     // Sudoku Numpad
     const numButtons = sudokuNumpad.querySelectorAll('.numpad-btn');

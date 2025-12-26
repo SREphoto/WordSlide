@@ -30,7 +30,42 @@ const CATEGORY_DATA: ConnectionCategory[][] = [
         { id: "d3", description: "CLEANING TOOLS", words: ["MOP", "BROOM", "SPONGE", "DUSTER"], level: 2 },
         { id: "d4", description: "R-WORDS IN MUSIC", words: ["RAP", "ROCK", "REEL", "RAG"], level: 3 }
     ],
-    // Add more puzzles if desired
+    [
+        { id: "e1", description: "BREAD TYPES", words: ["RYE", "SODA", "PITA", "NAAN"], level: 0 },
+        { id: "e2", description: "BIRDS", words: ["ROBIN", "FINCH", "SWIFT", "JAY"], level: 1 },
+        { id: "e3", description: "MATHEMATICAL TERMS", words: ["MEAN", "ROOT", "SINE", "PLOT"], level: 2 },
+        { id: "e4", description: "STAR ___", words: ["FISH", "GAZE", "TREK", "DUST"], level: 3 }
+    ],
+    [
+        { id: "f1", description: "COFFEE ORDERS", words: ["LATTE", "MOCHA", "DECAF", "ICED"], level: 0 },
+        { id: "f2", description: "KINDS OF METAL", words: ["GOLD", "IRON", "TIN", "LEAD"], level: 1 },
+        { id: "f3", description: "PARTS OF A CAR", words: ["HOOD", "TIRE", "DOOR", "VENT"], level: 2 },
+        { id: "f4", description: "COLLECTIVE NOUNS", words: ["PRIDE", "HERD", "PACK", "GANG"], level: 3 }
+    ],
+    [
+        { id: "g1", description: "DESSERTS", words: ["CAKE", "PIE", "TART", "FLAN"], level: 0 },
+        { id: "g2", description: "HALLOWEEN SYMBOLS", words: ["BAT", "GHOST", "WITCH", "PUMP"], level: 1 },
+        { id: "g3", description: "GEOMETRIC SHAPES", words: ["CONE", "CUBE", "LINE", "OVAL"], level: 2 },
+        { id: "g4", description: "ENDS IN -HOUSE", words: ["WARE", "LIGHT", "PLAY", "TREE"], level: 3 }
+    ],
+    [
+        { id: "h1", description: "KINDS OF WIND", words: ["BREEZE", "GALE", "GUST", "ZEPHYR"], level: 0 },
+        { id: "h2", description: "MUSICAL INSTRUMENTS", words: ["CELLO", "HARP", "LUTE", "OBOE"], level: 1 },
+        { id: "h3", description: "FLIGHTLESS BIRDS", words: ["EMU", "KIWI", "PENGUIN", "RHEA"], level: 2 },
+        { id: "h4", description: "STARTS WITH 'P'", words: ["PLANE", "PLATE", "PLUM", "PLUS"], level: 3 }
+    ],
+    [
+        { id: "i1", description: "MEASUREMENT UNITS", words: ["FOOT", "MILE", "YARD", "INCH"], level: 0 },
+        { id: "i2", description: "COMPUTER COMPONENTS", words: ["CHIP", "DISK", "RAM", "CORE"], level: 1 },
+        { id: "i3", description: "STREAMS OF WATER", words: ["BROOK", "CREEK", "RIVER", "RUN"], level: 2 },
+        { id: "i4", description: "ENDS IN -BELL", words: ["BLUE", "DOOR", "DUMB", "FIRE"], level: 3 }
+    ],
+    [
+        { id: "j1", description: "TYPES OF TEA", words: ["BLACK", "GREEN", "HERBAL", "WHITE"], level: 0 },
+        { id: "j2", description: "DANCE STYLES", words: ["SALSA", "SWING", "TANGO", "WALTZ"], level: 1 },
+        { id: "j3", description: "CHESS TERMS", words: ["CHECK", "MATE", "PAWN", "STALE"], level: 2 },
+        { id: "j4", description: "PALINDROMES", words: ["KAYAK", "LEVEL", "RADAR", "STATS"], level: 3 }
+    ]
 ];
 
 export class ConnectionsGame {

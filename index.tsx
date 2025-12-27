@@ -1682,9 +1682,15 @@ const yahtzeeContainer = document.getElementById('yahtzee-container') as HTMLEle
 const yahtzeeDiceGrid = document.getElementById('yahtzee-dice-grid') as HTMLElement;
 const yahtzeeMessage = document.getElementById('yahtzee-message') as HTMLElement;
 const yahtzeeRollsLeft = document.getElementById('yahtzee-rolls-left')?.querySelector('span') as HTMLElement;
+const yahtzeeTotalScoreDisplay = document.getElementById('yahtzee-total-score-display')?.querySelector('span') as HTMLElement;
 const yahtzeeRollBtn = document.getElementById('yahtzee-roll-button') as HTMLButtonElement;
 const yahtzeeScoreBtn = document.getElementById('yahtzee-score-button') as HTMLButtonElement;
 const yahtzeeBackBtn = document.getElementById('yahtzee-back-button') as HTMLButtonElement;
+
+// Yahtzee Scorecard DOM
+const yahtzeeScorecardModal = document.getElementById('yahtzee-scorecard-modal') as HTMLElement;
+const yahtzeeScoreGrid = document.getElementById('yahtzee-score-grid') as HTMLElement;
+const closeYahtzeeScorecard = document.getElementById('close-yahtzee-scorecard') as HTMLElement;
 
 function showYahtzeeScreen() {
     hideAllScreens();
@@ -1700,13 +1706,17 @@ function renderYahtzee(animate: boolean = false) {
     yahtzeeMessage.textContent = state.turnOver ? 'Turn over – choose a category' : 'Roll the dice';
     yahtzeeRollsLeft.textContent = state.rollsLeft.toString();
 
+    // Calculate and show total score
+    const totalScore = Object.values(state.scoreCard).reduce((a, b) => (a || 0) + (b || 0), 0);
+    yahtzeeTotalScoreDisplay.textContent = totalScore.toString();
+
     yahtzeeDiceGrid.innerHTML = '';
     state.dice.forEach((val, i) => {
         const dieEl = create3DDieElement(val, state.held[i], () => {
             yahtzeeGameInstance!.toggleHold(i);
             renderYahtzee(false);
         });
-        if (state.held[i]) dieEl.classList.add('die-keep'); // Add visual class for compiled CSS
+        if (state.held[i]) dieEl.classList.add('die-keep');
 
         if (animate) {
             const cube = dieEl.querySelector('.cube-die') as HTMLElement;
@@ -1718,6 +1728,82 @@ function renderYahtzee(animate: boolean = false) {
         }
         yahtzeeDiceGrid.appendChild(dieEl);
     });
+
+    yahtzeeRollBtn.disabled = state.turnOver || state.rollsLeft <= 0;
+    yahtzeeScoreBtn.disabled = state.dice[0] === 0; // Can only score after first roll
+}
+
+function renderYahtzeeScorecard() {
+    if (!yahtzeeGameInstance) return;
+    const state = yahtzeeGameInstance.getState();
+    yahtzeeScoreGrid.innerHTML = '';
+
+    const categories: { key: YahtzeeCategory; name: string }[] = [
+        { key: 'ones', name: 'Ones' },
+        { key: 'twos', name: 'Twos' },
+        { key: 'threes', name: 'Threes' },
+        { key: 'fours', name: 'Fours' },
+        { key: 'fives', name: 'Fives' },
+        { key: 'sixes', name: 'Sixes' },
+        { key: 'threeOfKind', name: '3 of a Kind' },
+        { key: 'fourOfKind', name: '4 of a Kind' },
+        { key: 'fullHouse', name: 'Full House' },
+        { key: 'smallStraight', name: 'Sm Straight' },
+        { key: 'largeStraight', name: 'Lg Straight' },
+        { key: 'yahtzee', name: 'YAHTZEE' },
+        { key: 'chance', name: 'Chance' },
+    ];
+
+    categories.forEach(cat => {
+        const item = document.createElement('div');
+        item.className = 'scorecard-item';
+
+        const isScored = state.scoreCard[cat.key] !== undefined;
+        if (isScored) {
+            item.classList.add('scored', 'disabled');
+        }
+
+        const potential = (yahtzeeGameInstance as any).calculateCategoryPoints(cat.key);
+
+        item.innerHTML = `
+            <span class="category-name">${cat.name}</span>
+            <span class="potential-score">${isScored ? state.scoreCard[cat.key] : potential}</span>
+        `;
+
+        if (!isScored) {
+            item.onclick = () => {
+                yahtzeeGameInstance!.score(cat.key);
+                yahtzeeScorecardModal.classList.add('hidden');
+
+                // Show how many points were scored
+                showFeedback(`Scored ${potential} in ${cat.name}!`, true);
+
+                // Start a new turn if not all categories filled? 
+                // For simplicity, we auto-reset for next turn if still playing.
+                // Reset turn state but keep scorecard. (Actually the class handles this partially)
+                // Wait, YahtzeeGame.reset() clears the scorecard. I should fix that in the class or manage it here.
+                // Let's assume we want a full game experience.
+
+                // Check if game over (all categories scored)
+                if (Object.keys(state.scoreCard).length + 1 >= 13) {
+                    const final = Object.values(state.scoreCard).reduce((a, b) => (a || 0) + (b || 0), 0) + potential;
+                    showFeedback(`Game Over! Final Score: ${final}`, true, true);
+                    coins += Math.floor(final / 10);
+                    updateGlobalUIElements();
+                    setTimeout(showMainMenu, 3000);
+                } else {
+                    // Reset only internal roll state for next turn
+                    (yahtzeeGameInstance as any).rollsLeft = 3;
+                    (yahtzeeGameInstance as any).dice = [0, 0, 0, 0, 0];
+                    (yahtzeeGameInstance as any).held = [false, false, false, false, false];
+                    (yahtzeeGameInstance as any).turnOver = false;
+                    renderYahtzee(false);
+                }
+            };
+        }
+
+        yahtzeeScoreGrid.appendChild(item);
+    });
 }
 
 yahtzeeRollBtn.addEventListener('click', () => {
@@ -1725,14 +1811,16 @@ yahtzeeRollBtn.addEventListener('click', () => {
     yahtzeeGameInstance.roll();
     renderYahtzee(true);
 });
+
 yahtzeeScoreBtn.addEventListener('click', () => {
-    if (!yahtzeeGameInstance) return;
-    // For demo purposes we just score “chance”. Replace with UI to pick a category.
-    const pts = yahtzeeGameInstance.score('chance');
-    if (pts !== null) alert(`Scored ${pts} points in Chance!`);
-    yahtzeeGameInstance.reset();
-    renderYahtzee(false);
+    renderYahtzeeScorecard();
+    yahtzeeScorecardModal.classList.remove('hidden');
 });
+
+closeYahtzeeScorecard.addEventListener('click', () => {
+    yahtzeeScorecardModal.classList.add('hidden');
+});
+
 yahtzeeBackBtn.addEventListener('click', showMainMenu);
 
 
@@ -1745,6 +1833,20 @@ const liarDiceMessage = document.getElementById('liar-dice-message') as HTMLElem
 const liarDiceBidBtn = document.getElementById('liar-dice-bid-button') as HTMLButtonElement;
 const liarDiceCallBtn = document.getElementById('liar-dice-call-button') as HTMLButtonElement;
 const liarDiceBackBtn = document.getElementById('liar-dice-back-button') as HTMLButtonElement;
+
+// Liar's Dice Bidding DOM
+const liarDiceBidModal = document.getElementById('liar-dice-bid-modal') as HTMLElement;
+const closeLiarBid = document.getElementById('close-liar-bid') as HTMLElement;
+const bidQtyMinus = document.getElementById('bid-qty-minus') as HTMLButtonElement;
+const bidQtyPlus = document.getElementById('bid-qty-plus') as HTMLButtonElement;
+const bidQtyValue = document.getElementById('bid-qty-value') as HTMLElement;
+const bidFaceMinus = document.getElementById('bid-face-minus') as HTMLButtonElement;
+const bidFacePlus = document.getElementById('bid-face-plus') as HTMLButtonElement;
+const bidFaceValue = document.getElementById('bid-face-value') as HTMLElement;
+const liarDiceConfirmBid = document.getElementById('liar-dice-confirm-bid') as HTMLButtonElement;
+
+let currentBidQty = 1;
+let currentBidFace = 1;
 
 function showLiarDiceScreen() {
     hideAllScreens();
@@ -1767,43 +1869,113 @@ function renderLiarDice(animate: boolean = false) {
     // Computer dice (hidden/dimmed)
     liarDiceComputerDice.innerHTML = '';
     state.computerDice.forEach(v => {
-        const dieEl = create3DDieElement(v, false, () => { });
+        // In real Liar's Dice, computer dice are hidden until call.
+        // We can show a 'locked' or 'hidden' face.
+        // Or just dimmed if game not over.
+        const dieEl = create3DDieElement(state.gameOver ? v : '?', false, () => { });
         liarDiceComputerDice.appendChild(dieEl);
     });
 
     if (animate) {
-        // small visual cue on the player dice grid
-        const grid = liarDicePlayerDice;
-        grid.classList.add('rolling');
         soundManager.playDiceRoll();
-        setTimeout(() => grid.classList.remove('rolling'), 600);
+        [liarDicePlayerDice, liarDiceComputerDice].forEach(grid => {
+            grid.classList.add('rolling');
+            setTimeout(() => grid.classList.remove('rolling'), 600);
+        });
     }
+
+    liarDiceBidBtn.disabled = state.gameOver || !state.playerTurn;
+    liarDiceCallBtn.disabled = state.gameOver || !state.playerTurn || !state.currentBid;
+}
+
+function updateBidUI() {
+    bidQtyValue.textContent = currentBidQty.toString();
+    bidFaceValue.textContent = currentBidFace.toString();
 }
 
 liarDiceBidBtn.addEventListener('click', () => {
     if (!liarDiceGameInstance) return;
-    const countStr = prompt('Bid count?', '1');
-    if (!countStr) return;
-    const faceStr = prompt('Bid face (1‑6)?', '1');
-    if (!faceStr) return;
+    const state = liarDiceGameInstance.getState();
 
-    const count = parseInt(countStr);
-    const face = parseInt(faceStr) as any;
-
-    if (liarDiceGameInstance.playerBid({ count, face })) {
-        renderLiarDice(true);
-        setTimeout(() => liarDiceGameInstance!.computerTurn(), 1000); // Wait a bit for AI
+    // Set initial values based on current bid
+    if (state.currentBid) {
+        currentBidQty = state.currentBid.count;
+        currentBidFace = state.currentBid.face;
     } else {
-        alert("Invalid bid!");
+        currentBidQty = 1;
+        currentBidFace = 1;
+    }
+
+    updateBidUI();
+    liarDiceBidModal.classList.remove('hidden');
+});
+
+bidQtyMinus.addEventListener('click', () => {
+    if (currentBidQty > 1) {
+        currentBidQty--;
+        updateBidUI();
+        soundManager.playClick();
     }
 });
+
+bidQtyPlus.addEventListener('click', () => {
+    if (currentBidQty < 10) {
+        currentBidQty++;
+        updateBidUI();
+        soundManager.playClick();
+    }
+});
+
+bidFaceMinus.addEventListener('click', () => {
+    if (currentBidFace > 1) {
+        currentBidFace--;
+        updateBidUI();
+        soundManager.playClick();
+    }
+});
+
+bidFacePlus.addEventListener('click', () => {
+    if (currentBidFace < 6) {
+        currentBidFace++;
+        updateBidUI();
+        soundManager.playClick();
+    }
+});
+
+liarDiceConfirmBid.addEventListener('click', () => {
+    if (liarDiceGameInstance!.playerBid({ count: currentBidQty, face: currentBidFace as any })) {
+        liarDiceBidModal.classList.add('hidden');
+        renderLiarDice(true);
+        setTimeout(() => {
+            liarDiceGameInstance!.computerTurn();
+            renderLiarDice(true);
+            triggerHapticFeedback('light');
+        }, 1500);
+    } else {
+        showFeedback("Bid must be higher than current bid!", false);
+        triggerScreenShake();
+    }
+});
+
+closeLiarBid.addEventListener('click', () => {
+    liarDiceBidModal.classList.add('hidden');
+});
+
 liarDiceCallBtn.addEventListener('click', () => {
     if (!liarDiceGameInstance) return;
     const result = liarDiceGameInstance.playerCallLiar();
-    if (result) alert(result.result);
-    liarDiceGameInstance.reset();
-    renderLiarDice(false);
+    if (result) {
+        renderLiarDice(false);
+        showFeedback(result.result, result.playerWon, true, 4000);
+        if (result.playerWon) {
+            coins += 50;
+            updateGlobalUIElements();
+        }
+    }
+    // Add a "Play Again" button or logic in message
+    liarDiceMessage.innerHTML += '<br><button class="action-button primary" onclick="showLiarDiceScreen()">Play Again</button>';
 });
+
 liarDiceBackBtn.addEventListener('click', showMainMenu);
 
 

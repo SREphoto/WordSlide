@@ -17,8 +17,8 @@
       }
     }
     </script>
-  <script type="module" crossorigin src="/WordSlide/assets/index-DqCLyE4p.js"></script>
-  <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-DtTXj47D.css">
+  <script type="module" crossorigin src="/WordSlide/assets/index-DM1aiWNv.js"></script>
+  <link rel="stylesheet" crossorigin href="/WordSlide/assets/index-oVZovarY.css">
 </head>
 
 <body>
@@ -735,11 +735,25 @@
             <div class="yahtzee-status">
                 <div id="yahtzee-rolls-left" class="status-item">Rolls left: <span>3</span></div>
                 <div id="yahtzee-message" class="game-message"></div>
+                <div id="yahtzee-total-score-display" class="status-item">Total Score: <span>0</span></div>
             </div>
             <div id="yahtzee-dice-grid" class="dice-container-3d"></div>
             <div class="yahtzee-controls">
                 <button id="yahtzee-roll-button" class="action-button primary">Roll</button>
-                <button id="yahtzee-score-button" class="action-button secondary">Score</button>
+                <button id="yahtzee-score-button" class="action-button secondary">Scorecard</button>
+            </div>
+
+            <!-- Yahtzee Scorecard Modal -->
+            <div id="yahtzee-scorecard-modal" class="modal-overlay hidden">
+                <div class="modal-content scorecard-content">
+                    <header class="modal-header">
+                        <h2>Select Category</h2>
+                        <button id="close-yahtzee-scorecard" class="material-symbols-outlined">close</button>
+                    </header>
+                    <div id="yahtzee-score-grid" class="scorecard-grid">
+                        <!-- Score categories will be generated here -->
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -755,8 +769,37 @@
             <div id="liar-dice-player-dice" class="dice-container-3d"></div>
             <div id="liar-dice-computer-dice" class="dice-container-3d computer-dice"></div>
             <div class="liar-dice-controls">
-                <button id="liar-dice-bid-button" class="action-button primary">Bid</button>
+                <button id="liar-dice-bid-button" class="action-button primary">Place Bid</button>
                 <button id="liar-dice-call-button" class="action-button secondary">Call Liar</button>
+            </div>
+
+            <!-- Liar's Dice Bidding Overlay -->
+            <div id="liar-dice-bid-modal" class="modal-overlay hidden">
+                <div class="modal-content bid-content">
+                    <header class="modal-header">
+                        <h2>Place Your Bid</h2>
+                        <button id="close-liar-bid" class="material-symbols-outlined">close</button>
+                    </header>
+                    <div class="bid-selectors">
+                        <div class="bid-group">
+                            <label>Quantity</label>
+                            <div class="bid-picker">
+                                <button id="bid-qty-minus" class="bid-picker-btn">−</button>
+                                <span id="bid-qty-value">1</span>
+                                <button id="bid-qty-plus" class="bid-picker-btn">+</button>
+                            </div>
+                        </div>
+                        <div class="bid-group">
+                            <label>Face Value</label>
+                            <div class="bid-picker">
+                                <button id="bid-face-minus" class="bid-picker-btn">−</button>
+                                <span id="bid-face-value">1</span>
+                                <button id="bid-face-plus" class="bid-picker-btn">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="liar-dice-confirm-bid" class="action-button primary full-width">Confirm Bid</button>
+                </div>
             </div>
         </main>
     </div>

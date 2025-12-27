@@ -15,7 +15,7 @@ import { FarkleGame } from "./FarkleGame";
 import { ThreesGame } from "./ThreesGame";
 import { SolitaireGame } from "./SolitaireGame";
 import { SevensGame } from "./SevensGame";
-import { YahtzeeGame } from './YahtzeeGame';
+import { YahtzeeGame, type YahtzeeCategory } from './YahtzeeGame';
 import { LiarDiceGame } from './LiarDiceGame';
 import { ZanzibarGame } from './ZanzibarGame';
 import { LockInGame } from './LockInGame';
@@ -486,6 +486,45 @@ let speechRecognition: any = null;
 let isListening = false;
 
 // --- Utility Functions ---
+function triggerHapticFeedback(pattern: 'light' | 'success' | 'error') {
+    if (gameSettings?.soundEffectsEnabled) {
+        if ('vibrate' in navigator) {
+            switch (pattern) {
+                case 'light': navigator.vibrate(20); break;
+                case 'success': navigator.vibrate([100, 50, 100]); break;
+                case 'error': navigator.vibrate(200); break;
+            }
+        }
+        switch (pattern) {
+            case 'light': soundManager.playClick(); break;
+            case 'success': soundManager.playSuccess(); break;
+            case 'error': soundManager.playError(); break;
+        }
+    }
+}
+
+function triggerScreenShake() {
+    document.body.classList.add('shake');
+    setTimeout(() => document.body.classList.remove('shake'), 400);
+}
+
+function triggerConfetti() {
+    if (!confettiContainer) return;
+    confettiContainer.innerHTML = '';
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.animationDelay = Math.random() * 0.5 + 's';
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+        const size = Math.random() * 8 + 5;
+        confetti.style.width = size + 'px';
+        confetti.style.height = size + 'px';
+        confettiContainer.appendChild(confetti);
+    }
+    setTimeout(() => confettiContainer.innerHTML = '', 3500);
+}
+
 function showFeedback(message: string, isSuccess: boolean, isLevelComplete = false, duration = 0) {
     feedbackMessage.textContent = message;
     feedbackPopup.classList.remove('hidden', 'success', 'level-complete-popup');
@@ -522,42 +561,6 @@ function showFeedback(message: string, isSuccess: boolean, isLevelComplete = fal
         (feedbackOkButton as any).nextAction = (feedbackOkButton as any).nextAction || (() => feedbackPopup.classList.add('hidden'));
     }
 }
-
-function triggerConfetti() {
-    confettiContainer.innerHTML = ''; // Clear previous confetti
-    for (let i = 0; i < 50; i++) {
-        const confetti = document.createElement('div');
-        confetti.classList.add('confetti');
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.animationDelay = Math.random() * 0.5 + 's';
-        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
-        const size = Math.random() * 8 + 5;
-        confetti.style.width = size + 'px';
-        confetti.style.height = size + 'px';
-        confettiContainer.appendChild(confetti);
-    }
-    setTimeout(() => confettiContainer.innerHTML = '', 3500); // Clear confetti after animation
-}
-
-function triggerHapticFeedback(pattern: 'light' | 'success' | 'error') {
-    if (gameSettings.soundEffectsEnabled) {
-        if ('vibrate' in navigator) {
-            switch (pattern) {
-                case 'light': navigator.vibrate(20); break;
-                case 'success': navigator.vibrate([100, 50, 100]); break;
-                case 'error': navigator.vibrate(200); break;
-            }
-        }
-        switch (pattern) {
-            case 'light': soundManager.playClick(); break;
-            case 'success': soundManager.playSuccess(); break;
-            case 'error': soundManager.playError(); break;
-        }
-    }
-}
-
-
-
 
 // --- Screen Navigation ---
 // --- Navigation & Core UI ---
@@ -1707,7 +1710,7 @@ function renderYahtzee(animate: boolean = false) {
     yahtzeeRollsLeft.textContent = state.rollsLeft.toString();
 
     // Calculate and show total score
-    const totalScore = Object.values(state.scoreCard).reduce((a, b) => (a || 0) + (b || 0), 0);
+    const totalScore = Object.values(state.scoreCard).reduce((a: number, b) => a + (b as number || 0), 0);
     yahtzeeTotalScoreDisplay.textContent = totalScore.toString();
 
     yahtzeeDiceGrid.innerHTML = '';
@@ -1784,9 +1787,8 @@ function renderYahtzeeScorecard() {
                 // Wait, YahtzeeGame.reset() clears the scorecard. I should fix that in the class or manage it here.
                 // Let's assume we want a full game experience.
 
-                // Check if game over (all categories scored)
                 if (Object.keys(state.scoreCard).length + 1 >= 13) {
-                    const final = Object.values(state.scoreCard).reduce((a, b) => (a || 0) + (b || 0), 0) + potential;
+                    const final = Object.values(state.scoreCard).reduce((a: number, b) => a + (b as number || 0), 0) + potential;
                     showFeedback(`Game Over! Final Score: ${final}`, true, true);
                     coins += Math.floor(final / 10);
                     updateGlobalUIElements();
@@ -1869,9 +1871,6 @@ function renderLiarDice(animate: boolean = false) {
     // Computer dice (hidden/dimmed)
     liarDiceComputerDice.innerHTML = '';
     state.computerDice.forEach(v => {
-        // In real Liar's Dice, computer dice are hidden until call.
-        // We can show a 'locked' or 'hidden' face.
-        // Or just dimmed if game not over.
         const dieEl = create3DDieElement(state.gameOver ? v : '?', false, () => { });
         liarDiceComputerDice.appendChild(dieEl);
     });
@@ -1882,10 +1881,19 @@ function renderLiarDice(animate: boolean = false) {
             grid.classList.add('rolling');
             setTimeout(() => grid.classList.remove('rolling'), 600);
         });
+        triggerHapticFeedback('light');
     }
 
-    liarDiceBidBtn.disabled = state.gameOver || !state.playerTurn;
-    liarDiceCallBtn.disabled = state.gameOver || !state.playerTurn || !state.currentBid;
+    if (state.gameOver) {
+        liarDiceBidBtn.textContent = "Play Again";
+        liarDiceBidBtn.disabled = false;
+        liarDiceCallBtn.style.display = 'none';
+    } else {
+        liarDiceBidBtn.textContent = "Place Bid";
+        liarDiceBidBtn.disabled = !state.playerTurn;
+        liarDiceCallBtn.style.display = 'block';
+        liarDiceCallBtn.disabled = !state.playerTurn || !state.currentBid;
+    }
 }
 
 function updateBidUI() {
@@ -1896,6 +1904,12 @@ function updateBidUI() {
 liarDiceBidBtn.addEventListener('click', () => {
     if (!liarDiceGameInstance) return;
     const state = liarDiceGameInstance.getState();
+
+    if (state.gameOver) {
+        liarDiceGameInstance.reset();
+        renderLiarDice(true);
+        return;
+    }
 
     // Set initial values based on current bid
     if (state.currentBid) {
@@ -1970,10 +1984,12 @@ liarDiceCallBtn.addEventListener('click', () => {
         if (result.playerWon) {
             coins += 50;
             updateGlobalUIElements();
+            soundManager.playSuccess();
+        } else {
+            soundManager.playError();
+            triggerScreenShake();
         }
     }
-    // Add a "Play Again" button or logic in message
-    liarDiceMessage.innerHTML += '<br><button class="action-button primary" onclick="showLiarDiceScreen()">Play Again</button>';
 });
 
 liarDiceBackBtn.addEventListener('click', showMainMenu);
@@ -2029,10 +2045,10 @@ zanzibarRollBtn.addEventListener('click', () => {
     renderZanzibar(true);
 });
 zanzibarKeepBtn.addEventListener('click', () => {
-    // toggle keep on the first unkept die for demo
-    const idx = zanzibarGameInstance!.getState().kept.findIndex(k => !k);
-    if (idx !== -1) zanzibarGameInstance!.toggleKeep(idx);
-    renderZanzibar(false);
+    // Confirm and end turn
+    showFeedback("Turn ended!", true);
+    zanzibarGameInstance!.reset();
+    renderZanzibar(true);
 });
 zanzibarBackBtn.addEventListener('click', showMainMenu);
 
@@ -2570,11 +2586,6 @@ function processSubmittedWord(word: string) {
     clearSwipeState();
 }
 
-function triggerScreenShake() {
-    gameContainer.classList.add('screen-shake');
-    triggerHapticFeedback('error');
-    setTimeout(() => gameContainer.classList.remove('screen-shake'), 300);
-}
 
 function handleShuffleLetters() {
     if (coins < SHUFFLE_COST) {
